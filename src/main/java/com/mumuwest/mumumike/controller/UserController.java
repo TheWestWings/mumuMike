@@ -1,6 +1,7 @@
 package com.mumuwest.mumumike.controller;
 
 
+import com.mumuwest.mumumike.annotation.Role;
 import com.mumuwest.mumumike.mapper.UserMapper;
 import com.mumuwest.mumumike.pojo.AjaxResult;
 import com.mumuwest.mumumike.pojo.User;
@@ -12,10 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
 @RestController
@@ -41,7 +39,8 @@ public class UserController {
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
             );
             // 生成 JWT token
-            String token = JwtUtil.generateToken(user.getUsername());
+            user = userService.getUserByUsername(user.getUsername());
+            String token = JwtUtil.generateToken(user.getUsername(), user.getRole());
             return new AjaxResult(200, "登录成功", token);
         } catch (AuthenticationException e) {
             return AjaxResult.error("用户名或密码错误");
@@ -63,5 +62,10 @@ public class UserController {
         return AjaxResult.success("注册成功");
     }
 
+    @PutMapping("/updateRole")
+    @Role(role = {1, 2})
+    public AjaxResult updateRole(){
+        return AjaxResult.success();
+    }
 
 }

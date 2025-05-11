@@ -12,19 +12,30 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
 
-    // 示例方法
+    /**
+     * 用户注册
+     * @param username 用户名
+     * @param password 密码
+     * @param email    邮箱
+     * @param phone    手机号
+     * @return
+     */
     public Integer register(String username, String password, String email, String phone) {
-
         return userMapper.insertUser(new User(username, password, email, phone));
     }
 
+    @Override
     public String login(String username, String password) {
-        // 实现登录逻辑
-        return "登录成功";
+        return "";
     }
 
     public User getUserInfo(Integer userId) {
         // 实现获取用户信息逻辑
         return new User();
+    }
+
+    @Override
+    public User getUserByUsername(String username) {
+        return userMapper.selectUserByUsername(username);
     }
 }

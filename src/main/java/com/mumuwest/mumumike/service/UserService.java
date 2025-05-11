@@ -30,4 +30,13 @@ public interface UserService {
      * @return 用户信息
      */
     User getUserInfo(Integer userId);
+
+
+    /**
+     * 根据用户名获取用户信息
+     *
+     * @param username 用户名
+     * @return 用户信息
+     */
+    User getUserByUsername(String username);
 }
