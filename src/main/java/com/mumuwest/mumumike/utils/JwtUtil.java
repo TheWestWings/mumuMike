@@ -7,7 +7,7 @@ import java.util.Date;
 
 public class JwtUtil {
     private static final String SECRET_KEY = "your-secret-key-123456789012345678901234567890129999999999999999999999999999"; // 至少 32 字节
-    private static final long EXPIRATION_TIME = 864_000_000; // 10天
+    private static final long EXPIRATION_TIME = 964_000_000; // 10天
 
     public static String generateToken(String username) {
         return Jwts.builder()

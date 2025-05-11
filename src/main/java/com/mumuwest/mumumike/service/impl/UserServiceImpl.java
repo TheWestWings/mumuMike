@@ -1,17 +1,21 @@
 package com.mumuwest.mumumike.service.impl;
 
+import com.mumuwest.mumumike.mapper.UserMapper;
 import com.mumuwest.mumumike.pojo.User;
+import com.mumuwest.mumumike.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class UserServiceImpl {
-    // 这里是用户服务的实现类
-    // 你可以在这里实现用户注册、登录、获取用户信息等功能
+public class UserServiceImpl implements UserService {
+
+    @Autowired
+    private UserMapper userMapper;
 
     // 示例方法
-    public String register(String username, String password, String email, String phone) {
-        // 实现注册逻辑
-        return "注册成功";
+    public Integer register(String username, String password, String email, String phone) {
+
+        return userMapper.insertUser(new User(username, password, email, phone));
     }
 
     public String login(String username, String password) {

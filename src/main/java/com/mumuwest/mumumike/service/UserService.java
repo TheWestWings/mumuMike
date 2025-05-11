@@ -12,7 +12,7 @@ public interface UserService {
      * @param phone    手机号
      * @return 注册结果
      */
-    String register(String username, String password, String email, String phone);
+    Integer register(String username, String password, String email, String phone);
 
     /**
      * 用户登录
