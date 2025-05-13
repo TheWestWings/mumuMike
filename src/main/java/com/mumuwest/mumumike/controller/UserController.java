@@ -63,7 +63,7 @@ public class UserController {
     }
 
     @PutMapping("/updateRole")
-    @Role(role = {1, 2})
+    @Role(role = {1, 2, 0})
     public AjaxResult updateRole(){
         return AjaxResult.success();
     }
