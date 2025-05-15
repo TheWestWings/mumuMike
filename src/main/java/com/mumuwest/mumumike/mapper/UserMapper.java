@@ -12,6 +12,13 @@ public interface UserMapper {
 
     Integer insertUser(User user);
 
+    /**
+     * 修改用户信息
+     * @param user
+     * @return
+     */
+    Integer updateUserInfo(User user);
+
     // 查询所有用户
     List<User> selectAllUsers();
 }

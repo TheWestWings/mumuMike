@@ -1,0 +1,60 @@
+/* 自定义 ElementUI 主题颜色，基于主色调 #8d6e63 */
+
+/* 主色调 */
+$--color-primary: #8d6e63 !default;
+$--color-primary-light-3: #a88e85 !default;
+$--color-primary-light-5: #c3afab !default;
+$--color-primary-light-7: #ded0ce !default;
+$--color-primary-light-9: #f9f0ef !default;
+$--color-primary-dark-2: #7b5e55 !default;
+
+/* 状态颜色 */
+$--color-success: #67c23a !default;
+$--color-success-light: #b3e19d !default;
+$--color-success-lighter: #f4fbea !default;
+
+$--color-warning: #e6a23c !default;
+$--color-warning-light: #f3d19e !default;
+$--color-warning-lighter: #fdf6ec !default;
+
+$--color-danger: #f56c6c !default;
+$--color-danger-light: #fab6b6 !default;
+$--color-danger-lighter: #fef0f0 !default;
+
+$--color-info: #909399 !default;
+$--color-info-light: #c8c9cc !default;
+$--color-info-lighter: #f4f4f5 !default;
+
+/* 文本颜色 */
+$--color-text-primary: #303133 !default;
+$--color-text-regular: #606266 !default;
+$--color-text-secondary: #909399 !default;
+$--color-text-placeholder: #c0c4cc !default;
+
+/* 背景颜色 */
+$--background-color-base: #f5f7fa !default;
+$--color-white: #ffffff !default;
+$--color-black: #000000 !default;
+
+/* 边框颜色 */
+$--border-color-base: #dcdfe6 !default;
+$--border-color-light: #e4e7ed !default;
+$--border-color-lighter: #ebeef5 !default;
+$--border-color-extra-light: #f2f6fc !default;
+
+/* 禁用状态 */
+$--disabled-bg-color: #f5f7fa !default;
+$--disabled-text-color: #c0c4cc !default;
+$--disabled-border-color: #e4e7ed !default;
+
+/* 其他全局样式 */
+$--border-radius-base: 4px !default;
+$--border-radius-small: 2px !default;
+$--font-size-base: 14px !default;
+$--font-size-small: 12px !default;
+$--font-size-large: 16px !default;
+
+/* 改变 icon 字体路径变量，必需 */
+$--font-path: '~element-ui/lib/theme-chalk/fonts';
+
+@import "~element-ui/packages/theme-chalk/src/index";

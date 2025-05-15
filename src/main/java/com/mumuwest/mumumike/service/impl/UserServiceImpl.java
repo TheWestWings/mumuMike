@@ -42,6 +42,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Integer updateUserInfo(User user) {
+        // 实现更新用户信息逻辑
+        return userMapper.updateUserInfo(user);
+    }
+
+    @Override
     public List<User> getList(User user) {
         // 实现获取用户列表逻辑
         return userMapper.selectAllUsers();

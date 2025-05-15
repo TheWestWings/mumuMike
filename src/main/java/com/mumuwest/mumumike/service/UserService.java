@@ -43,6 +43,13 @@ public interface UserService {
     User getUserByUsername(String username);
 
     /**
+     * 修改用户信息
+     * @param user
+     * @return
+     */
+    Integer updateUserInfo(User user);
+
+    /**
      * 获取所有用户信息
      *
      * @param user 用户信息
