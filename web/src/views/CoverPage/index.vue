@@ -1,19 +1,17 @@
 <template>
-  <el-container>
-    <router-view></router-view>
-
-  </el-container>
-  
+  <div class="cover-container">
+    
+  </div>
 </template>
 
 <script>
 export default {
-  name: "LoginPage"
+  name: 'CoverPage'
 }
 </script>
 
 <style scoped>
-.el-container {
+.cover-container {
   height: 100vh;
   width: 100%;
   background-image: url('@/assets/background/login1.png');

@@ -37,7 +37,8 @@
 
       <div class="auth-footer">
         <span>还没有账号？</span>
-        <a href="#" @click.prevent="dispReg">立即注册</a>
+        <router-link to="/register">立即注册</router-link>
+        
       </div>
     </el-form>
   </div>
@@ -47,8 +48,8 @@
 <script>
 
 import axios from 'axios'
-import faildAlert from './faildAlert.vue'
-import RoundButton from './roundButton.vue'
+import faildAlert from "@/components/faildAlert.vue"
+import RoundButton from '@/components/roundButton.vue'
 import cookies from "vue-cookies"
 
 
@@ -62,9 +63,7 @@ mounted() {
 },
 
   methods: {
-    dispReg(){
-          this.$emit('change', true) 
-      },
+
     submit() {
       this.$refs.form.validate((valid) => {
         if(valid){
@@ -210,7 +209,7 @@ font-size: 14px;
 }
 
 .auth-footer a {
-color: #3498db;
+color: #8d6e63;
 text-decoration: none;
 margin-left: 5px;
 font-weight: 500;
@@ -219,8 +218,8 @@ position: relative;
 }
 
 .auth-footer a:hover {
-color: #2980b9;
-text-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+color: #a37f72;
+text-shadow: 0 0 8px rgba(179, 82, 30, 0.3);
 }
 
 .auth-footer a::after {

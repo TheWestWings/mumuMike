@@ -68,7 +68,7 @@
   
       <div class="auth-footer">
       <span>已有账号？</span>
-      <a href="#" @click.prevent="dispLogin">立即登录</a>
+      <router-link to="/login">立即登录</router-link>
       </div>
       </el-form>
   </div>
@@ -76,9 +76,8 @@
   
   <script>
   import axios from 'axios'
-  import RoundButton from './roundButton.vue'
-  import FaildAlert from './faildAlert.vue'
-  
+  import FaildAlert from "@/components/faildAlert.vue"
+  import RoundButton from '@/components/roundButton.vue'
   
   
   
@@ -252,35 +251,35 @@
     font-size: 14px;
   }
   
-  .auth-footer a {
-    color: #3498db;
-    text-decoration: none;
-    margin-left: 5px;
-    font-weight: 500;
-    transition: all 0.2s;
-    position: relative;
-  }
-  
-  .auth-footer a:hover {
-    color: #2980b9;
-    text-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
-  }
-  
-  .auth-footer a::after {
-    content: '';
-    position: absolute;
-    bottom: -2px;
-    left: 0;
-    width: 100%;
-    height: 1px;
-    background: currentColor;
-    transform: scaleX(0);
-    transition: transform 0.3s;
-  }
-  
-  .auth-footer a:hover::after {
-    transform: scaleX(1);
-  }
+.auth-footer a {
+color: #8d6e63;
+text-decoration: none;
+margin-left: 5px;
+font-weight: 500;
+transition: all 0.2s;
+position: relative;
+}
+
+.auth-footer a:hover {
+color: #a37f72;
+text-shadow: 0 0 8px rgba(179, 82, 30, 0.3);
+}
+
+.auth-footer a::after {
+content: '';
+position: absolute;
+bottom: -2px;
+left: 0;
+width: 100%;
+height: 1px;
+background: currentColor;
+transform: scaleX(0);
+transition: transform 0.3s;
+}
+
+.auth-footer a:hover::after {
+transform: scaleX(1);
+}
   
   /* 夜间模式 */
   @media (prefers-color-scheme: dark) {

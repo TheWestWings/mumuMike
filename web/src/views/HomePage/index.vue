@@ -50,8 +50,8 @@
 </template>
 
 <script>
-import classForm from './views/HomePage/components/classForm.vue'
-import ProductCard from './views/HomePage/components/productCard.vue'
+import classForm from './components/classForm.vue'
+import ProductCard from './components/productCard.vue'
 export default {
   name: "HomePage",
   components: { classForm, ProductCard },
