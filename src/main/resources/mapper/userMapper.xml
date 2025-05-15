@@ -5,6 +5,20 @@
     <select id="selectUserByUsername" parameterType="String" resultType="com.mumuwest.mumumike.pojo.User">
         SELECT * FROM user WHERE username = #{username}
     </select>
+    <select id="selectAllUsers" parameterType="com.mumuwest.mumumike.pojo.User">
+        select * from user
+        <where>
+            <if test="username != null">
+                username = #{username}
+            </if>
+            <if test="email != null">
+                and email = #{email}
+            </if>
+            <if test="phone != null">
+                and phone = #{phone}
+            </if>
+        </where>
+    </select>
 
     <insert id="insertUser" parameterType="com.mumuwest.mumumike.pojo.User">
         INSERT INTO user (username, password, email, phone) VALUES (#{username}, #{password}, #{email}, #{phone})
