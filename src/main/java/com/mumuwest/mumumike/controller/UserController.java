@@ -4,9 +4,11 @@ package com.mumuwest.mumumike.controller;
 import com.mumuwest.mumumike.annotation.Role;
 import com.mumuwest.mumumike.mapper.UserMapper;
 import com.mumuwest.mumumike.pojo.AjaxResult;
+import com.mumuwest.mumumike.pojo.TableDataInfo;
 import com.mumuwest.mumumike.pojo.User;
 import com.mumuwest.mumumike.service.UserService;
 import com.mumuwest.mumumike.utils.JwtUtil;
+import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -63,9 +65,19 @@ public class UserController {
     }
 
     @PutMapping("/updateRole")
-    @Role(role = {1, 2, 0})
-    public AjaxResult updateRole(){
+    @Role(role = {0})
+    public AjaxResult updateRole(@RequestBody User user) {
+        userService.updateUserInfo(user);
         return AjaxResult.success();
+    }
+
+    @GetMapping("/list")
+    @Role(role = {0, 1})
+    public TableDataInfo list(){
+        TableDataInfo tableDataInfo = new TableDataInfo(userService.getList(new User()), userMapper.selectAllUsers().size());
+        tableDataInfo.setCode(200);
+        tableDataInfo.setMsg("查询成功");
+        return tableDataInfo;
     }
 
 }

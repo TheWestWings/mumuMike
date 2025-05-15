@@ -2,6 +2,8 @@ package com.mumuwest.mumumike.service;
 
 import com.mumuwest.mumumike.pojo.User;
 
+import java.util.List;
+
 public interface UserService {
     /**
      * 用户注册
@@ -39,4 +41,19 @@ public interface UserService {
      * @return 用户信息
      */
     User getUserByUsername(String username);
+
+    /**
+     * 修改用户信息
+     * @param user
+     * @return
+     */
+    Integer updateUserInfo(User user);
+
+    /**
+     * 获取所有用户信息
+     *
+     * @param user 用户信息
+     * @return 更新结果
+     */
+    List<User> getList(User user);
 }

@@ -6,6 +6,8 @@ import com.mumuwest.mumumike.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -37,5 +39,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public User getUserByUsername(String username) {
         return userMapper.selectUserByUsername(username);
+    }
+
+    @Override
+    public Integer updateUserInfo(User user) {
+        // 实现更新用户信息逻辑
+        return userMapper.updateUserInfo(user);
+    }
+
+    @Override
+    public List<User> getList(User user) {
+        // 实现获取用户列表逻辑
+        return userMapper.selectAllUsers();
     }
 }
