@@ -9,4 +9,11 @@ public interface UserMapper {
     User selectUserByUsername(String username);
 
     Integer insertUser(User user);
+
+    /**
+     * 修改用户信息
+     * @param user
+     * @return
+     */
+    Integer updateUserInfo(User user);
 }

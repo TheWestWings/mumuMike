@@ -38,4 +38,10 @@ public class UserServiceImpl implements UserService {
     public User getUserByUsername(String username) {
         return userMapper.selectUserByUsername(username);
     }
+
+    @Override
+    public Integer updateUserInfo(User user) {
+        // 实现更新用户信息逻辑
+        return userMapper.updateUserInfo(user);
+    }
 }

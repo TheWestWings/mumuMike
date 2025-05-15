@@ -63,9 +63,9 @@ public class UserController {
     }
 
     @PutMapping("/updateRole")
-    @Role(role = {1, 2, 0})
-    public AjaxResult updateRole(){
+    @Role(role = {0})
+    public AjaxResult updateRole(@RequestBody User user) {
+        userService.updateUserInfo(user);
         return AjaxResult.success();
     }
-
 }

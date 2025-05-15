@@ -39,4 +39,11 @@ public interface UserService {
      * @return 用户信息
      */
     User getUserByUsername(String username);
+
+    /**
+     * 修改用户信息
+     * @param user
+     * @return
+     */
+    Integer updateUserInfo(User user);
 }
