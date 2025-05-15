@@ -8,6 +8,7 @@ import com.mumuwest.mumumike.pojo.TableDataInfo;
 import com.mumuwest.mumumike.pojo.User;
 import com.mumuwest.mumumike.service.UserService;
 import com.mumuwest.mumumike.utils.JwtUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -78,6 +79,15 @@ public class UserController {
         tableDataInfo.setCode(200);
         tableDataInfo.setMsg("查询成功");
         return tableDataInfo;
+    }
+
+    @GetMapping("/getInfo")
+    public AjaxResult getInfo(HttpServletRequest request) {
+        // 通过jwt另外解析用户名
+        String header = request.getHeader("Authorization");
+        String token = header.substring(7);
+        String username = JwtUtil.getUsernameFromToken(token);
+        return AjaxResult.success(userService.getUserByUsername(username));
     }
 
 }
