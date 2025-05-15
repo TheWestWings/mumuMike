@@ -1,8 +1,8 @@
 <template>
    <div class="category-section" id="sugar">
     <div class="category-header">
-        <h2>糖水系列</h2>
-        <p>传统与创新的完美融合，温暖你的味蕾</p>
+        <h2>{{ title }}</h2>
+        <p>{{ description }}</p>
     </div>
     <div class="products">
         <slot name="products"></slot>
@@ -11,8 +11,23 @@
 </template>
 
 <script>
-export default {
 
+export default {
+    props: ['title', 'description'],
+    data() {
+
+        return{
+            series: {
+                title: '糖水系列',
+                description: '传统与创新的完美融合，温暖你的味蕾'
+            }
+
+        }
+    },
+    mounted(){
+        console.log(this.title)
+        console.log(this.description)
+    }
 }
 </script>
 

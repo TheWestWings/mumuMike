@@ -1,16 +1,28 @@
 <template>
 <div class="product-card">
-    <img src="@/assets/products/taojiaolianzixiannai.png" alt="桃胶莲子鲜奶" class="product-image">
+    <img :src="pictureURL" alt="桃胶莲子鲜奶" class="product-image">
     <div class="product-info">
-        <h3>桃胶莲子鲜奶</h3>
-        <p>精选红豆熬制，搭配浓醇牛奶，香甜绵密。</p>
-        <div class="product-price">¥18</div>
+        <h3>{{ name }}</h3>
+        <p>{{ description }}</p>
+        <div class="product-price">¥{{ price }}</div>
     </div>
 </div>
 </template>
 
 <script>
 export default {
+    props: ['name', 'description', 'price', 'pictureURL'],
+    data() {
+        return {
+            product: {
+                name: '桃胶莲子鲜奶',
+                description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
+                price: '18',
+                pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
+            }
+
+        }
+    }
 
 }
 </script>

@@ -1,10 +1,12 @@
 <template>
-  <div></div>
+  <div>
+    dwadwa
+  </div>
 </template>
 
 <script>
 export default {
-
+  name: "LoginPage"
 }
 </script>
 
