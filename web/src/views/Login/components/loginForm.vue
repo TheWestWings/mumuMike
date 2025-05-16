@@ -50,7 +50,7 @@
 import axios from 'axios'
 import faildAlert from "@/components/faildAlert.vue"
 import RoundButton from '@/components/roundButton.vue'
-import cookies from "vue-cookies"
+import request from '@/utils/request.js'
 
 
 
@@ -88,12 +88,28 @@ mounted() {
       }).then(result => {
         
           let judge = result.data.code
-      
+          
+
           if(judge === 200) {
 
+            this.$store.commit('setToken', result.data.data)
+            console.log(this.$store.state.token)
+
+            request({
+              url: 'http://localhost:8080/getInfo',
+              method: 'get',
+            }).then(res => {
+              const user = res.data.data
+              this.$store.commit('setUsername', user.username)
+              this.$store.commit('setRole', user.role)
+              this.$store.commit('setEmail', user.email)
+              this.$store.commit('setPhone', user.phone)
+    
+            })
+
+            
           this.isSuccess = true
-          cookies.set('userName', this.form.username)
-          cookies.set('userJwt', result.data.data)
+
 
           this.welcome()
           } else {
