@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mumuwest.mumumike.mapper.ProductTypeMapper">
+
+    <insert id="insertProductType" parameterType="com.mumuwest.mumumike.pojo.ProductType">
+        INSERT INTO product_type (title, description)
+        VALUES (#{title}, #{description})
+    </insert>
+
+    <delete id="deleteProductType" parameterType="com.mumuwest.mumumike.pojo.ProductType">
+        DELETE FROM product_type
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="title != null">
+                AND title = #{title}
+            </if>
+            <if test="description != null">
+                AND description = #{description}
+            </if>
+        </where>
+    </delete>
+
+
+    <update id="updateProductType" parameterType="com.mumuwest.mumumike.pojo.ProductType">
+        update product_type
+        <set>
+            <if test="title != null">
+                title = #{title},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="getProductTypeById" resultType="com.mumuwest.mumumike.pojo.ProductType">
+        SELECT * FROM product_type
+        WHERE id = #{id}
+    </select>
+    <select id="getProductTypeList" resultType="com.mumuwest.mumumike.pojo.ProductType">
+        SELECT * FROM product_type
+        <where>
+            <if test="id != null">
+                AND id = #{id}
+            </if>
+            <if test="title != null">
+                AND title = #{title}
+            </if>
+            <if test="description != null">
+                AND description = #{description}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

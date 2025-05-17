@@ -1,11 +1,12 @@
-package com.mumuwest.mumumike.service;
+package com.mumuwest.mumumike.mapper;
 
 import com.mumuwest.mumumike.pojo.ProductType;
+import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
 
-public interface ProductTypeService {
-
+@Mapper
+public interface ProductTypeMapper {
     /**
      * 新建产品类型
      * @param productType
