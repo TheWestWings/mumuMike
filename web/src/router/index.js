@@ -73,6 +73,11 @@ const routesAll = [
       meta: {
         roles: 1,
       }
+    },
+    {
+      path: 'UsersMgmt',
+      name: 'UsersMgmt',
+      component: () => import('@/views/MgmtPage/views/UsersMgmt.vue'),
     }
   ]
 }

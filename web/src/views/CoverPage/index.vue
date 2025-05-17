@@ -1,13 +1,16 @@
 <template>
   <div class="cover-container">
-    
+    <el-button>去购买</el-button>
+    <el-button>去管理</el-button>
   </div>
 </template>
 
 <script>
 export default {
   name: 'CoverPage'
+  
 }
+
 </script>
 
 <style scoped>

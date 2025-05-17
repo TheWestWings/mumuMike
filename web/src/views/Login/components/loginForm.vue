@@ -58,8 +58,10 @@ export default {
 components: { faildAlert, RoundButton,  },
 props:['userinfo'],
 mounted() {
-  this.form.username = this.userinfo.username
-  this.form.pswd = this.userinfo.pswd
+  // this.form.username = this.userinfo.username
+  // this.form.pswd = this.userinfo.pswd
+  this.form.username = 'zzl'
+  this.form.pswd = '123'
 },
 
   methods: {

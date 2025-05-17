@@ -16,16 +16,21 @@
       
       class="el-menu-vertical-demo"
       @open="handleOpen"
-      @close="handleClose">
+      @close="handleClose"
+      router>
       
       <el-menu-item index="1">
         <i class="el-icon-menu"></i>
         <span slot="title"><router-link to="/cwff">用户管理</router-link></span>
       </el-menu-item>
-      <el-menu-item index="2">
-        <i class="el-icon-document"></i>
-        <span slot="title"><router-link to="/OrderMgmt">订单管理</router-link></span>
+
+
+      <el-menu-item index="/MgmtPage/OrderMgmt">
+          <i class="el-icon-document"></i>
+          <span slot="title">订单管理</span>
       </el-menu-item>
+
+
       <el-menu-item index="3">
         <i class="el-icon-setting"></i>
         <span slot="title">产品管理</span>

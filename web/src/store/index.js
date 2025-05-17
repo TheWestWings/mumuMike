@@ -5,48 +5,54 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    role: 3,
-    token: null,
-    username: null,
-    email: null,
-    phone: null,
-    password: null,
+    role: localStorage.getItem('role') || 3,
+    token: localStorage.getItem('token') || null,
+    username: localStorage.getItem('username') || null,
+    email: localStorage.getItem('email') || null,
+    phone: localStorage.getItem('phone') || null,
+    password: localStorage.getItem('password') || null,
   },
   getters: {
   },
   mutations: {
     setRole(state, role) {
       state.role = role
+      localStorage.setItem('role', role)
     },
     clearRole(state) {
       state.role = null
     },
     setToken(state, token) {
       state.token = token
+      localStorage.setItem('token', token)
     },
     clearToken(state) {
       state.token = null
     },
     setUsername(state, username) {
       state.username = username
+      localStorage.setItem('username', username)
     },
     clearUsername(state) {
       state.username = null
     },
     setEmail(state, email) {
       state.email = email
+      localStorage.setItem('email', email)
     },
     clearEmail(state) {
       state.email = null
     },
     setPhone(state, phone) {
       state.phone = phone
+      localStorage.setItem('phone', phone)
     },
     clearPhone(state) {
       state.phone = null
     },
     setPassword(state, password) {
       state.password = password
+      localStorage.setItem('password', password)
     },
     clearPassword(state) {
       state.password = null
