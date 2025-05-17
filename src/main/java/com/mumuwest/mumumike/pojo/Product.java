@@ -45,7 +45,9 @@ public class Product {
     }
 
     public void setPictureUrl(String pictureUrl) {
-        this.pictureUrl = pictureUrl;
+        String baseUrl = "http://localhost:8080";
+        String relativePath = pictureUrl.replace("./", "");
+        this.pictureUrl = baseUrl + "/" + relativePath;
     }
 
     public Integer getProductTypeId() {
