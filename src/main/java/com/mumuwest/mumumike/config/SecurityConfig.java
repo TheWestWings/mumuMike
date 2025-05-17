@@ -37,6 +37,7 @@ public class SecurityConfig {
                 .cors().and() // 启用 CORS，配合 CorsConfigurationSource
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/login", "/register", "/api/public/**").permitAll() // 公开接口
+                        .requestMatchers("/uploads/**").permitAll() // 允许访问上传的文件
                         .requestMatchers("/productType/**").permitAll() // 临时放行 /dam/**
                         .anyRequest().authenticated() // 其他需要认证
                 )

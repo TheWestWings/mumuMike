@@ -2,10 +2,11 @@ package com.mumuwest.mumumike.pojo;
 
 public class Product {
     private Integer id;
+    private Integer productTypeId;
     private String name;
     private String description;
     private Integer price;
-    private String picture;
+    private String pictureUrl;
 
     public Integer getId() {
         return id;
@@ -39,11 +40,19 @@ public class Product {
         this.price = price;
     }
 
-    public String getPicture() {
-        return picture;
+    public String getPictureUrl() {
+        return pictureUrl;
     }
 
-    public void setPicture(String picture) {
-        this.picture = picture;
+    public void setPictureUrl(String pictureUrl) {
+        this.pictureUrl = pictureUrl;
+    }
+
+    public Integer getProductTypeId() {
+        return productTypeId;
+    }
+
+    public void setProductTypeId(Integer productTypeId) {
+        this.productTypeId = productTypeId;
     }
 }

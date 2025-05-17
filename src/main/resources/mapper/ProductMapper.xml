@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mumuwest.mumumike.mapper.ProductMapper">
+
+
+    <insert id="insertProduct" parameterType="com.mumuwest.mumumike.pojo.Product">
+        INSERT INTO product (name, product_type_id, description, price, picture_url)
+        VALUES (#{name}, #{productTypeId}, #{description}, #{price}, #{pictureUrl})
+    </insert>
+
+    <update id="updateProduct" parameterType="com.mumuwest.mumumike.pojo.Product">
+        update product
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="productTypeId != null">
+                product_type_id = #{productTypeId},
+            </if>
+            <if test="description != null">
+                description = #{description},
+            </if>
+            <if test="price != null">
+                price = #{price},
+            </if>
+            <if test="pictureUrl != null">
+                picture_url = #{pictureUrl},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProduct"  parameterType="com.mumuwest.mumumike.pojo.Product">
+        DELETE FROM product
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                and name = #{name}
+            </if>
+            <if test="productTypeId != null">
+                and product_type_id = #{productTypeId}
+            </if>
+            <if test="description != null">
+                and description = #{description}
+            </if>
+            <if test="price != null">
+                and price = #{price}
+            </if>
+            <if test="pictureUrl != null">
+                and picture_url = #{pictureUrl}
+            </if>
+        </where>
+    </delete>
+
+    <select id="getProductById" resultType="com.mumuwest.mumumike.pojo.Product">
+        SELECT * FROM product
+        WHERE id = #{id}
+    </select>
+
+    <select id="getProductList" resultType="com.mumuwest.mumumike.pojo.Product">
+        SELECT * FROM product
+        <where>
+            <if test="id != null">
+                id = #{id}
+            </if>
+            <if test="name != null">
+                and name = #{name}
+            </if>
+            <if test="productTypeId != null">
+                and product_type_id = #{productTypeId}
+            </if>
+            <if test="description != null">
+                and description = #{description}
+            </if>
+            <if test="price != null">
+                and price = #{price}
+            </if>
+            <if test="pictureUrl != null">
+                and picture_url = #{pictureUrl}
+            </if>
+        </where>
+    </select>
+
+
+</mapper>
