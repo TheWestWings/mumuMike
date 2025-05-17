@@ -1,8 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import LoginPage from '@/views/Login/index.vue'
-// import store from '@/store'
+import store from '@/store'
 
 
 
@@ -10,16 +9,17 @@ Vue.use(VueRouter)
 
 const routesAll = [
   {
-    path: '/', redirect: '/login'
+    path: '/', redirect: '/auth/login'
     // path: '/', redirect: '/coverPage'
   },
   {
   path: '/auth',
   name: 'auth',
-  component: LoginPage,
+  component: () => import('@/views/Login/index.vue'),
   children: [
+
     {
-      path: '/login',
+      path: 'login',
       name: 'login',
       component: () => import('@/views/Login/components/loginForm.vue'),
       meta: {
@@ -27,32 +27,28 @@ const routesAll = [
       }
     },
     {
-      path: '/register',
+      path: 'register',
       name: 'register',
       component: () => import('@/views/Login/components/registerForm.vue'),
       meta: {
         roles: 3,
       }
-      
     }
   ]},
 {
-  path: '/home',
-  name: 'home',
-  component: () => import('@/views/HomePage/index.vue'),
+  path: '/Shopping',
+  name: 'Shopping',
+  component: () => import('@/views/ShoppingPage/index.vue'),
   meta: {
     roles: 2,
   }
-  
-  
 },
 {
-  path : '/coverPage',
-  name: 'coverPage',
-  component: () => import('@/views/CoverPage/index.vue'),
+  path : '/HomePage',
+  name: 'HomePage',
+  component: () => import('@/views/HomePage/index.vue'),
   meta: {
     roles: 3,
-    
   }
 },
 {
@@ -61,7 +57,6 @@ const routesAll = [
   component: () => import('@/views/MgmtPage/index.vue'),
   meta: {
     roles: 1,
-    requiresAuth: true
   },
   children: [
     {
@@ -76,9 +71,45 @@ const routesAll = [
       path: 'UsersMgmt',
       name: 'UsersMgmt',
       component: () => import('@/views/MgmtPage/views/UsersMgmt.vue'),
+      meta: {
+        roles: 1,
+      }
+    },
+    {
+      path: 'ProductsMgmt',
+      name: 'ProductsMgmt',
+      component: () => import('@/views/MgmtPage/views/ProductsMgmt.vue'),
+      meta: {
+        roles: 1,
+      }
+    },
+    {
+      path: 'MessageMgmt',
+      name: 'MessageMgmt',
+      component: () => import('@/views/MgmtPage/views/MessageMgmt.vue'),
+      meta: {
+        roles: 1,
+      }
+    },
+    {
+      path: 'SeriesMgmt',
+      name: 'SeriesMgmt',
+      component: () => import('@/views/MgmtPage/views/SeriesMgmt.vue'),
+      meta: {
+        roles: 1,
+      }
+    },
+    {
+      path: 'HistoryOrder',
+      name: 'HistoryOrder',
+      component: () => import('@/views/MgmtPage/views/HistoryOrder.vue'),
+      meta: {
+        roles: 1,
+      }
     }
+
   ]
-},
+}
 ]
 
 // function setRoutes(routes) {
@@ -102,47 +133,47 @@ const router = new VueRouter({
   routes: routesAll
 })
 
-//   router.beforeEach((to, from, next) => {
-//     console.log('to', to)
-//     console.log('from', from)
-//     console.log(to.meta.roles)
-//     console.log('store.state.role', store.state.role)
-//     if (to.meta.roles === 3) {
-//       next()
-//     }
-//     else if (to.meta.roles === 2) {
-//       if(store.state.role <= 2) {
-//         next()
-//       }
-//       else {
-//         next({
-//           path: '/login',
-//           query: { redirect: to.path }
-//         })
-//       }
-//     }
-//     else if (to.meta.roles === 1) {
-//       if(store.state.role <= 1) {
-//         next()
-//       }
-//       else if(store.state.role === 2) {
-//         next({
-//           path: from.path,
-//         })
-//       }
-//       else {
-//         next({
-//           path: '/login',
-//           query: { redirect: to.path }
-//         })
-//       }
-//     }
-//     else {
-//       next({
-//         path: from.path,
-//       })
-//     }
-// })
+  router.beforeEach((to, from, next) => {
+    console.log('to', to)
+    console.log('from', from)
+    console.log(to.meta.roles)
+    console.log('store.state.role', store.state.role)
+    if (to.meta.roles === 3) {
+      next()
+    }
+    else if (to.meta.roles === 2) {
+      if(store.state.role <= 2) {
+        next()
+      }
+      else {
+        next({
+          path: '/auth/login',
+          query: { redirect: to.path }
+        })
+      }
+    }
+    else if (to.meta.roles === 1) {
+      if(store.state.role <= 1) {
+        next()
+      }
+      else if(store.state.role === 2) {
+        next({
+          path: from.path,
+        })
+      }
+      else {
+        next({
+          path: '/auth/login',
+          query: { redirect: to.path }
+        })
+      }
+    }
+    else {
+      next({
+        path: from.path,
+      })
+    }
+})
 
 
 

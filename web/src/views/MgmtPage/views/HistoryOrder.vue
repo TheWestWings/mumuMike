@@ -1,11 +1,15 @@
 <template>
   <div>
-      <el-descriptions
+
+    <el-collapse v-model="activeNames" @change="handleChange"
+        v-for="(item, index) in orderList"
+         :key="index">
+      <el-collapse-item :title="'取餐码 '+item.number" name="index">
+        
+        <el-descriptions
          class="margin-top" 
          :column="4" 
          border
-         v-for="(item, index) in orderList"
-         :key="index"
          >
 
       <el-descriptions-item>
@@ -59,18 +63,16 @@
             </el-table-column>
 
             <el-table-column
-              label="单价"
-              width="180">
-              <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.price }}</span>
-              </template>
-            </el-table-column>
-
-            <el-table-column
               label="数量"
               width="180">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.count }}</span>
+                <el-popover trigger="hover" placement="top">
+                  <p>姓名: {{ scope.row.name }}</p>
+                  <p>单价: {{ scope.row.price }}</p>
+                  <div slot="reference" class="name-wrapper">
+                    <span style="margin-left: 10px">{{ scope.row.count }}</span>
+                  </div>
+                </el-popover>
               </template>
             </el-table-column>
 
@@ -82,26 +84,16 @@
                 <span style="margin-left: 10px">{{ scope.row.price * scope.row.count }}</span>
               </template>
             </el-table-column>
-
-            <el-table-column label="操作">
-              <template slot-scope="scope">
-                <el-button
-                  size="mini"
-                  type="danger"
-                  plain
-                  @click="handleEdit(scope.$index, scope.row)">退单</el-button>
-                  
-                <el-button
-                  size="mini"
-                  type="success"
-                  plain
-                  @click="handleDelete(scope.$index, scope.row)">完成</el-button>
-              </template>
-            </el-table-column>
           </el-table>
 
       </el-descriptions-item>
     </el-descriptions>
+        
+
+      </el-collapse-item>
+
+    </el-collapse>
+
   </div>
 </template>
 
@@ -136,11 +128,12 @@ export default {
           ]
 
         },
+
         {
           username:'weec',
           phone: '15987536941',
           number: '152',
-          state: '制作中',
+          state: '已完成',
           productsList: [
             {
               name: '珍珠奶茶',
@@ -162,7 +155,7 @@ export default {
           ]
 
         },
-        {
+                {
           username:'weec',
           phone: '15987536941',
           number: '152',
@@ -172,21 +165,18 @@ export default {
               name: '珍珠奶茶',
               count: 1,
               price: 15,
-              state: '制作中'
               
             },
             {
               name: '珍珠奶茶',
               count: 2,
               price: 15,
-              state: '制作中'
                
             },
             {
               name: '珍珠奶茶',
               count: 3,
               price: 15,
-              state: '制作中'
             }
           ]
 

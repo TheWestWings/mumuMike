@@ -15,27 +15,42 @@
       <el-menu
       
       class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose"
+
       router>
       
-      <el-menu-item index="1">
+      <el-menu-item index="/MgmtPage/UsersMgmt">
         <i class="el-icon-menu"></i>
-        <span slot="title"><router-link to="/cwff">用户管理</router-link></span>
+        <span slot="title">用户管理</span>
       </el-menu-item>
 
+      <el-submenu index="">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>订单管理</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="/MgmtPage/OrderMgmt">未完成订单</el-menu-item>
+          <el-menu-item index="/MgmtPage/HistoryOrder">已完成订单</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
 
-      <el-menu-item index="/MgmtPage/OrderMgmt">
-          <i class="el-icon-document"></i>
-          <span slot="title">订单管理</span>
-      </el-menu-item>
 
 
-      <el-menu-item index="3">
-        <i class="el-icon-setting"></i>
-        <span slot="title">产品管理</span>
-      </el-menu-item>
-      <el-menu-item index="4">
+      <el-submenu index="">
+        <template slot="title">
+          <i class="el-icon-location"></i>
+          <span>产品管理</span>
+        </template>
+        <el-menu-item-group>
+          <el-menu-item index="/MgmtPage/SeriesMgmt">类别</el-menu-item>
+          <el-menu-item index="/MgmtPage/ProductsMgmt">具体产品</el-menu-item>
+        </el-menu-item-group>
+      </el-submenu>
+
+
+
+
+      <el-menu-item index="/MgmtPage/MessageMgmt">
         <i class="el-icon-setting"></i>
         <span slot="title">留言管理</span>
       </el-menu-item>

@@ -133,7 +133,7 @@ mounted() {
         console.log('welcome')
         let now = this.$route.query.redirect
         console.log('now ' + now)
-        if(!now) now = '/coverPage'
+        if(!now) now = '/HomePage'
         this.$router.push({
           path: now,  
         });

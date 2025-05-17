@@ -1,7 +1,5 @@
 <template>
-  <div>
-    
-  </div>
+  <div>dvfvcsdv</div>
 </template>
 
 <script>
