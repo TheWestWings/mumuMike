@@ -37,7 +37,7 @@ public class SecurityConfig {
                 .cors().and() // 启用 CORS，配合 CorsConfigurationSource
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/login", "/register", "/api/public/**").permitAll() // 公开接口
-//                        .requestMatchers("/dam/**").permitAll() // 临时放行 /dam/**
+                        .requestMatchers("/productType/**").permitAll() // 临时放行 /dam/**
                         .anyRequest().authenticated() // 其他需要认证
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(userDetailsService), UsernamePasswordAuthenticationFilter.class);
@@ -48,7 +48,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost")); // 前端地址
+        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:1024")); // 前端地址
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 允许的方法
         configuration.setAllowedHeaders(Collections.singletonList("*")); // 允许的头
         configuration.setAllowCredentials(true); // 是否允许携带凭证（如 Cookie）
