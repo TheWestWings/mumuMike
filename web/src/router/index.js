@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import LoginPage from '@/views/Login/index.vue'
+import store from '@/store'
 
 
 
@@ -23,7 +24,7 @@ const routesAll = [
       name: 'login',
       component: () => import('@/views/Login/components/loginForm.vue'),
       meta: {
-        roles: [0, 1, 2],
+        roles: 3,
       }
     },
     {
@@ -31,7 +32,7 @@ const routesAll = [
       name: 'register',
       component: () => import('@/views/Login/components/registerForm.vue'),
       meta: {
-        roles: [0, 1, 2],
+        roles: 3,
       }
       
     }
@@ -42,7 +43,7 @@ const routesAll = [
   name: 'home',
   component: () => import('@/views/HomePage/index.vue'),
   meta: {
-    roles: [0, 1, 2],
+    roles: 2,
   }
   
   
@@ -52,7 +53,8 @@ const routesAll = [
   name: 'coverPage',
   component: () => import('@/views/CoverPage/index.vue'),
   meta: {
-    roles: [0, 1, 2],
+    roles: 3,
+    
   }
 },
 {
@@ -60,10 +62,20 @@ const routesAll = [
   name: 'MgmtPage',
   component: () => import('@/views/MgmtPage/index.vue'),
   meta: {
-    roles: [0, 1],
-  }
+    roles: 1,
+    requiresAuth: true
+  },
+  children: [
+    {
+      path: 'OrderMgmt',
+      name: 'OrderMgmt',
+      component: () => import('@/views/MgmtPage/views/OrderMgmt.vue'),
+      meta: {
+        roles: 1,
+      }
+    }
+  ]
 }
-
 ]
 
 // function setRoutes(routes) {
@@ -74,15 +86,61 @@ const routesAll = [
 //     }
 //     newRoutes.push(route)
 //   })
-//   return newRoutes
+//   return newRoutes77777777
 // }
 
 //  setRoutes(routesAll)
+
+
 
 
 const router = new VueRouter({
   mode: 'history',
   routes: routesAll
 })
+
+  router.beforeEach((to, from, next) => {
+    console.log('to', to)
+    console.log('from', from)
+    console.log(to.meta.roles)
+    console.log('store.state.role', store.state.role)
+    if (to.meta.roles === 3) {
+      next()
+    }
+    else if (to.meta.roles === 2) {
+      if(store.state.role <= 2) {
+        next()
+      }
+      else {
+        next({
+          path: '/login',
+          query: { redirect: to.path }
+        })
+      }
+    }
+    else if (to.meta.roles === 1) {
+      if(store.state.role <= 1) {
+        next()
+      }
+      else if(store.state.role === 2) {
+        next({
+          path: from.path,
+        })
+      }
+      else {
+        next({
+          path: '/login',
+          query: { redirect: to.path }
+        })
+      }
+    }
+    else {
+      next({
+        path: from.path,
+      })
+    }
+})
+
+
 
 export default router

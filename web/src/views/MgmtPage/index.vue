@@ -1,29 +1,47 @@
 <template>
-  <el-container>
-    <el-header style="height: 450px;">
-      <header class="header" >
+<el-container>
+  <el-header>
+    <header class="header" >
         <div class="header-content">
             <h1>木木牛奶公司</h1>
             <p>用心制作的奶香甜品</p>
         </div>
       </header>
+  </el-header>
+  <el-container>
 
+
+    <el-aside width="200px">
       <el-menu
-        :default-active="activeIndex2"
-        class="nav1"
-        mode="horizontal"
-
-        background-color="#8d6e63"
-        text-color="#fff"
-        active-text-color="#ffd04b">
-        <el-menu-item index="1"><a href="#home">用户管理</a></el-menu-item>
-        <el-menu-item index="2"><a href="#sugar">订单管理</a></el-menu-item>
-        <el-menu-item index="3"><a href="#snow">产品管理</a></el-menu-item>
-      </el-menu>
-    </el-header>
-
-    </el-container>
-
+      
+      class="el-menu-vertical-demo"
+      @open="handleOpen"
+      @close="handleClose">
+      
+      <el-menu-item index="1">
+        <i class="el-icon-menu"></i>
+        <span slot="title"><router-link to="/cwff">用户管理</router-link></span>
+      </el-menu-item>
+      <el-menu-item index="2">
+        <i class="el-icon-document"></i>
+        <span slot="title"><router-link to="/OrderMgmt">订单管理</router-link></span>
+      </el-menu-item>
+      <el-menu-item index="3">
+        <i class="el-icon-setting"></i>
+        <span slot="title">产品管理</span>
+      </el-menu-item>
+      <el-menu-item index="4">
+        <i class="el-icon-setting"></i>
+        <span slot="title">留言管理</span>
+      </el-menu-item>
+    </el-menu>
+    </el-aside>
+    <el-main>
+      <router-view></router-view>
+    </el-main>
+  </el-container>
+</el-container>
+ 
 </template>
 
 <script>
@@ -34,40 +52,63 @@ export default {
 </script>
 
 <style scoped>
+.el-container {
+  height: 100vh;
+}
+
+.el-container .el-container {
+  flex-direction: row;
+  flex: 1;
+}
+
+.el-header {
+  padding: 0;
+  height: 120px !important;
+}
+
 .header {
-    height: 400px;
-    position: relative;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: rgba(93, 64, 55, 0.8);
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(93, 64, 55, 0.8);
 }
 
 .header-content {
-    text-align: center;
-    color: #fff;
-    position: relative;
-    z-index: 2;
+  text-align: center;
+  color: #fff;
 }
 
 .header h1 {
-    font-size: 3em;
-    margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  font-size: 3em;
+  margin: 0 0 10px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-a {
-  text-decoration: none;
+.header p {
+  margin: 0;
 }
 
-.nav1 {
-  display: flex !important;
-  justify-content: center !important;
+.el-aside {
+  background-color: #fff;
+  border-right: 1px solid #e6e6e6;
+}
+
+.el-main {
+  background-color: #f5f7fa;
+}
+
+.el-menu {
+  border-right: none;
 }
 
 .el-menu-item {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
+}
+
+a {
+  text-decoration: none;
 }
 </style>

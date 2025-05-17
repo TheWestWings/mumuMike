@@ -104,14 +104,13 @@ mounted() {
               this.$store.commit('setRole', user.role)
               this.$store.commit('setEmail', user.email)
               this.$store.commit('setPhone', user.phone)
+              this.welcome()
     
             })
 
             
           this.isSuccess = true
-
-
-          this.welcome()
+          
           } else {
 
             this.handleAlert("登录失败，请检查用户名或密码")
@@ -130,11 +129,11 @@ mounted() {
 
       welcome() {
         console.log('welcome')
+        let now = this.$route.query.redirect
+        console.log('now ' + now)
+        if(!now) now = '/coverPage'
         this.$router.push({
-          path: '/myWelcome',
-            query:{
-              username: this.form.username
-            }
+          path: now,  
         });
       }
   },
