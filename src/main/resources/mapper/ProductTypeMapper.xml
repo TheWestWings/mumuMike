@@ -43,7 +43,7 @@
     <select id="getProductTypeList" resultType="com.mumuwest.mumumike.pojo.ProductType">
         SELECT * FROM product_type
         <where>
-            <if test="id != null">
+            <if test="id != null and id != 0">
                 AND id = #{id}
             </if>
             <if test="title != null">

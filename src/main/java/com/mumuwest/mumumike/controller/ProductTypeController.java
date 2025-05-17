@@ -5,20 +5,19 @@ import com.mumuwest.mumumike.pojo.AjaxResult;
 import com.mumuwest.mumumike.pojo.ProductType;
 import com.mumuwest.mumumike.pojo.TableDataInfo;
 import com.mumuwest.mumumike.service.ProductTypeService;
-import org.apache.ibatis.annotations.Delete;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
-@RestController("/productType")
+@RestController
+@RequestMapping("/productType")
 public class ProductTypeController {
     @Autowired
     public ProductTypeService productTypeService;
 
     @Role(role = {0, 1})
     @PostMapping("/getProductTypeList")
-    public TableDataInfo getProductTypeList(@RequestBody ProductType productType) {
+    public TableDataInfo getProductTypeList(ProductType productType) {
         return new TableDataInfo(productTypeService.getProductTypeList(productType), productTypeService.getProductTypeList(productType).size());
     }
 
@@ -40,6 +39,7 @@ public class ProductTypeController {
         return AjaxResult.success(productTypeService.updateProductType(productType));
     }
 
+    @Role(role = {0, 1})
     @DeleteMapping("/{id}")
     public AjaxResult deleteProductType(@PathVariable("id") Integer id) {
         ProductType productType = new ProductType();
