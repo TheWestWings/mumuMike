@@ -1,11 +1,15 @@
 package com.mumuwest.mumumike.service.impl;
 
 import com.mumuwest.mumumike.mapper.ProductMapper;
+import com.mumuwest.mumumike.mapper.ProductTypeMapper;
 import com.mumuwest.mumumike.pojo.Product;
+import com.mumuwest.mumumike.pojo.ProductType;
+import com.mumuwest.mumumike.pojo.VO.ProductVO;
 import com.mumuwest.mumumike.service.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -13,6 +17,8 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     public ProductMapper productMapper;
+    @Autowired
+    public ProductTypeMapper productTypeMapper;
 
     @Override
     public int insertProduct(Product product) {
@@ -37,5 +43,24 @@ public class ProductServiceImpl implements ProductService {
     @Override
     public List<Product> getProductList(Product product) {
         return productMapper.getProductList(product);
+    }
+
+    @Override
+    public List<ProductVO> getProductVOList() {
+        List<ProductType> productTypes = productTypeMapper.getProductTypeList(new ProductType());
+        List<ProductVO> productVOList = new ArrayList<>();
+        for(ProductType productType : productTypes) {
+            ProductVO productVO = new ProductVO();
+            productVO.setId(productType.getId());
+            productVO.setTitle(productType.getTitle());
+            productVO.setDescription(productType.getDescription());
+            Product product = new Product();
+            product.setProductTypeId(productType.getId());
+            List<Product> productList = productMapper.getProductList(product);
+            productVO.setProductList(productList);
+            productVOList.add(productVO);
+        }
+
+        return productVOList;
     }
 }

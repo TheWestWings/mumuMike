@@ -4,6 +4,7 @@ import com.mumuwest.mumumike.pojo.AjaxResult;
 import com.mumuwest.mumumike.pojo.Product;
 import com.mumuwest.mumumike.pojo.ProductType;
 import com.mumuwest.mumumike.pojo.TableDataInfo;
+import com.mumuwest.mumumike.pojo.VO.ProductVO;
 import com.mumuwest.mumumike.service.ProductService;
 import com.mumuwest.mumumike.utils.FileStorageUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -75,7 +76,11 @@ public class ProductController {
         return AjaxResult.success(productService.deleteProduct(id));
     }
 
-
+    @GetMapping("/getProductVOList")
+    public TableDataInfo getProductVOList() {
+        List<ProductVO> productVOList = productService.getProductVOList();
+        return new TableDataInfo(productVOList, productVOList.size());
+    }
 
 
 }

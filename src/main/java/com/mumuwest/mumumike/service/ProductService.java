@@ -1,6 +1,7 @@
 package com.mumuwest.mumumike.service;
 
 import com.mumuwest.mumumike.pojo.Product;
+import com.mumuwest.mumumike.pojo.VO.ProductVO;
 
 import java.util.List;
 
@@ -40,4 +41,10 @@ public interface ProductService {
      * @return
      */
     public List<Product> getProductList(Product product);
+
+    /**
+     * 查询产品VO列表
+     * @return
+     */
+    public List<ProductVO> getProductVOList();
 }
