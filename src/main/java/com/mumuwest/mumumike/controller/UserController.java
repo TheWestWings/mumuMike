@@ -180,7 +180,7 @@ public class UserController {
         userUpdate.setUsername(user.getUsername());
         userUpdate.setEmail(user.getEmail());
         userUpdate.setPhone(user.getPhone());
-        return AjaxResult.success(userService.updateUserInfo(user));
+        return AjaxResult.success(userService.updateUserInfo(userUpdate));
     }
 
     /**
