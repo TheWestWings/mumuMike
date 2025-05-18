@@ -2,11 +2,45 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mumuwest.mumumike.mapper.OrderMapper">
 
+    <!-- 结果映射 -->
+    <resultMap id="OrderResultMap" type="com.mumuwest.mumumike.pojo.Order">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="status" column="status"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <collection property="product" ofType="com.mumuwest.mumumike.pojo.OrderProduct">
+            <id property="id" column="op_id"/>
+            <result property="productId" column="product_id"/>
+            <result property="orderId" column="order_id"/>
+            <result property="count" column="count"/>
+            <result property="status" column="op_status"/>
+        </collection>
+    </resultMap>
 
-    <insert id="insertOrder">
-        INSERT INTO orders (user_id, product, status, createTime, updateTime)
-        VALUES (#{userId}, #{product}, #{status}, #{createTime}, #{updateTime})
+    <select id="getOrderById" resultMap="OrderResultMap">
+        SELECT o.id, o.user_id, o.status, o.createTime, o.updateTime,
+               op.id as op_id, op.product_id, op.count,  op.order_id ,op.status as op_status
+        FROM orders o
+                 LEFT JOIN orders_product op ON o.id = op.order_id
+        WHERE o.id = #{id}
+    </select>
 
+    <select id="getOrdersList" resultMap="OrderResultMap">
+        SELECT o.id, o.user_id, o.status, o.createTime, o.updateTime,
+        op.id as op_id, op.product_id, op.count,  op.order_id ,op.status as op_status
+        FROM orders o
+        LEFT JOIN orders_product op ON o.id = op.order_id
+    </select>
+
+    <insert id="insertOrder" parameterType="com.mumuwest.mumumike.pojo.Order" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO orders (user_id, status, createTime, updateTime)
+        VALUES (#{userId}, #{status}, #{createTime}, #{updateTime})
+
+    </insert>
+    <insert id="insertOrderProduct">
+        INSERT INTO orders_product (product_id, order_id, count, status)
+        VALUES (#{productId}, #{orderId}, #{count}, #{status})
     </insert>
 
     <update id="updateOrder">
@@ -29,32 +63,9 @@
         WHERE id = #{id}
     </delete>
 
-    <select id="getOrderById" resultType="com.mumuwest.mumumike.pojo.Order">
-        SELECT * FROM orders
-        WHERE id = #{id}
-    </select>
 
-    <select id="getOrdersList" resultType="com.mumuwest.mumumike.pojo.Order">
-        SELECT * FROM orders
-        <where>
-            <if test="id != null and id != 0">
-                AND id = #{id}
-            </if>
-            <if test="userId != null">
-                AND user_id = #{userId}
-            </if>
-            <if test="status != null">
-                AND status = #{status}
-            </if>
-            <if test="createTime != null">
-                AND createTime = #{createTime}
-            </if>
-            <if test="updateTime != null">
-                AND updateTime = #{updateTime}
-            </if>
 
-        </where>
-    </select>
+
 
 
 </mapper>

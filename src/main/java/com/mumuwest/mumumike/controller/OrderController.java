@@ -1,16 +1,16 @@
 package com.mumuwest.mumumike.controller;
 
 import com.mumuwest.mumumike.annotation.Role;
-import com.mumuwest.mumumike.pojo.AjaxResult;
-import com.mumuwest.mumumike.pojo.Order;
-import com.mumuwest.mumumike.pojo.TableDataInfo;
-import com.mumuwest.mumumike.pojo.User;
+import com.mumuwest.mumumike.pojo.*;
+import com.mumuwest.mumumike.pojo.VO.OrderProductVO;
 import com.mumuwest.mumumike.pojo.VO.OrderVO;
 import com.mumuwest.mumumike.service.OrderService;
+import com.mumuwest.mumumike.service.ProductService;
 import com.mumuwest.mumumike.service.UserService;
 import org.apache.poi.ss.formula.functions.T;
 import org.aspectj.weaver.loadtime.Aj;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,6 +26,9 @@ public class OrderController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProductService productService;
 
     /**
      * 通过id查询订单
@@ -60,7 +63,12 @@ public class OrderController {
     public AjaxResult getOrderVOById(@PathVariable("id") Integer id) {
         Order orderById = orderService.getOrderById(id);
         User userById = userService.getUserById(orderById.getUserId());
-        OrderVO orderVO = new OrderVO(orderById, userById);
+        List<OrderProductVO> orderProductVOList = new ArrayList<>();
+        for (OrderProduct orderProduct : orderById.getProduct()) {
+            Product productById = productService.getProductById(orderProduct.getProductId());
+            orderProductVOList.add(new OrderProductVO(productById, orderProduct));
+        }
+        OrderVO orderVO = new OrderVO(orderById, userById, orderProductVOList);
         return AjaxResult.success(orderVO);
     }
 
@@ -77,7 +85,12 @@ public class OrderController {
         List<OrderVO> orderVOList = new ArrayList<>();
         for (Order orderItem : orderList) {
             User userById = userService.getUserById(orderItem.getUserId());
-            OrderVO orderVO = new OrderVO(orderItem, userById);
+            List<OrderProductVO> orderProductVOList = new ArrayList<>();
+            for (OrderProduct orderProduct : orderItem.getProduct()) {
+                Product productById = productService.getProductById(orderProduct.getProductId());
+                orderProductVOList.add(new OrderProductVO(productById, orderProduct));
+            }
+            OrderVO orderVO = new OrderVO(orderItem, userById, orderProductVOList);
             orderVOList.add(orderVO);
         }
         return new TableDataInfo(orderVOList, orderList.size());

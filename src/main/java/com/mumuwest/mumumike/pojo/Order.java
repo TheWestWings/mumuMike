@@ -1,11 +1,12 @@
 package com.mumuwest.mumumike.pojo;
 
 import java.util.Date;
+import java.util.List;
 
 public class Order {
     private Integer id;
     private Integer userId;
-    private String product;
+    private List<OrderProduct> product;
     private Integer status;
     private Date createTime;
     private Date updateTime;
@@ -26,11 +27,11 @@ public class Order {
         this.userId = userId;
     }
 
-    public String getProduct() {
+    public List<OrderProduct> getProduct() {
         return product;
     }
 
-    public void setProduct(String product) {
+    public void setProduct(List<OrderProduct> product) {
         this.product = product;
     }
 

@@ -1,16 +1,12 @@
-package com.mumuwest.mumumike.pojo.VO;
+package com.mumuwest.mumumike.pojo;
 
 
-import com.mumuwest.mumumike.pojo.OrderProduct;
-import com.mumuwest.mumumike.pojo.Product;
-
-public class OrderProductVO {
+public class OrderProduct {
     private Integer id;
     private Integer productId;
-    private Product product;
     private Integer orderId;
     private Integer count;
-    private Integer status;
+    private Integer status; // 0：未完成， 1：已完成， 2：已退单
 
     public Integer getId() {
         return id;
@@ -26,14 +22,6 @@ public class OrderProductVO {
 
     public void setProductId(Integer productId) {
         this.productId = productId;
-    }
-
-    public Product getProduct() {
-        return product;
-    }
-
-    public void setProduct(Product product) {
-        this.product = product;
     }
 
     public Integer getOrderId() {
@@ -58,14 +46,5 @@ public class OrderProductVO {
 
     public void setStatus(Integer status) {
         this.status = status;
-    }
-
-    public OrderProductVO(Product product, OrderProduct orderProduct) {
-        this.id = orderProduct.getId();
-        this.productId = orderProduct.getProductId();
-        this.product = product;
-        this.orderId = orderProduct.getOrderId();
-        this.count = orderProduct.getCount();
-        this.status = orderProduct.getStatus();
     }
 }

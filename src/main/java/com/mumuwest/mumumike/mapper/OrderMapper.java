@@ -1,6 +1,7 @@
 package com.mumuwest.mumumike.mapper;
 
 import com.mumuwest.mumumike.pojo.Order;
+import com.mumuwest.mumumike.pojo.OrderProduct;
 import org.apache.ibatis.annotations.Mapper;
 
 import java.util.List;
@@ -14,6 +15,13 @@ public interface OrderMapper {
      * @return
      */
     public int insertOrder(Order order);
+
+    /**
+     * 新建订单产品
+     * @param orderProduct
+     * @return
+     */
+    public int insertOrderProduct(OrderProduct orderProduct);
 
     /**
      * 修改订单
