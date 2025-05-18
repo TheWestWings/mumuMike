@@ -6,6 +6,7 @@ import com.mumuwest.mumumike.pojo.OrderProduct;
 import com.mumuwest.mumumike.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -15,6 +16,7 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
+    @Transactional
     @Override
     public int insertOrder(Order order) {
         orderMapper.insertOrder(order);
@@ -44,5 +46,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<Order> getOrderList(Order order) {
         return orderMapper.getOrdersList(order);
+    }
+
+    @Override
+    public int updateOrderProduct(OrderProduct orderProduct) {
+        return orderMapper.updateOrderProduct(orderProduct);
     }
 }

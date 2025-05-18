@@ -1,6 +1,7 @@
 package com.mumuwest.mumumike.service;
 
 import com.mumuwest.mumumike.pojo.Order;
+import com.mumuwest.mumumike.pojo.OrderProduct;
 
 import java.util.List;
 
@@ -40,4 +41,11 @@ public interface OrderService {
      * @return
      */
     public List<Order> getOrderList(Order order);
+
+    /**
+     * 修改订单产品信息
+     * @param orderProduct
+     * @return
+     */
+    public int updateOrderProduct(OrderProduct orderProduct);
 }

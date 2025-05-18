@@ -50,4 +50,11 @@ public interface OrderMapper {
      * @return
      */
     public List<Order> getOrdersList(Order order);
+
+    /**
+     * 修改订单产品信息
+     * @param orderProduct
+     * @return
+     */
+    public int updateOrderProduct(OrderProduct orderProduct);
 }

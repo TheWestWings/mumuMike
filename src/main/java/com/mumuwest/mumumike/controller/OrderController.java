@@ -128,5 +128,15 @@ public class OrderController {
         return AjaxResult.success(orderService.updateOrder(order));
     }
 
+    /**
+     * 修改订单产品状态
+     * @param orderProduct
+     * @return
+     */
+    @PutMapping("/updateOrderProduct")
+    public AjaxResult updateOrderProduct(OrderProduct orderProduct) {
+        return AjaxResult.success(orderService.updateOrderProduct(orderProduct));
+    }
+
 
 }

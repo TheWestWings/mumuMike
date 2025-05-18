@@ -58,6 +58,16 @@
         </set>
     </update>
 
+    <update id="updateOrderProduct" parameterType="com.mumuwest.mumumike.pojo.OrderProduct">
+        update orders_product
+        <set>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
     <delete id="deleteOrder">
         DELETE FROM orders
         WHERE id = #{id}
