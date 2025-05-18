@@ -2,8 +2,59 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mumuwest.mumumike.mapper.OrderMapper">
 
-    <insert id="createOrder" parameterType="com.mumuwest.mumumike.pojo.Order">
-        INSERT INTO order (user_id, product_id, quantity, order_date)
-        VALUES (#{userId}, #{productId}, #{quantity}, #{orderDate})>
+
+    <insert id="insertOrder">
+        INSERT INTO orders (user_id, product, status, createTime, updateTime)
+        VALUES (#{userId}, #{product}, #{status}, #{createTime}, #{updateTime})
+
     </insert>
+
+    <update id="updateOrder">
+        UPDATE orders
+        <set>
+            <if test="product != null">
+                product = #{product},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
+            </if>
+        </set>
+    </update>
+
+    <delete id="deleteOrder">
+        DELETE FROM orders
+        WHERE id = #{id}
+    </delete>
+
+    <select id="getOrderById" resultType="com.mumuwest.mumumike.pojo.Order">
+        SELECT * FROM orders
+        WHERE id = #{id}
+    </select>
+
+    <select id="getOrdersList" resultType="com.mumuwest.mumumike.pojo.Order">
+        SELECT * FROM orders
+        <where>
+            <if test="id != null and id != 0">
+                AND id = #{id}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="status != null">
+                AND status = #{status}
+            </if>
+            <if test="createTime != null">
+                AND createTime = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                AND updateTime = #{updateTime}
+            </if>
+
+        </where>
+    </select>
+
+
 </mapper>

@@ -1,13 +1,119 @@
 package com.mumuwest.mumumike.controller;
 
+import com.mumuwest.mumumike.annotation.Role;
 import com.mumuwest.mumumike.pojo.AjaxResult;
+import com.mumuwest.mumumike.pojo.Order;
+import com.mumuwest.mumumike.pojo.TableDataInfo;
+import com.mumuwest.mumumike.pojo.User;
+import com.mumuwest.mumumike.pojo.VO.OrderVO;
+import com.mumuwest.mumumike.service.OrderService;
+import com.mumuwest.mumumike.service.UserService;
+import org.apache.poi.ss.formula.functions.T;
+import org.aspectj.weaver.loadtime.Aj;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@RestController("/order")
+import java.util.ArrayList;
+import java.util.List;
+
+@RestController
+@RequestMapping("/order")
 public class OrderController {
 
-    public AjaxResult getOrderById(Integer id) {
-        return AjaxResult.success("查询成功");
+    @Autowired
+    private OrderService orderService;
+
+    @Autowired
+    private UserService userService;
+
+    /**
+     * 通过id查询订单
+     * @param id
+     * @return
+     */
+    @GetMapping("/getOrderById/{id}")
+    @Role(role = {0, 1})
+    public AjaxResult getOrderById(@PathVariable("id") Integer id) {
+        return AjaxResult.success(orderService.getOrderById(id));
     }
+
+    /**
+     * 创建订单
+     * @param order
+     * @return
+     */
+    @GetMapping("/getList")
+    @Role(role = {0, 1})
+    public TableDataInfo getList(Order order) {
+        List<Order> orderList = orderService.getOrderList(order);
+        return new TableDataInfo(orderList, orderList.size());
+    }
+
+    /**
+     * 获取VO
+     * @param id
+     * @return
+     */
+    @GetMapping("/getOrderVOById/{id}")
+    @Role(role = {0, 1})
+    public AjaxResult getOrderVOById(@PathVariable("id") Integer id) {
+        Order orderById = orderService.getOrderById(id);
+        User userById = userService.getUserById(orderById.getUserId());
+        OrderVO orderVO = new OrderVO(orderById, userById);
+        return AjaxResult.success(orderVO);
+    }
+
+
+    /**
+     * 获取VO列表
+     * @param order
+     * @return
+     */
+    @GetMapping("/getListVO")
+    @Role(role = {0, 1})
+    public TableDataInfo getListVO(Order order) {
+        List<Order> orderList = orderService.getOrderList(order);
+        List<OrderVO> orderVOList = new ArrayList<>();
+        for (Order orderItem : orderList) {
+            User userById = userService.getUserById(orderItem.getUserId());
+            OrderVO orderVO = new OrderVO(orderItem, userById);
+            orderVOList.add(orderVO);
+        }
+        return new TableDataInfo(orderVOList, orderList.size());
+    }
+
+    /**
+     * 创建订单
+     * @param order
+     * @return
+     */
+    @PostMapping
+    public AjaxResult insertOrder(@RequestBody Order order) {
+        return AjaxResult.success(orderService.insertOrder(order));
+    }
+
+    /**
+     * 删除订单
+     * @param id
+     * @return
+     */
+    @DeleteMapping("/{id}")
+    @Role(role = {0, 1})
+    public AjaxResult deleteOrder(@PathVariable("id") Integer id) {
+        return AjaxResult.success(orderService.deleteOrder(id));
+    }
+
+    /**
+     * 修改订单
+     * @param order
+     * @return
+     */
+    @PutMapping
+    @Role(role = {0, 1})
+    public AjaxResult updateOrder(Order order) {
+        return AjaxResult.success(orderService.updateOrder(order));
+    }
+
+
 }

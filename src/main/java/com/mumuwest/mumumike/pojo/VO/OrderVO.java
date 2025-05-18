@@ -1,14 +1,19 @@
-package com.mumuwest.mumumike.pojo;
+package com.mumuwest.mumumike.pojo.VO;
+
+import com.mumuwest.mumumike.pojo.Order;
+import com.mumuwest.mumumike.pojo.User;
 
 import java.util.Date;
+import java.util.List;
 
-public class Order {
+public class OrderVO {
     private Integer id;
     private Integer userId;
     private String product;
     private Integer status;
     private Date createTime;
     private Date updateTime;
+    private User user;
 
     public Integer getId() {
         return id;
@@ -58,5 +63,21 @@ public class Order {
         this.updateTime = updateTime;
     }
 
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public OrderVO(Order order, User user) {
+        this.id = order.getId();
+        this.userId = order.getUserId();
+        this.product = order.getProduct();
+        this.status = order.getStatus();
+        this.createTime = order.getCreateTime();
+        this.updateTime = order.getUpdateTime();
+        this.user = user;
+    }
 }
