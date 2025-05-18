@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 @CrossOrigin
@@ -159,6 +160,12 @@ public class UserController {
     @PutMapping("/updateUserByid")
     @Role(role = {0, 1})
     public AjaxResult updateUserByid(@RequestBody User user) {
+        User userQuery = new User();
+        userQuery.setUsername(user.getUsername());
+        List<User> users = userService.getList(userQuery);
+        if(!users.isEmpty()) {
+            return AjaxResult.error("用户名已存在");
+        }
         return AjaxResult.success(userService.updateUserInfo(user));
     }
 
