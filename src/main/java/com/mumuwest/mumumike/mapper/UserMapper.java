@@ -7,9 +7,18 @@ import java.util.List;
 
 @Mapper
 public interface UserMapper {
-    // 根据用户名查询用户
+    /**
+     * 通过用户名查询用户
+     * @param username
+     * @return
+     */
     User selectUserByUsername(String username);
 
+    /**
+     * 添加用户
+     * @param user
+     * @return
+     */
     Integer insertUser(User user);
 
     /**
@@ -19,8 +28,16 @@ public interface UserMapper {
      */
     Integer updateUserInfo(User user);
 
-    // 查询所有用户
+    /**
+     * 选择全部用户
+     * @return
+     */
     List<User> selectAllUsers();
 
+    /**
+     * 通过id查询用户
+     * @param id
+     * @return
+     */
     User selectUserById(Integer id);
 }

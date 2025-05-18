@@ -7,6 +7,7 @@ public class User {
     private Integer role;   // 0: 超级管理元, 1: 管理员，2：普通用户
     private String email;
     private String phone;
+    private String avatar;
     private String status; // 1: 正常 0：禁用
 
     public User() {
@@ -73,6 +74,16 @@ public class User {
 
     public void setStatus(String status) {
         this.status = status;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public void setAvatar(String avatar) {
+        String baseUrl = "http://localhost:8080";
+        String relativePath = avatar.replace("./", "");
+        this.avatar = baseUrl + "/" + relativePath;
     }
 }
 

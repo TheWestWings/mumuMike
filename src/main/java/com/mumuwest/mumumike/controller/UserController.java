@@ -7,6 +7,7 @@ import com.mumuwest.mumumike.pojo.AjaxResult;
 import com.mumuwest.mumumike.pojo.TableDataInfo;
 import com.mumuwest.mumumike.pojo.User;
 import com.mumuwest.mumumike.service.UserService;
+import com.mumuwest.mumumike.utils.FileStorageUtil;
 import com.mumuwest.mumumike.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.ibatis.annotations.Update;
@@ -18,6 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @CrossOrigin
 @RestController
@@ -173,4 +177,27 @@ public class UserController {
         userUpdate.setPhone(user.getPhone());
         return AjaxResult.success(userService.updateUserInfo(user));
     }
+
+    /**
+     * 修改头像
+     * @param avatar
+     * @param request
+     * @return
+     */
+    @PostMapping("/updateAvatar")
+    public AjaxResult updateAvatar(@RequestParam("avatar") MultipartFile avatar, HttpServletRequest request) throws IOException {
+        // 通过jwt另外解析用户名
+        String header = request.getHeader("Authorization");
+        String token = header.substring(7);
+        String username = JwtUtil.getUsernameFromToken(token);
+        User userByUsername = userService.getUserByUsername(username);
+        User userUpdate = new User();
+        userUpdate.setId(userByUsername.getId());
+        if(avatar != null) {
+            String avatarUrl = FileStorageUtil.storeFile(avatar);
+            userUpdate.setAvatar(avatarUrl);
+        }
+        return AjaxResult.success(userService.updateUserInfo(userUpdate));
+    }
+
 }

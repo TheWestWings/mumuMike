@@ -19,6 +19,9 @@
             <if test="status != null">
                 status = #{status},
             </if>
+            <if test="avatar != '' and avatar != null">
+                avatar = #{avatar},
+            </if>
         </set>
         where id = #{id}
     </update>
@@ -26,6 +29,7 @@
     <select id="selectUserByUsername" parameterType="String" resultType="com.mumuwest.mumumike.pojo.User">
         SELECT * FROM user WHERE username = #{username}
     </select>
+
     <select id="selectAllUsers" parameterType="com.mumuwest.mumumike.pojo.User">
         select * from user
         <where>
