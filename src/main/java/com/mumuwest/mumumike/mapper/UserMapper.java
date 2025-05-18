@@ -21,4 +21,6 @@ public interface UserMapper {
 
     // 查询所有用户
     List<User> selectAllUsers();
+
+    User selectUserById(Integer id);
 }

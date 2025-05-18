@@ -56,4 +56,11 @@ public interface UserService {
      * @return 更新结果
      */
     List<User> getList(User user);
+
+    /**
+     * 根据id查询用户
+     * @param id
+     * @return
+     */
+    User getUserById(Integer id);
 }

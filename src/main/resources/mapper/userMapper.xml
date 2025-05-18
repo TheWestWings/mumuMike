@@ -2,12 +2,24 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.mumuwest.mumumike.mapper.UserMapper">
     <update id="updateUserInfo" parameterType="com.mumuwest.mumumike.pojo.User">
-        update user set
-            username = #{username},
-            password = #{password},
-            email = #{email},
-            phone = #{phone},
-            status = #{status},
+        update user
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="password != null">
+                password = #{password},
+            </if>
+            <if test="email != null">
+                email = #{email},
+            </if>
+            <if test="phone != null">
+                phone = #{phone},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
         where id = #{id}
     </update>
 
@@ -32,9 +44,14 @@
         </where>
     </select>
 
+
     <insert id="insertUser" parameterType="com.mumuwest.mumumike.pojo.User">
         INSERT INTO user (username, password, email, phone, status) VALUES (#{username}, #{password}, #{email}, #{phone}, #{status})
     </insert>
+
+    <select id="selectUserById" resultType="com.mumuwest.mumumike.pojo.User">
+        SELECT * FROM user WHERE id = #{id}
+    </select>
 
 
 

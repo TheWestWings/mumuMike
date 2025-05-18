@@ -52,4 +52,10 @@ public class UserServiceImpl implements UserService {
         // 实现获取用户列表逻辑
         return userMapper.selectAllUsers();
     }
+
+    @Override
+    public User getUserById(Integer id) {
+        return userMapper.selectUserById(id);
+    }
+
 }
