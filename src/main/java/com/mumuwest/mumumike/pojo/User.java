@@ -7,6 +7,7 @@ public class User {
     private Integer role;   // 0: 超级管理元, 1: 管理员，2：普通用户
     private String email;
     private String phone;
+    private String status; // 1: 正常 0：禁用
 
     public User() {
     }
@@ -64,6 +65,14 @@ public class User {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }
 
