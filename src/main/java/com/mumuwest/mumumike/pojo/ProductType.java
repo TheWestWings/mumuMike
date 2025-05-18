@@ -4,6 +4,7 @@ public class ProductType {
     private int id;
     private String title;
     private String description;
+    private Integer status;
 
     public int getId() {
         return id;
@@ -27,5 +28,13 @@ public class ProductType {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

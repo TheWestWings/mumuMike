@@ -40,6 +40,7 @@
         SELECT * FROM product_type
         WHERE id = #{id}
     </select>
+
     <select id="getProductTypeList" resultType="com.mumuwest.mumumike.pojo.ProductType">
         SELECT * FROM product_type
         <where>
@@ -51,6 +52,9 @@
             </if>
             <if test="description != null">
                 AND description = #{description}
+            </if>
+            <if test="status != null and status != 0">
+                AND status = #{status}
             </if>
         </where>
     </select>

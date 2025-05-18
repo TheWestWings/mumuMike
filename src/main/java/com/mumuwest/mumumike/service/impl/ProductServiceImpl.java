@@ -47,13 +47,16 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<ProductVO> getProductVOList() {
-        List<ProductType> productTypes = productTypeMapper.getProductTypeList(new ProductType());
+        ProductType productTypeQuery = new ProductType();
+        productTypeQuery.setStatus(1);
+        List<ProductType> productTypes = productTypeMapper.getProductTypeList(productTypeQuery);
         List<ProductVO> productVOList = new ArrayList<>();
         for(ProductType productType : productTypes) {
             ProductVO productVO = new ProductVO();
             productVO.setId(productType.getId());
             productVO.setTitle(productType.getTitle());
             productVO.setDescription(productType.getDescription());
+            productVO.setStatus(productType.getStatus());
             Product product = new Product();
             product.setProductTypeId(productType.getId());
             List<Product> productList = productMapper.getProductList(product);
