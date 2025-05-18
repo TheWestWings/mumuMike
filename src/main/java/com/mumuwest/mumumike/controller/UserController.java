@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.Objects;
 
 @CrossOrigin
 @RestController
@@ -51,8 +52,12 @@ public class UserController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
             );
+
             // 生成 JWT token
             user = userService.getUserByUsername(user.getUsername());
+            if(Objects.equals(user.getStatus(), "0")) {
+                return AjaxResult.error("用户已被禁用");
+            }
             String token = JwtUtil.generateToken(user.getUsername(), user.getRole());
             return new AjaxResult(200, "登录成功", token);
         } catch (AuthenticationException e) {
