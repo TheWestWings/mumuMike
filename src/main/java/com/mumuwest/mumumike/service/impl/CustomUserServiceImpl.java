@@ -15,6 +15,12 @@ public class CustomUserServiceImpl implements UserDetailsService {
     @Autowired
     UserMapper userMapper;
 
+    /**
+     * 根据用户名加载用户信息
+     * @param username
+     * @return
+     * @throws UsernameNotFoundException
+     */
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userMapper.selectUserByUsername(username);

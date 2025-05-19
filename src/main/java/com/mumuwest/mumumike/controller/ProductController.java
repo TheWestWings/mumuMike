@@ -21,12 +21,22 @@ public class ProductController {
     @Autowired
     public ProductService productService;
 
+    /**
+     * 获取产品列表
+     * @param product
+     * @return
+     */
     @PostMapping("/getProductList")
     public TableDataInfo getProductList(Product product) {
         List<Product> productList = productService.getProductList(product);
         return new TableDataInfo(productList, productList.size());
     }
 
+    /**
+     * 根据id查询产品
+     * @param id
+     * @return
+     */
     @GetMapping("/{id}")
     public AjaxResult getProductById(@PathVariable("id") Integer id) {
         return AjaxResult.success(productService.getProductById(id));
@@ -52,6 +62,15 @@ public class ProductController {
         return AjaxResult.success(productService.insertProduct(product));
     }
 
+    /**
+     * 更新产品
+     * @param name
+     * @param description
+     * @param price
+     * @param productTypeId
+     * @param image
+     * @return
+     */
     @PutMapping
     public AjaxResult updateProduct(@RequestParam("name") String name,
                                     @RequestParam("description") String description,
@@ -71,11 +90,20 @@ public class ProductController {
         return AjaxResult.success(productService.updateProduct(product));
     }
 
+    /**
+     * 删除产品
+     * @param id
+     * @return
+     */
     @DeleteMapping("/{id}")
     public AjaxResult deleteProduct(@PathVariable("id") Integer id) {
         return AjaxResult.success(productService.deleteProduct(id));
     }
 
+    /**
+     * 获取产品VO列表
+     * @return
+     */
     @GetMapping("/getProductVOList")
     public TableDataInfo getProductVOList() {
         List<ProductVO> productVOList = productService.getProductVOList();

@@ -16,6 +16,11 @@ public class OrderServiceImpl implements OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
+    /**
+     * 创建订单
+     * @param order
+     * @return
+     */
     @Transactional
     @Override
     public int insertOrder(Order order) {
@@ -28,26 +33,51 @@ public class OrderServiceImpl implements OrderService {
         return 1;
     }
 
+    /**
+     * 删除订单
+     * @param id
+     * @return
+     */
     @Override
     public int deleteOrder(Integer id) {
         return orderMapper.deleteOrder(id);
     }
 
+    /**
+     * 修改订单
+     * @param order
+     * @return
+     */
     @Override
     public int updateOrder(Order order) {
         return orderMapper.updateOrder(order);
     }
 
+    /**
+     * 根据id查询订单
+     * @param id
+     * @return
+     */
     @Override
     public Order getOrderById(Integer id) {
         return orderMapper.getOrderById(id);
     }
 
+    /**
+     * 查询订单列表
+     * @param order
+     * @return
+     */
     @Override
     public List<Order> getOrderList(Order order) {
         return orderMapper.getOrdersList(order);
     }
 
+    /**
+     * 修改订单产品信息
+     * @param orderProduct
+     * @return
+     */
     @Override
     public int updateOrderProduct(OrderProduct orderProduct) {
         return orderMapper.updateOrderProduct(orderProduct);
