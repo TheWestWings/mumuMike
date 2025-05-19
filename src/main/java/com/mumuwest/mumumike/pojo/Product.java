@@ -1,11 +1,15 @@
 package com.mumuwest.mumumike.pojo;
 
+import lombok.Setter;
+
 public class Product {
     private Integer id;
     private Integer productTypeId;
+    private String productTypeName;
     private String name;
     private String description;
     private Integer price;
+    @Setter
     private Integer status; // 1: 上架 0：下架
     private String pictureUrl;
 
@@ -61,6 +65,14 @@ public class Product {
 
     public Integer getStatus() {
         return status;
+    }
+
+    public String getProductTypeName() {
+        return productTypeName;
+    }
+
+    public void setProductTypeName(String productTypeName) {
+        this.productTypeName = productTypeName;
     }
 
     public void setStatus(Integer status) {

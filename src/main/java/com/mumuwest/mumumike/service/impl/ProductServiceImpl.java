@@ -20,6 +20,7 @@ public class ProductServiceImpl implements ProductService {
     @Autowired
     public ProductTypeMapper productTypeMapper;
 
+
     /**
      * 添加产品
      * @param product
@@ -57,7 +58,12 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public Product getProductById(Integer id) {
-        return productMapper.getProductById(id);
+        Product product = productMapper.getProductById(id);
+        if(product != null) {
+            ProductType productType = productTypeMapper.getProductTypeById(product.getProductTypeId());
+            product.setProductTypeName(productType.getTitle());
+        }
+        return product;
     }
 
     /**
@@ -67,7 +73,12 @@ public class ProductServiceImpl implements ProductService {
      */
     @Override
     public List<Product> getProductList(Product product) {
-        return productMapper.getProductList(product);
+        List<Product> productList = productMapper.getProductList(product);
+        for(Product productItem : productList) {
+            ProductType productType = productTypeMapper.getProductTypeById(productItem.getProductTypeId());
+            productItem.setProductTypeName(productType.getTitle());
+        }
+        return productList;
     }
 
     /**
