@@ -14,8 +14,14 @@ public class ProductTypeServiceImpl implements ProductTypeService {
     @Autowired
     private ProductTypeMapper productTypeMapper;
 
+    /**
+     * 新建产品类型
+     * @param productType
+     * @return
+     */
     @Override
     public int insertProductType(ProductType productType) {
+        productType.setStatus(1);
         return productTypeMapper.insertProductType(productType);
     }
 
