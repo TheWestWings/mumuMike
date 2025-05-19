@@ -6,6 +6,7 @@ public class Product {
     private String name;
     private String description;
     private Integer price;
+    private Integer status; // 1: 上架 0：下架
     private String pictureUrl;
 
     public Integer getId() {
@@ -56,5 +57,13 @@ public class Product {
 
     public void setProductTypeId(Integer productTypeId) {
         this.productTypeId = productTypeId;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }

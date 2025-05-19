@@ -21,6 +21,7 @@ public class ProductTypeServiceImpl implements ProductTypeService {
      */
     @Override
     public int insertProductType(ProductType productType) {
+        productType.setStatus(1);
         return productTypeMapper.insertProductType(productType);
     }
 

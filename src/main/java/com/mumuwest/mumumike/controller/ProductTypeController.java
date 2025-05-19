@@ -2,6 +2,7 @@ package com.mumuwest.mumumike.controller;
 
 import com.mumuwest.mumumike.annotation.Role;
 import com.mumuwest.mumumike.pojo.AjaxResult;
+import com.mumuwest.mumumike.pojo.Product;
 import com.mumuwest.mumumike.pojo.ProductType;
 import com.mumuwest.mumumike.pojo.TableDataInfo;
 import com.mumuwest.mumumike.service.ProductTypeService;
@@ -28,7 +29,7 @@ public class ProductTypeController {
     }
 
     /**
-     * 根据id查询产品类型
+     * 根据id获取产品类型
      * @param id
      * @return
      */
@@ -39,7 +40,7 @@ public class ProductTypeController {
     }
 
     /**
-     * 添加产品类型
+     * 新建产品类型
      * @param productType
      * @return
      */
@@ -48,7 +49,6 @@ public class ProductTypeController {
     public AjaxResult insertProductType(@RequestBody ProductType productType) {
         return AjaxResult.success(productTypeService.insertProductType(productType));
     }
-
 
     /**
      * 更新产品类型
@@ -74,5 +74,17 @@ public class ProductTypeController {
         return AjaxResult.success(productTypeService.deleteProductType(productType));
     }
 
+    /**
+     * 修改产品类型状态
+     * @param productType
+     * @return
+     */
+    @PutMapping("/updateProductTypeStatus")
+    public AjaxResult updateProductTypeStatus(@RequestBody ProductType productType) {
+        ProductType productTypeUpdate = new ProductType();
+        productTypeUpdate.setId(productType.getId());
+        productTypeUpdate.setStatus(productType.getStatus());
+        return AjaxResult.success(productTypeService.updateProductType(productTypeUpdate));
+    }
 
 }

@@ -110,5 +110,13 @@ public class ProductController {
         return new TableDataInfo(productVOList, productVOList.size());
     }
 
+    @PutMapping("/updateProductStatus")
+    public AjaxResult updateProductStatus(@RequestBody Product product) {
+        Product productUpdate = new Product();
+        productUpdate.setId(product.getId());
+        productUpdate.setStatus(product.getStatus());
+        return AjaxResult.success(productService.updateProduct(productUpdate));
+    }
+
 
 }

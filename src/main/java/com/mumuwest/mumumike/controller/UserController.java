@@ -22,6 +22,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
 
 @CrossOrigin
 @RestController
@@ -51,8 +53,12 @@ public class UserController {
             Authentication authentication = authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
             );
+
             // 生成 JWT token
             user = userService.getUserByUsername(user.getUsername());
+            if(Objects.equals(user.getStatus(), "0")) {
+                return AjaxResult.error("用户已被禁用");
+            }
             String token = JwtUtil.generateToken(user.getUsername(), user.getRole());
             return new AjaxResult(200, "登录成功", token);
         } catch (AuthenticationException e) {
@@ -154,6 +160,12 @@ public class UserController {
     @PutMapping("/updateUserByid")
     @Role(role = {0, 1})
     public AjaxResult updateUserByid(@RequestBody User user) {
+        User userQuery = new User();
+        userQuery.setUsername(user.getUsername());
+        List<User> users = userService.getList(userQuery);
+        if(!users.isEmpty()) {
+            return AjaxResult.error("用户名已存在");
+        }
         return AjaxResult.success(userService.updateUserInfo(user));
     }
 
@@ -175,7 +187,7 @@ public class UserController {
         userUpdate.setUsername(user.getUsername());
         userUpdate.setEmail(user.getEmail());
         userUpdate.setPhone(user.getPhone());
-        return AjaxResult.success(userService.updateUserInfo(user));
+        return AjaxResult.success(userService.updateUserInfo(userUpdate));
     }
 
     /**

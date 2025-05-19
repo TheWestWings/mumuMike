@@ -33,6 +33,9 @@
     <select id="selectAllUsers" parameterType="com.mumuwest.mumumike.pojo.User">
         select * from user
         <where>
+            <if test="true">
+                and role != 0
+            </if>
             <if test="username != null">
                 username = #{username}
             </if>

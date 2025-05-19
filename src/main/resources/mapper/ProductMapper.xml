@@ -62,6 +62,7 @@
     <select id="getProductList" resultType="com.mumuwest.mumumike.pojo.Product">
         SELECT * FROM product
         <where>
+
             <if test="id != null">
                 id = #{id}
             </if>

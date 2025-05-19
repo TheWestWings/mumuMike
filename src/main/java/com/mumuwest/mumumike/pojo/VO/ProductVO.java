@@ -9,6 +9,7 @@ public class ProductVO {
     private String title;
     private String description;
     private List<Product> productList;
+    private Integer status;
 
     public int getId() {
         return id;
@@ -40,5 +41,13 @@ public class ProductVO {
 
     public void setProductList(List<Product> productList) {
         this.productList = productList;
+    }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
     }
 }
