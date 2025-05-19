@@ -7,6 +7,7 @@ public class OrderProduct {
     private Integer orderId;
     private Integer count;
     private Integer status; // 0：未完成， 1：已完成， 2：已退单
+    private String commment; // 订单备注
 
     public Integer getId() {
         return id;
@@ -46,5 +47,13 @@ public class OrderProduct {
 
     public void setStatus(Integer status) {
         this.status = status;
+    }
+
+    public String getCommment() {
+        return commment;
+    }
+
+    public void setCommment(String commment) {
+        this.commment = commment;
     }
 }

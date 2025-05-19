@@ -1,12 +1,7 @@
 <template>
   <div>
 
-  <i
-   class="el-icon-circle-plus"
-    style="color: #7D665F;
-    font-size:80px;"
-    @click="add">
-  </i>
+
 
     <el-table
       :data="ProductList"

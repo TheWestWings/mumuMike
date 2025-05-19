@@ -51,6 +51,9 @@
             <if test="pictureUrl != null">
                 and picture_url = #{pictureUrl}
             </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
         </where>
     </delete>
 
