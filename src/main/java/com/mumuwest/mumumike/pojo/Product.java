@@ -9,7 +9,6 @@ public class Product {
     private String name;
     private String description;
     private Integer price;
-    @Setter
     private Integer status; // 1: 上架 0：下架
     private String pictureUrl;
 
@@ -50,9 +49,8 @@ public class Product {
     }
 
     public void setPictureUrl(String pictureUrl) {
-        String baseUrl = "http://localhost:8080";
         String relativePath = pictureUrl.replace("./", "");
-        this.pictureUrl = baseUrl + "/" + relativePath;
+        this.pictureUrl = "/" + relativePath;
     }
 
     public Integer getProductTypeId() {

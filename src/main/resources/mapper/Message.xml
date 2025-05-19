@@ -27,6 +27,19 @@
         WHERE id = #{id}
     </update>
 
+    <update id="updateMessageStatus">
+        UPDATE message
+        <set>
+            <if test="status != null">
+                status = #{status},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
     <delete id="deleteMessage">
         DELETE FROM message
         WHERE id = #{id}

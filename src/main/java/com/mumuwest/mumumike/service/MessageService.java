@@ -39,7 +39,7 @@ public interface MessageService {
      * @param message
      * @return
      */
-    public List<Message> getMessageList(Message message);
+    public List<Message> getMessageListByUserId(Integer userId);
 
     /**
      * 修改信息状态
