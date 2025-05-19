@@ -22,6 +22,9 @@
             <if test="avatar != '' and avatar != null">
                 avatar = #{avatar},
             </if>
+            <if test="role != '' and role != null">
+                role = #{role},
+            </if>
         </set>
         where id = #{id}
     </update>

@@ -7,22 +7,64 @@
         <el-drawer
           title="个人中心"
           :visible.sync="drawer"
-          
+          :size="400"
+          class="user-drawer"
         >
-        
-          <el-col :span="12">
-            <div class="sub-title"></div>
-            <div class="demo-basic--circle">
-              <div class="block"><el-avatar :size="50" :src="circleUrl"></el-avatar></div>
-              <div class="block" v-for="size in sizeList" :key="size">
-                <el-avatar :size="size" :src="circleUrl"></el-avatar>
-              </div>
-            </div>
-          </el-col>  
 
+          <div class="demo-basic--circle">
+            <div class="block">
+              <el-avatar :size="100" :src="circleUrl"></el-avatar>
+            </div>
+          </div>
+
+        <el-form
+         label-position="top"
+         :rules="editRule"
+         :model="user"
+         ref="userForm"
+         >
+          <el-form-item label="用户名" prop="username">
+            <el-input
+             :readonly="!onEdit"
+             v-model="user.username"
+             :class="{'input-edit': onEdit}"
+             ></el-input>
+          </el-form-item>
+
+          <el-form-item label="电话" prop="phone">
+            <el-input
+             :readonly="!onEdit"
+             v-model="user.phone"
+             :class="{'input-edit': onEdit}"
+             ></el-input>
+          </el-form-item>
+
+          <el-form-item label="邮箱" prop="email">
+            <el-input
+             :readonly="!onEdit"
+             v-model="user.email"
+             :class="{'input-edit': onEdit}"
+             ></el-input>
+          </el-form-item>
+
+          <el-form-item size="large" v-if="onEdit">
+            <el-button type="primary" @click="handleUpdateUserInfo">确认修改</el-button>
+          </el-form-item>
+
+
+          <el-form-item size="large" v-else>
+            <el-button @click="handleOnEdit">修改信息</el-button>
+          </el-form-item>
+
+
+        </el-form>
+        <el-button @click="handleLogout">退出登录</el-button>
+        
 
           
         </el-drawer>
+
+        <el-button @click="$router.push('/HomePage')">返回首页</el-button>
 
 
         <el-header style="height: 450px;">
@@ -74,27 +116,69 @@
 </template>
 
 <script>
+import { updateUserInfo } from '@/api/User/User'
 import classForm from './components/classForm.vue'
 import ProductCard from './components/productCard.vue'
 import { getSeriesList } from '@/api/Shopping/Shopping'
 export default {
   name: "ShoppingPage",
   components: { classForm, ProductCard },
-  methods: {
 
-  },
   mounted(){
-    getSeriesList().then(res => {
+    this.getList()
+
+    this.user.username = this.$store.state.username
+    this.user.pswd = this.$store.state.pswd
+    this.user.phone = this.$store.state.phone
+    this.user.email = this.$store.state.email
+  },
+
+  methods: {
+    getList() {
+      getSeriesList().then(res => {
       console.log(res.data)
       this.seriesList = res.data.rows
       
     })
+    },
+    handleOnEdit() {
+      this.onEdit = true
+    }
+    ,
+    handleUpdateUserInfo() {
+
+      updateUserInfo(this.user).then(() => {
+
+        this.$store.commit('setUsername', this.user.username)
+        this.$store.commit('setEmail', this.user.email)
+        this.$store.commit('setPhone', this.user.phone)
+        this.$message({
+          message: "修改成功！",
+          type: 'success'
+        })
+      })
+      this.onEdit = false
+    },
+
+    handleLogout() {
+      this.$store.commit('clearAll')
+      this.$router.push('/')
+    }
+
   },
 
 
   
   data(){
     return{
+
+      user: {
+        username: '',
+        phone: '',
+        email: '',
+      },
+
+      onEdit: false,
 
       drawer: false,
 
@@ -188,7 +272,23 @@ export default {
           ]
       },
 
-      ]
+      ],
+
+      editRule: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur'},
+          { min: 3, max: 16, message: '长度在4到16个字符', trigger: 'blur' },
+          { pattern: /^[a-zA-Z0-9_]+$/, message: '只能包含字母、数字和下划线', trigger: 'blur' }
+        ],
+        email: [
+          { required: true, message: '请输入邮箱地址', trigger: 'blur'},
+          { type: 'email', message: '请输入正确的邮箱地址', trigger: ['blur', 'change'] }
+        ],
+        phone: [
+          { required: true, message: '请输入电话号码', trigger: 'blur'},
+          { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的11位手机号码', trigger: 'blur' }
+        ],
+      },
     }
   }
 
@@ -197,7 +297,79 @@ export default {
 }
 </script>
 
-<style scope>
+<style lang="less" scoped>
+.user-drawer {
+  .el-drawer__header {
+    margin-bottom: 0;
+    padding: 20px;
+    font-size: 18px;
+    font-weight: bold;
+    border-bottom: 1px solid #eee;
+  }
+
+  .el-drawer__body {
+    padding: 20px;
+  }
+}
+
+.demo-basic--circle {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0;
+  
+  .block {
+    text-align: center;
+
+    .el-avatar {
+      border: 3px solid #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.05);
+      }
+    }
+  }
+}
+
+.el-form {
+  padding: 0 20px;
+
+  .el-form-item {
+    margin-bottom: 25px;
+
+    .el-input__inner {
+      border-radius: 4px;
+      background-color: #f5f7fa;
+      transition: all 0.3s ease;
+    }
+
+    .input-edit {
+      background-color: #ffffff !important;
+      border: none !important;
+      outline: 2px solid #8d6e63 !important;
+      outline-offset: -1px !important;
+      border-radius: 4px !important;
+      box-shadow: 0 2px 8px rgba(141, 110, 99, 0.15);
+      &:focus {
+        background-color: #fff !important;
+        box-shadow: 0 4px 12px rgba(141, 110, 99, 0.2);
+      }
+    }
+  }
+}
+
+.el-button {
+  width: calc(100% - 40px);
+  margin: 10px 20px;
+  border-radius: 4px;
+  transition: all 0.3s;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+}
 
 .header {
     height: 400px;

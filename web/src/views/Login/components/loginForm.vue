@@ -37,7 +37,7 @@
 
       <div class="auth-footer">
         <span>还没有账号？</span>
-        <router-link to="/register">立即注册</router-link>
+        <router-link to="/auth/register">立即注册</router-link>
         
       </div>
     </el-form>
@@ -56,10 +56,10 @@ import request from '@/utils/request.js'
 
 export default {
 components: { faildAlert, RoundButton,  },
-props:['userinfo'],
+
 mounted() {
-  // this.form.username = this.userinfo.username
-  // this.form.pswd = this.userinfo.pswd
+  // this.form.username = this.$store.state.username
+  // this.form.pswd = this.$store.state.psw
   this.form.username = 'zzl'
   this.form.pswd = '123'
 },

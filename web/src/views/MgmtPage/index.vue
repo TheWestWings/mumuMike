@@ -8,6 +8,7 @@
         </div>
       </header>
   </el-header>
+  <el-button @click="$router.push('/HomePage')">返回首页</el-button>
   <el-container>
 
 

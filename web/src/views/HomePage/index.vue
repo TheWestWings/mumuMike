@@ -1,6 +1,6 @@
 <template>
   <div class="cover-container">
-    <router-link to="/home">
+    <router-link to="/Shopping">
       <el-button type="primary">去购买</el-button>
     </router-link>
     <span>&ensp;</span>

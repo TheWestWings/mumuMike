@@ -10,7 +10,7 @@ export default new Vuex.Store({
     username: localStorage.getItem('username') || null,
     email: localStorage.getItem('email') || null,
     phone: localStorage.getItem('phone') || null,
-    password: localStorage.getItem('password') || null,
+    pswd: localStorage.getItem('pswd') || null,
   },
   getters: {
   },
@@ -21,6 +21,7 @@ export default new Vuex.Store({
     },
     clearRole(state) {
       state.role = null
+      localStorage.removeItem('role')
     },
     setToken(state, token) {
       state.token = token
@@ -28,6 +29,7 @@ export default new Vuex.Store({
     },
     clearToken(state) {
       state.token = null
+      localStorage.removeItem('token')
     },
     setUsername(state, username) {
       state.username = username
@@ -35,6 +37,7 @@ export default new Vuex.Store({
     },
     clearUsername(state) {
       state.username = null
+      localStorage.removeItem('username')
     },
     setEmail(state, email) {
       state.email = email
@@ -42,6 +45,7 @@ export default new Vuex.Store({
     },
     clearEmail(state) {
       state.email = null
+      localStorage.removeItem('email')
     },
     setPhone(state, phone) {
       state.phone = phone
@@ -49,13 +53,15 @@ export default new Vuex.Store({
     },
     clearPhone(state) {
       state.phone = null
+      localStorage.removeItem('phone')
     },
-    setPassword(state, password) {
-      state.password = password
-      localStorage.setItem('password', password)
+    setPswd(state, pswd) {
+      state.pswd = pswd
+      localStorage.setItem('pswd', pswd)
     },
-    clearPassword(state) {
-      state.password = null
+    clearpswd(state) {
+      state.pswd = null
+      localStorage.removeItem('pswd')
     },
 
     clearAll(state) {
@@ -64,7 +70,14 @@ export default new Vuex.Store({
       state.username = null
       state.email = null
       state.phone = null
-      state.password = null
+      state.pswd = null
+
+      localStorage.removeItem('role')
+      localStorage.removeItem('token')
+      localStorage.removeItem('username')
+      localStorage.removeItem('email')
+      localStorage.removeItem('phone')
+      localStorage.removeItem('pswd')
     }
 
   },

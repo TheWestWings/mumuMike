@@ -84,9 +84,9 @@ const routesAll = [
       }
     },
     {
-      path: 'MessageMgmt',
-      name: 'MessageMgmt',
-      component: () => import('@/views/MgmtPage/views/MessageMgmt.vue'),
+      path: 'InformationMgmt',
+      name: 'InformationMgmt',
+      component: () => import('@/views/MgmtPage/views/InformationMgmt.vue'),
       meta: {
         roles: 1,
       }

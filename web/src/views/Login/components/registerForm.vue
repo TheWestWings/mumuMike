@@ -68,7 +68,7 @@
   
       <div class="auth-footer">
       <span>已有账号？</span>
-      <router-link to="/login">立即登录</router-link>
+      <router-link to="/auth/login">立即登录</router-link>
       </div>
       </el-form>
   </div>
@@ -84,9 +84,7 @@
   export default {
     components: {RoundButton, FaildAlert},
       methods: {
-        dispLogin() {
-          this.$emit('change', false) 
-        },
+
         submit() {
           this.$refs.regForm.validate((valid) => {
             if(valid){
@@ -118,8 +116,14 @@
             if(judge === 200) {
               console.log(result.data.msg)
       
-              this.$emit('success',this.regForm.regUsername, this.regForm.regPswd)
-              this.dispLogin()
+              this.$store.commit('setUsername', this.regForm.regUsername)
+              this.$store.commit('setPswd', this.regForm.regPswd)
+              this.$store.commit('setRole', 2)
+              this.$store.commit('setEmail', this.regForm.regEmail)
+              this.$store.commit('setPhone', this.regForm.regPhone)
+
+
+              this.$router.push('/auth/login')
             
   
   
