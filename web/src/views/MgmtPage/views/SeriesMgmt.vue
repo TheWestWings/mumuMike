@@ -394,6 +394,7 @@ export default {
 </style>
 
 <style scoped lang="less">
+
 .el-table {
   .el-button {
     padding: 8px 15px;
@@ -407,15 +408,6 @@ export default {
     }
   }
 }
-/* .dotClass {
-  width:10px;
-  height:10px;
-  border-radius: 50%;
-  display: block;
-  margin-left: 10px;
-} */
-
-
 
 ::v-deep .main-el-switch {
     position: relative;

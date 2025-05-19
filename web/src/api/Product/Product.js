@@ -6,3 +6,11 @@ export function getProductList() {
     method: 'post',
   });
 }
+
+export function updateProductStatus(data) {
+  return request({
+    url: 'product/updateProductStatus',
+    method: 'put',
+    data
+  });
+}
