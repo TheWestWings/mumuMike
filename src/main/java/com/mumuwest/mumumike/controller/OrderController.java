@@ -78,9 +78,9 @@ public class OrderController {
      * @param order
      * @return
      */
-    @GetMapping("/getListVO")
+    @PostMapping("/getListVO")
     @Role(role = {0, 1})
-    public TableDataInfo getListVO(Order order) {
+    public TableDataInfo getListVO(@RequestBody Order order) {
         List<Order> orderList = orderService.getOrderList(order);
         List<OrderVO> orderVOList = new ArrayList<>();
         for (Order orderItem : orderList) {
