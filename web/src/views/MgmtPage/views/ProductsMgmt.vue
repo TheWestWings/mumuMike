@@ -242,7 +242,6 @@ export default {
     getList() {
       getProductList().then(res => {
         this.ProductList = res.data.rows
-
         console.log('this', this.ProductList)
       })
     },
@@ -259,6 +258,8 @@ export default {
       this.isShow[formName] = false
       this.$refs[formName].resetFields();
       this.fileList = []
+      this.addForm = {}
+      this.modifyForm = {}
     },
 
     handlePictureCardPreview(file) {
