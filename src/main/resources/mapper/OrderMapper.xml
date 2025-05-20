@@ -39,8 +39,8 @@
 
     </insert>
     <insert id="insertOrderProduct">
-        INSERT INTO orders_product (product_id, order_id, count, status)
-        VALUES (#{productId}, #{orderId}, #{count}, #{status})
+        INSERT INTO orders_product (product_id, order_id, count)
+        VALUES (#{productId}, #{orderId}, #{count})
     </insert>
 
     <update id="updateOrder">
