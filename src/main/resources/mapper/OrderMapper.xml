@@ -61,6 +61,7 @@
                 status = #{status},
             </if>
         </set>
+        where id = #{id}
     </update>
 
     <update id="updateOrderProduct" parameterType="com.mumuwest.mumumike.pojo.OrderProduct">
