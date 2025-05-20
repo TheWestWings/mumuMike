@@ -31,6 +31,11 @@
         op.id as op_id, op.product_id, op.count,  op.order_id ,op.status as op_status
         FROM orders o
         LEFT JOIN orders_product op ON o.id = op.order_id
+        <where>
+            <if test="status != null">
+                o.status = #{status}
+            </if>
+        </where>
     </select>
 
     <insert id="insertOrder" parameterType="com.mumuwest.mumumike.pojo.Order" useGeneratedKeys="true" keyProperty="id">
