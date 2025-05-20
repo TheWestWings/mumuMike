@@ -76,7 +76,9 @@ public class ProductServiceImpl implements ProductService {
         List<Product> productList = productMapper.getProductList(product);
         for(Product productItem : productList) {
             ProductType productType = productTypeMapper.getProductTypeById(productItem.getProductTypeId());
-            productItem.setProductTypeName(productType.getTitle());
+            if(productType != null) {
+                productItem.setProductTypeName(productType.getTitle());
+            }
         }
         return productList;
     }
