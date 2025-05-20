@@ -49,7 +49,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(Collections.singletonList("http://localhost")); // 前端地址
+        configuration.setAllowedOrigins(Collections.singletonList("http://localhost:1024")); // 前端地址
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // 允许的方法
         configuration.setAllowedHeaders(Collections.singletonList("*")); // 允许的头
         configuration.setAllowCredentials(true); // 是否允许携带凭证（如 Cookie）

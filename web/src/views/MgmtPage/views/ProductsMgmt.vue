@@ -258,17 +258,14 @@ export default {
     handelCloseDialog(formName) {
       this.isShow[formName] = false
       this.$refs[formName].resetFields();
-
+      this.fileList = []
     },
 
     handlePictureCardPreview(file) {
       this.dialogImageUrl = file.url;
       this.dialogVisible = true;
     },
-
-    //////修改
-  
-
+    // 修改产品
     handleEdit(row) {
       this.modifyForm.id = row.id
       this.initSeries(this.modifyForm.id)
