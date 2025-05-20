@@ -1,19 +1,19 @@
 <template>
-      <el-container>
-        <el-button @click="drawer = true" type="primary">
+      <el-container style="background-color: #FDF6E3;" >
+        <el-button @click="drawer.user = true" type="primary">
           点我打开
         </el-button>
 
         <el-drawer
           title="个人中心"
-          :visible.sync="drawer"
+          :visible.sync="drawer.user"
           :size="400"
           class="user-drawer"
         >
 
           <div class="demo-basic--circle">
             <div class="block">
-              <el-avatar :size="100" :src="circleUrl"></el-avatar>
+              <el-avatar :size="100"></el-avatar>
             </div>
           </div>
 
@@ -90,26 +90,44 @@
           </el-menu>
 
         </el-header>
-            <el-main>
-              <class-form
-                v-for="(series, index) in seriesList"
+
+
+        <el-main class="main-content">
+          <class-form
+            v-for="(series, index) in seriesList"
+            :key="index"
+            :title="series.title"
+            :description="series.description"
+          >
+            <template v-slot:products>
+              <product-card
+              v-for="(product, index) in series.productList"
                 :key="index"
-                :title="series.title"
-                :description="series.description"
-              >
-                <template v-slot:products>
-                  <product-card
-                  v-for="(product, index) in series.productList"
-                    :key="index"
-                    :name="product.name"
-                    :description="product.description"
-                    :price="product.price"
-                    :pictureURL="product.pictureUrl"
-                  ></product-card>
-                  <el-button></el-button>
-                </template>
-            </class-form>
-            </el-main> 
+                :product="product"
+                @click="handleAdd"
+              ></product-card>
+              
+            </template>
+        </class-form>
+
+        <el-button @click="drawer.car = true">购物车</el-button>
+
+        <el-drawer
+          direction="btt"
+          :visible.sync="drawer.car"
+          :size="400">
+      
+          <product-selection
+            @countChange="handleCountChange"
+            v-for="(item, index) in carProductList"
+            :key="index"
+            :product="item"
+          ></product-selection>
+
+          <el-button @click="submitOrder">提交订单</el-button>
+        </el-drawer>
+
+        </el-main> 
         <el-footer>Footer</el-footer>
     </el-container>
 
@@ -120,9 +138,13 @@ import { updateUserInfo } from '@/api/User/User'
 import classForm from './components/classForm.vue'
 import ProductCard from './components/productCard.vue'
 import { getSeriesList } from '@/api/Shopping/Shopping'
+import ProductSelection from '../MgmtPage/components/ProductSelection.vue'
+import { getProductById } from '@/api/Product/Product'
+import { submitOrder } from '@/api/Order/Order'
+
 export default {
   name: "ShoppingPage",
-  components: { classForm, ProductCard },
+  components: { classForm, ProductCard, ProductSelection },
 
   mounted(){
     this.getList()
@@ -136,7 +158,7 @@ export default {
   methods: {
     getList() {
       getSeriesList().then(res => {
-      console.log(res.data)
+      
       this.seriesList = res.data.rows
       
     })
@@ -163,7 +185,49 @@ export default {
     handleLogout() {
       this.$store.commit('clearAll')
       this.$router.push('/')
+    },
+
+    ///////////购物车
+    handleCountChange(now) {
+      this.carProductList.forEach((item, index) => {
+        console.log('我要加了', item.count)
+        console.log(now.productId)
+
+        if(item.productId === now.productId){
+          this.carProductList[index].count = now.count
+          console.log('我要加了', item.count)
+        }
+        
+      })
+    },
+    handleAdd(id) {/////////产品上的+按钮
+      let flag = false
+      this.carProductList.forEach((item, index) => {
+        if(item.productId === id) {
+          console.log('yes')
+          this.carProductList[index].count = item.count + 1
+          flag = true
+        }
+      })
+      console.log('list', this.carProductList)
+      if(flag) return 0
+      getProductById(id).then((res) => {
+        let now = res.data.data 
+        now.productId = now.id
+        now.count = 1
+        this.carProductList.push(now)
+      })
+    },
+    submitOrder() {
+      this.order.createTime = new Date()
+      this.order.product = this.carProductList
+      console.log(this.order)
+      submitOrder(this.order).then((res) => {
+        
+        console.log(res)
+      })
     }
+
 
   },
 
@@ -180,97 +244,18 @@ export default {
 
       onEdit: false,
 
-      drawer: false,
-
-
-
-      seriesList: [{
-          title: '糖水系列',
-          description: '传统与创新的完美融合，温暖你的味蕾',
-          productList: [{
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          {
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          {
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          {
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          ]
+      drawer: {
+        user: false,
+        car: false
       },
-      {
-          title: '糖水系列',
-          description: '传统与创新的完美融合，温暖你的味蕾',
-          productList: [{
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          {
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          {
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          {
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          ]
+
+      order:{
+        userId: this.$store.state.id,
+        product: [],
+        createTime: null,
       },
-      {
-          title: '糖水系列',
-          description: '传统与创新的完美融合，温暖你的味蕾',
-          productList: [{
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          {
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          {
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          {
-            name: '桃胶莲子鲜奶',
-            description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-            price: '18',
-            pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-          },
-          ]
-      },
+
+      seriesList: [
 
       ],
 
@@ -289,6 +274,8 @@ export default {
           { pattern: /^1[3-9]\d{9}$/, message: '请输入正确的11位手机号码', trigger: 'blur' }
         ],
       },
+
+      carProductList:[],
     }
   }
 
@@ -298,6 +285,12 @@ export default {
 </script>
 
 <style lang="less" scoped>
+
+.main-content {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
 .user-drawer {
   .el-drawer__header {
     margin-bottom: 0;

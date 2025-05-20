@@ -34,8 +34,8 @@
     </select>
 
     <insert id="insertOrder" parameterType="com.mumuwest.mumumike.pojo.Order" useGeneratedKeys="true" keyProperty="id">
-        INSERT INTO orders (user_id, status, createTime, updateTime)
-        VALUES (#{userId}, #{status}, #{createTime}, #{updateTime})
+        INSERT INTO orders (user_id, createTime, updateTime)
+        VALUES (#{userId}, #{createTime}, #{updateTime})
 
     </insert>
     <insert id="insertOrderProduct">
@@ -48,9 +48,6 @@
         <set>
             <if test="product != null">
                 product = #{product},
-            </if>
-            <if test="status != null">
-                status = #{status},
             </if>
             <if test="updateTime != null">
                 updateTime = #{updateTime},

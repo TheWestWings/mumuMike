@@ -134,7 +134,7 @@ public class OrderController {
      * @return
      */
     @PutMapping("/updateOrderProduct")
-    public AjaxResult updateOrderProduct(OrderProduct orderProduct) {
+    public AjaxResult updateOrderProduct(@RequestBody OrderProduct orderProduct) {
         return AjaxResult.success(orderService.updateOrderProduct(orderProduct));
     }
 

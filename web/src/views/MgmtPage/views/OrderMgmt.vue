@@ -4,7 +4,7 @@
          class="margin-top" 
          :column="4" 
          border
-         v-for="(item, index) in orderList"
+         v-for="(item, index) in receiveList"
          :key="index"
          >
 
@@ -13,7 +13,7 @@
           <i class="el-icon-user"></i>
           用户名
         </template>
-        {{ item.username }}
+        {{ item.user.username }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -21,7 +21,7 @@
           <i class="el-icon-mobile-phone"></i>
           手机号
         </template>
-        {{ item.phone }}
+        {{ item.user.phone }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -29,7 +29,7 @@
           <i class="el-icon-location-outline"></i>
           取餐码
         </template>
-        {{ item.number }}
+        {{ item.id }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -37,7 +37,7 @@
           <i class="el-icon-location-outline"></i>
           订单状态
         </template>
-        <el-tag>{{ item.state }}</el-tag>
+        <el-tag>{{ item.status }}</el-tag>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -47,14 +47,14 @@
         </template>
         
           <el-table
-            :data="item.productsList"
+            :data="item.product"
             style="width: 100%">
             <el-table-column
               label="产品名称"
               width="180">
               <template slot-scope="scope">
                 <!-- <i class="el-icon-time"></i> -->
-                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                <span style="margin-left: 10px">{{ scope.row.product.name }}</span>
               </template>
             </el-table-column>
 
@@ -62,7 +62,7 @@
               label="单价"
               width="180">
               <template slot-scope="scope">
-                <span style="margin-left: 10px">{{ scope.row.price }}</span>
+                <span style="margin-left: 10px">{{ scope.row.product.price }}</span>
               </template>
             </el-table-column>
 
@@ -79,7 +79,15 @@
               width="180">
               <template slot-scope="scope">
                 
-                <span style="margin-left: 10px">{{ scope.row.price * scope.row.count }}</span>
+                <span style="margin-left: 10px">{{ scope.row.product.price * scope.row.count }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="状态"
+              width="180">
+              <template slot-scope="scope">
+                <el-tag>{{ produStatus[scope.row.status] }}</el-tag>
               </template>
             </el-table-column>
 
@@ -89,13 +97,13 @@
                   size="mini"
                   type="danger"
                   plain
-                  @click="handleEdit(scope.$index, scope.row)">退单</el-button>
+                  @click="handleChargeback(scope.row)">退单</el-button>
                   
                 <el-button
                   size="mini"
                   type="success"
                   plain
-                  @click="handleDelete(scope.$index, scope.row)">完成</el-button>
+                  @click="handleFinish(scope.row)">完成</el-button>
               </template>
             </el-table-column>
           </el-table>
@@ -106,7 +114,13 @@
 </template>
 
 <script>
+import { getOrderList, updateOrderProductStatus } from '@/api/Order/Order'
 export default {
+  created() {
+    this.getList()
+
+  },
+
   data(){
     return {
       orderList:[
@@ -192,9 +206,40 @@ export default {
 
         }
 
-      ]
+      ],
+      receiveList:[],
+      produStatus: ['待制作', '已完成', '已退单'],
+      orderStatus: ['制作中', '待取餐', '已完成']
     }
-}
+  },
+  methods: {
+    getList() {
+      getOrderList().then(res => {
+        this.receiveList = res.data.rows
+        console.log(this.receiveList)
+      })
+    },
+    handleChargeback(row) {
+      
+      row.status = 2
+      updateOrderProductStatus({id: row.id, status: row.status}).then(() => {
+        this.getList()
+        
+      })
+      
+      
+    },
+    handleFinish(row) {
+      row.status = 1
+      updateOrderProductStatus({id: row.id, status: row.status}).then(() => {
+        this.getList()
+      })
+      
+
+    }
+    
+  }
+
 }
 </script>
 

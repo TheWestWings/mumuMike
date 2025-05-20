@@ -102,6 +102,7 @@ mounted() {
               method: 'get',
             }).then(res => {
               const user = res.data.data
+              this.$store.commit('setId', user.id)
               this.$store.commit('setUsername', user.username)
               this.$store.commit('setRole', user.role)
               this.$store.commit('setEmail', user.email)

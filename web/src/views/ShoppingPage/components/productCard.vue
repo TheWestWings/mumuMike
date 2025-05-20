@@ -1,25 +1,40 @@
 <template>
 <div class="product-card">
-    <img :src="pictureURL" alt="桃胶莲子鲜奶" class="product-image">
+    <img :src="product.pictureUrl" alt="桃胶莲子鲜奶" class="product-image">
     <div class="product-info">
-        <h3>{{ name }}</h3>
-        <p>{{ description }}</p>
-        <div class="product-price">¥{{ price }}</div>
+        <h3>{{ product.name }}</h3>
+        <p>{{ product.description }}</p>
+        <div class="product-price">¥{{ product.price }}</div>
     </div>
+    <el-badge :hidden="!product.count" :value="product.count" class="item">
+        <el-button
+        circle
+        @click="handleAdd"
+        ><i class="el-icon-plus"></i></el-button>
+     </el-badge>
 </div>
 </template>
 
 <script>
 export default {
-    props: ['name', 'description', 'price', 'pictureURL'],
+    props: ['product'],
+    watch: {
+        product: function(val) {
+            if(val.count && val. count > 0) this.isShow = true
+        }
+
+    },
+    methods: {
+        handleAdd() {
+            this.$emit('click', this.product.id)
+            console.log("click",  this.product.id)
+        }
+
+    },
     data() {
         return {
-            product: {
-                name: '桃胶莲子鲜奶',
-                description: '精选红豆熬制，搭配浓醇牛奶，香甜绵密。',
-                price: '18',
-                pictureURL: require('@/assets/products/taojiaolianzixiannai.png'),
-            }
+            isShow: false
+
 
         }
     }

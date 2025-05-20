@@ -5,6 +5,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    id: localStorage.getItem('id') || null,
     role: localStorage.getItem('role') || 3,
     token: localStorage.getItem('token') || null,
     username: localStorage.getItem('username') || null,
@@ -15,6 +16,14 @@ export default new Vuex.Store({
   getters: {
   },
   mutations: {
+    setId(state, id) {
+      state.id = id
+      localStorage.setItem('id', id)
+    },
+    clearId(state) {
+      state.id = null
+      localStorage.removeItem('id')
+    },
     setRole(state, role) {
       state.role = role
       localStorage.setItem('role', role)
@@ -71,7 +80,9 @@ export default new Vuex.Store({
       state.email = null
       state.phone = null
       state.pswd = null
-
+      state.id = null
+      
+      localStorage.removeItem('id')
       localStorage.removeItem('role')
       localStorage.removeItem('token')
       localStorage.removeItem('username')
