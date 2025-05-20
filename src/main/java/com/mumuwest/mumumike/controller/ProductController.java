@@ -89,7 +89,9 @@ public class ProductController {
 
         if(image != null) {
             String imagePath = FileStorageUtil.storeFile(image);
-            product.setPictureUrl(imagePath);
+            String baseUrl = "http://localhost:8080";
+            String relativePath = imagePath.replace("./", "");
+            product.setPictureUrl(baseUrl + "/" + relativePath);
         }
         return AjaxResult.success(productService.updateProduct(product));
     }
