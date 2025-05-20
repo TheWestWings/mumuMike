@@ -102,15 +102,15 @@
      :append-to-body="true" 
      width="35%">
       <el-form :model="modifyForm" :rules="ProductRules" ref="modifyForm" label-width="130px" class="demo-modifyForm">
-        <el-form-item label="系列名称" prop="name">
-          <el-input v-model="modifyForm.name" placeholder="请输入系列名称" style="width: 280px"></el-input>
+        <el-form-item label="产品名称" prop="name">
+          <el-input v-model="modifyForm.name" placeholder="请输入产品名称" style="width: 280px"></el-input>
         </el-form-item>
     
-        <el-form-item label="系列介绍" prop="description">
+        <el-form-item label="产品介绍" prop="description">
           <el-input type="textarea" v-model="modifyForm.description" placeholder="请输入系列介绍" style="width: 280px"></el-input>
         </el-form-item>
 
-        <el-form-item label="价格" prop="price">
+        <el-form-item label="产品价格" prop="price">
           <el-input v-model="modifyForm.price" placeholder="请输入产品价格" style="width: 280px"></el-input>
         </el-form-item>
 
@@ -148,48 +148,83 @@
         <el-form-item>
             <el-button
             type="primary"
-            @click="valid('modifyForm')"
+            @click="handlerUpdateSubmit()"
             >立即修改</el-button>
         <el-button @click="modifyFormReset()">重置</el-button>
         </el-form-item>
     </el-form>
     </el-dialog>
 
-<!-- 
-  <i
-   class="el-icon-circle-plus"
-    style="color: #7D665F;
-    font-size:80px;"
-    @click="add">
-  </i> -->
+
+    <i
+    class="el-icon-circle-plus"
+        style="color: #7D665F;
+        font-size:80px;"
+        @click="add">
+    </i>
 
 
 
-  <!-- <el-dialog
-    title="添加产品系列信息" 
+  <el-dialog
+    title="添加产品产品信息" 
     :visible.sync="isShow.addForm" 
     :before-close="addFormComfirm" 
     :close-on-click-modal="true" 
     :append-to-body="true" 
     width="35%">
-      <el-form :model="addForm" :rules="SeriesRules" ref="addForm" label-width="130px" class="demo-addForm">
-        <el-form-item label="系列名称" prop="title">
-          <el-input v-model="addForm.title" placeholder="请输入系列名称" style="width: 280px"></el-input>
+      <el-form :model="addForm" :rules="ProductRules" ref="addForm" label-width="130px" class="demo-modifyForm">
+        <el-form-item label="产品名称" prop="name">
+          <el-input v-model="addForm.name" placeholder="请输入产品名称" style="width: 280px"></el-input>
         </el-form-item>
     
-        <el-form-item label="系列介绍" prop="description">
-          <el-input type="textarea" v-model="addForm.description" placeholder="请输入系列介绍" style="width: 280px"></el-input>
+        <el-form-item label="产品介绍" prop="description">
+          <el-input type="textarea" v-model="addForm.description" placeholder="请输入产品介绍" style="width: 280px"></el-input>
         </el-form-item>
+
+        <el-form-item label="价格" prop="price">
+          <el-input v-model="addForm.price" placeholder="请输入产品价格" style="width: 280px"></el-input>
+        </el-form-item>
+
+
+
+        <el-form-item label="所属系列" prop="productTypeName">
+          <el-select v-model="addForm.productTypeId" filterable placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="产品图片" prop="pictureUrl">
+          <el-upload
+            action
+            :auto-upload="false"
+            :file-list="fileList"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
+            :on-change="handleFileChange">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible" append-to-body>
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
+
+        </el-form-item>
+        
 
         <el-form-item>
             <el-button
             type="primary"
-            @click="valid('addForm')"
-            >立即添加</el-button>
-        <el-button @click="addFormReset('addForm')">重置</el-button>
+            @click="handlerAddSubmit()"
+            >立即修改</el-button>
+        <el-button @click="modifyFormReset()">重置</el-button>
         </el-form-item>
     </el-form>
-    </el-dialog> -->
+    </el-dialog>
 
 
 
@@ -198,7 +233,7 @@
 </template>
 
 <script>
-import { getProductList, updateProductStatus, getProductById, updateProduct } from '@/api/Product/Product'
+import { getProductList, updateProductStatus, getProductById, updateProduct, addProduct } from '@/api/Product/Product'
 import { getSeriesList } from '@/api/Series/Series'
 
 export default {
@@ -244,19 +279,19 @@ export default {
       this.modifyForm.id = row.id
       this.initSeries(this.modifyForm.id)
     },
-  initSeries(id) {
-    getProductById(id).then(res => {
- 
-      this.modifyForm = res.data.data
-      this.modifyFormBufferData = JSON.parse(JSON.stringify(this.modifyForm))
-      this.fileList = [{
-        name: this.modifyForm.name,
-        url: this.modifyForm.pictureUrl
-      }]
-      console.log(this.fileList)
-      this.isShow.modifyForm = true
-    })
-  },
+    initSeries(id) {
+        getProductById(id).then(res => {
+    
+        this.modifyForm = res.data.data
+        this.modifyFormBufferData = JSON.parse(JSON.stringify(this.modifyForm))
+        this.fileList = [{
+            name: this.modifyForm.name,
+            url: this.modifyForm.pictureUrl
+        }]
+        console.log(this.fileList)
+        this.isShow.modifyForm = true
+        })
+    },
     handleFileChange(file) {
       // 当文件改变时更新fileList
       if (file.raw) {
@@ -271,6 +306,59 @@ export default {
     handleRemove() {
       // 清空文件列表
       this.fileList = []
+    },
+
+    handlerUpdateSubmit() {
+      this.$refs.modifyForm.validate((valid) => {
+        if (valid) {
+          this.modifyFormComfirm()
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+    handlerAddSubmit() {
+      this.$refs.addForm.validate((valid) => {
+        if (valid) {
+          this.addFormComfirm()
+        } else {
+          console.log('error submit!!');
+          return false;
+        }
+      });
+    },
+
+    addFormSubmit() {
+      const data = new FormData()
+      
+      data.append("name", this.addForm.name)
+      data.append("description", this.addForm.description)
+      data.append("price", this.addForm.price)
+      data.append("productTypeId", this.addForm.productTypeId)
+
+      // 检查是否有文件需要上传
+      if (this.fileList.length > 0 && this.fileList[0].raw) {
+        data.append("image", this.fileList[0].raw)
+      }
+
+     addProduct(data).then((res) => {
+
+      if(res.data.code === 200)
+        this.$message({
+            type: 'success',
+            message: '添加成功'
+        });
+
+      else if(res.data.code === 500)
+      this.$message({
+            type: 'error',
+            message: '添加失败！产品系列名名已存在'
+        });
+      this.getList()
+
+    })
+
     },
 
     modifyFormSubmit() {
@@ -313,6 +401,30 @@ export default {
         this.modifyForm = JSON.parse(JSON.stringify(this.modifyFormBufferData))
 
     },
+    addFormComfirm() {
+      this.$confirm('是否保存添加？', '确认信息', {
+      closeOnClickModal:false,
+      distinguishCancelAndClose: true,
+      confirmButtonText: '保存',
+      cancelButtonText: '放弃添加'
+      })
+      .then(() => {
+        this.addFormSubmit()
+        this.handelCloseDialog('addForm');
+        
+      })
+      .catch(action => {
+          console.log(action)
+          if(action === 'cancel') {
+            this.handelCloseDialog('addForm')
+            
+            this.$message({
+              type: 'info',
+              message: '取消添加'
+            })
+          }
+      });
+    },
 
     modifyFormComfirm() {
     {
@@ -341,6 +453,9 @@ export default {
       });
       }
     },
+    add(){
+        this.isShow.addForm = true
+    }
 
 
     

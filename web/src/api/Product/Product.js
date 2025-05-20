@@ -29,3 +29,11 @@ export function updateProduct(data) {
     data
   });
 }
+
+export function addProduct(data) {
+    return request({
+        url: 'product',
+        method: 'post',
+        data
+    });
+}
