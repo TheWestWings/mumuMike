@@ -135,7 +135,8 @@
             list-type="picture-card"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
-            :on-change="handleFileChange">
+            :on-change="handleFileChange"
+            :class="{styleB:fileList.length === 1}">
             <i class="el-icon-plus"></i>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible" append-to-body>
@@ -196,7 +197,7 @@
           </el-select>
         </el-form-item>
 
-        <el-form-item label="产品图片" prop="pictureUrl">
+        <el-form-item label="产品图片" prop="pictureUrl" class="styleB">
           <el-upload
             action
             :auto-upload="false"
@@ -204,7 +205,9 @@
             list-type="picture-card"
             :on-preview="handlePictureCardPreview"
             :on-remove="handleRemove"
-            :on-change="handleFileChange">
+            :on-change="handleFileChange"
+            class="styleB">
+            
             <i class="el-icon-plus"></i>
           </el-upload>
           <el-dialog :visible.sync="dialogVisible" append-to-body>
@@ -554,6 +557,12 @@ export default {
     height: 100px; /* 与 .cell 高度一致 */
     padding: 0; /* 移除 td 的默认内边距 */
 }
+
+
+.styleB .el-upload--picture-card{
+    display:none;   
+}
+
 </style>
 
 <style scoped lang="less">
