@@ -5,9 +5,12 @@ import com.mumuwest.mumumike.pojo.AjaxResult;
 import com.mumuwest.mumumike.pojo.Product;
 import com.mumuwest.mumumike.pojo.ProductType;
 import com.mumuwest.mumumike.pojo.TableDataInfo;
+import com.mumuwest.mumumike.service.ProductService;
 import com.mumuwest.mumumike.service.ProductTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @RestController
@@ -16,6 +19,9 @@ public class ProductTypeController {
 
     @Autowired
     public ProductTypeService productTypeService;
+
+    @Autowired
+    public ProductService productService;
 
     /**
      * 获取产品类型列表
@@ -71,6 +77,12 @@ public class ProductTypeController {
     public AjaxResult deleteProductType(@PathVariable("id") Integer id) {
         ProductType productType = new ProductType();
         productType.setId(id);
+        Product product = new Product();
+        product.setProductTypeId(productType.getId());
+        List<Product> productList = productService.getProductList(product);
+        if(!productList.isEmpty()){
+            return AjaxResult.error("该产品类型下有产品，不能删除");
+        }
         return AjaxResult.success(productTypeService.deleteProductType(productType));
     }
 
