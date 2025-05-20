@@ -423,6 +423,10 @@ export default {
 
       console.log(this.modifyFormBufferData)
         this.modifyForm = JSON.parse(JSON.stringify(this.modifyFormBufferData))
+        this.fileList = [{
+            name: this.modifyForm.name,
+            url: this.modifyForm.pictureUrl
+        }]
 
     },
     addFormComfirm() {
