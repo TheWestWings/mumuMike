@@ -2,9 +2,9 @@
   <div>
 
     <el-collapse v-model="activeNames" @change="handleChange"
-        v-for="(item, index) in orderList"
+        v-for="(item, index) in receiveList"
          :key="index">
-      <el-collapse-item :title="'取餐码 '+item.number" name="index">
+      <el-collapse-item :title="'取餐码 '+item.id" name="index">
         
         <el-descriptions
          class="margin-top" 
@@ -17,7 +17,7 @@
           <i class="el-icon-user"></i>
           用户名
         </template>
-        {{ item.username }}
+        {{ item.user.username }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -25,7 +25,7 @@
           <i class="el-icon-mobile-phone"></i>
           手机号
         </template>
-        {{ item.phone }}
+        {{ item.user.phone }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -33,7 +33,7 @@
           <i class="el-icon-location-outline"></i>
           取餐码
         </template>
-        {{ item.number }}
+        {{ item.id }}
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -41,7 +41,7 @@
           <i class="el-icon-location-outline"></i>
           订单状态
         </template>
-        <el-tag>{{ item.state }}</el-tag>
+        <el-tag>{{ orderStatus[item.status] }}</el-tag>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -51,14 +51,14 @@
         </template>
         
           <el-table
-            :data="item.productsList"
+            :data="item.product"
             style="width: 100%">
             <el-table-column
               label="产品名称"
               width="180">
               <template slot-scope="scope">
                 <!-- <i class="el-icon-time"></i> -->
-                <span style="margin-left: 10px">{{ scope.row.name }}</span>
+                <span style="margin-left: 10px">{{ scope.row.product.name }}</span>
               </template>
             </el-table-column>
 
@@ -66,13 +66,9 @@
               label="数量"
               width="180">
               <template slot-scope="scope">
-                <el-popover trigger="hover" placement="top">
-                  <p>姓名: {{ scope.row.name }}</p>
-                  <p>单价: {{ scope.row.price }}</p>
-                  <div slot="reference" class="name-wrapper">
-                    <span style="margin-left: 10px">{{ scope.row.count }}</span>
-                  </div>
-                </el-popover>
+             
+                <span style="margin-left: 10px">{{ scope.row.count }}</span>
+                  
               </template>
             </el-table-column>
 
@@ -81,7 +77,15 @@
               width="180">
               <template slot-scope="scope">
                 
-                <span style="margin-left: 10px">{{ scope.row.price * scope.row.count }}</span>
+                <span style="margin-left: 10px">{{ scope.row.product.price * scope.row.count }}</span>
+              </template>
+            </el-table-column>
+
+            <el-table-column
+              label="状态"
+              width="180">
+              <template slot-scope="scope">
+                <el-tag>{{ produStatus[scope.row.status] }}</el-tag>
               </template>
             </el-table-column>
           </el-table>
@@ -98,9 +102,25 @@
 </template>
 
 <script>
+import { getHistoryOrderList } from '@/api/Order/Order'
 export default {
+  mounted() {
+    this.getList()
+  },
+  methods: {
+    getList() {
+      getHistoryOrderList().then((res) => {
+        
+        this.receiveList = res.data.rows
+        console.log(this.receiveList)
+      })
+    }
+  },
   data(){
     return {
+      receiveList: [],
+      produStatus: ['待制作', '已完成', '已退单'],
+      orderStatus: ['制作中', '待取餐', '已完成'],
       orderList:[
         {
           username:'weec',

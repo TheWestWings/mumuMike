@@ -6,7 +6,11 @@
          border
          v-for="(item, index) in receiveList"
          :key="index"
+         :title="item.createTime"
          >
+         <template slot="extra">
+          <el-button @click="handleRelease(item)">已取餐</el-button>
+         </template>
 
       <el-descriptions-item>
         <template slot="label">
@@ -37,7 +41,7 @@
           <i class="el-icon-location-outline"></i>
           订单状态
         </template>
-        <el-tag>{{ item.status }}</el-tag>
+        <el-tag>{{ orderStatus[item.status] }}</el-tag>
       </el-descriptions-item>
 
       <el-descriptions-item>
@@ -114,7 +118,7 @@
 </template>
 
 <script>
-import { getOrderList, updateOrderProductStatus } from '@/api/Order/Order'
+import { getOrderList, updateOrderProductStatus, updateOrderStatus } from '@/api/Order/Order'
 export default {
   created() {
     this.getList()
@@ -209,25 +213,24 @@ export default {
       ],
       receiveList:[],
       produStatus: ['待制作', '已完成', '已退单'],
-      orderStatus: ['制作中', '待取餐', '已完成']
+      orderStatus: ['制作中', '待取餐', '已完成'],
     }
   },
   methods: {
     getList() {
       getOrderList().then(res => {
         this.receiveList = res.data.rows
+        // this.receiveList.forEach((item, index) => {
+        //   this.receiveList[index] = item.product.length 
+        // })
         console.log(this.receiveList)
       })
     },
     handleChargeback(row) {
-      
       row.status = 2
       updateOrderProductStatus({id: row.id, status: row.status}).then(() => {
         this.getList()
-        
       })
-      
-      
     },
     handleFinish(row) {
       row.status = 1
@@ -235,6 +238,12 @@ export default {
         this.getList()
       })
       
+    },
+    handleRelease(item) {
+      console.log({id: item.id, status: 2})
+      updateOrderStatus({id: item.id, status: 2}).then(() => {
+        this.getList()
+      })
 
     }
     

@@ -3,6 +3,13 @@
         <el-button @click="drawer.user = true" type="primary">
           点我打开
         </el-button>
+        <el-button @click="drawer.message = true" type="primary">
+          消息中心
+        </el-button>
+        <el-drawer
+        :visible.sync="drawer.message"
+        >消息</el-drawer>
+        
 
         <el-drawer
           title="个人中心"
@@ -141,6 +148,7 @@ import { getSeriesList } from '@/api/Shopping/Shopping'
 import ProductSelection from '../MgmtPage/components/ProductSelection.vue'
 import { getProductById } from '@/api/Product/Product'
 import { submitOrder } from '@/api/Order/Order'
+import {getMessageList} from '@/api/Message/Message'
 
 export default {
   name: "ShoppingPage",
@@ -148,11 +156,14 @@ export default {
 
   mounted(){
     this.getList()
+    
 
     this.user.username = this.$store.state.username
     this.user.pswd = this.$store.state.pswd
     this.user.phone = this.$store.state.phone
     this.user.email = this.$store.state.email
+    this.user.id = this.$store.state.id
+    this.getMessage()
   },
 
   methods: {
@@ -163,6 +174,13 @@ export default {
       
     })
     },
+    getMessage() {
+      console.log( 'id',this.user.id)
+      getMessageList(this.user.id).then(res => {
+        console.log( 'message',res)
+      })
+    },
+
     handleOnEdit() {
       this.onEdit = true
     }
@@ -246,7 +264,8 @@ export default {
 
       drawer: {
         user: false,
-        car: false
+        car: false,
+        message: false
       },
 
       order:{
