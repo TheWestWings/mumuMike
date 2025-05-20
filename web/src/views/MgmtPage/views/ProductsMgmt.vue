@@ -163,8 +163,6 @@
         @click="add">
     </i>
 
-
-
   <el-dialog
     title="添加产品产品信息" 
     :visible.sync="isShow.addForm" 
@@ -225,15 +223,11 @@
         </el-form-item>
     </el-form>
     </el-dialog>
-
-
-
-
   </div>
 </template>
 
 <script>
-import { getProductList, updateProductStatus, getProductById, updateProduct, addProduct } from '@/api/Product/Product'
+import { getProductList, updateProductStatus, getProductById, updateProduct, addProduct, deleteProduct } from '@/api/Product/Product'
 import { getSeriesList } from '@/api/Series/Series'
 
 export default {
@@ -328,6 +322,38 @@ export default {
         }
       });
     },
+
+    handleDelete(row) {
+      this.$confirm('是否删除该产品？', '确认信息', {
+        closeOnClickModal:false,
+        distinguishCancelAndClose: true,
+        confirmButtonText: '删除',
+        cancelButtonText: '取消'
+      })
+      .then(() => {
+        this.deleteProduct(row)
+      })
+      .catch(action => {
+          console.log(action)
+          if(action === 'cancel') {
+            this.$message({
+              type: 'info',
+              message: '已取消删除'
+            })
+          }
+      });
+    },
+
+    deleteProduct(row) {
+      deleteProduct(row.id).then(() => {
+        this.getList()
+        this.$message({
+          type: 'success',
+          message: '删除成功'
+        })
+      })
+    },
+    
 
     addFormSubmit() {
       const data = new FormData()
@@ -456,13 +482,6 @@ export default {
     add(){
         this.isShow.addForm = true
     }
-
-
-    
-
-
-
-
   },
   data() {
     return {

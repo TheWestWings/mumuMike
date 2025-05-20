@@ -325,16 +325,8 @@ export default {
           })
         }
       });
-
-
-
     }}
-
-
-
   },
-
-
   data() {
     return {
       SeriesList: [

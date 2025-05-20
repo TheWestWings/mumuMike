@@ -37,3 +37,10 @@ export function addProduct(data) {
         data
     });
 }
+
+export function deleteProduct(id) {
+    return request({
+        url: `product/${id}`,
+        method: 'delete',
+    });
+}

@@ -35,29 +35,7 @@
 
     <delete id="deleteProduct"  parameterType="com.mumuwest.mumumike.pojo.Product">
         DELETE FROM product
-        <where>
-            <if test="id != null">
-                id = #{id}
-            </if>
-            <if test="name != null">
-                and name = #{name}
-            </if>
-            <if test="productTypeId != null">
-                and product_type_id = #{productTypeId}
-            </if>
-            <if test="description != null">
-                and description = #{description}
-            </if>
-            <if test="price != null">
-                and price = #{price}
-            </if>
-            <if test="pictureUrl != null">
-                and picture_url = #{pictureUrl}
-            </if>
-            <if test="status != null">
-                and status = #{status}
-            </if>
-        </where>
+        where id = #{id}
     </delete>
 
     <select id="getProductById" resultType="com.mumuwest.mumumike.pojo.Product">
