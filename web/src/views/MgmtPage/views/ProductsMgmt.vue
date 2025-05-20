@@ -111,11 +111,37 @@
         </el-form-item>
 
         <el-form-item label="价格" prop="price">
-          <el-input v-model="modifyForm.peice" placeholder="请输入产品价格" style="width: 280px"></el-input>
+          <el-input v-model="modifyForm.price" placeholder="请输入产品价格" style="width: 280px"></el-input>
         </el-form-item>
 
+
+
         <el-form-item label="所属系列" prop="productTypeName">
-          <el-input v-model="modifyForm.peice" placeholder="请输入产品所属系列" style="width: 280px"></el-input>
+          <el-select v-model="modifyForm.productTypeId" filterable placeholder="请选择">
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.title"
+              :value="item.id">
+            </el-option>
+          </el-select>
+        </el-form-item>
+
+        <el-form-item label="产品图片" prop="pictureUrl">
+          <el-upload
+            action
+            :auto-upload="false"
+            :file-list="fileList"
+            list-type="picture-card"
+            :on-preview="handlePictureCardPreview"
+            :on-remove="handleRemove"
+            :on-change="handleFileChange">
+            <i class="el-icon-plus"></i>
+          </el-upload>
+          <el-dialog :visible.sync="dialogVisible" append-to-body>
+            <img width="100%" :src="dialogImageUrl" alt="">
+          </el-dialog>
+
         </el-form-item>
         
 
@@ -124,7 +150,7 @@
             type="primary"
             @click="valid('modifyForm')"
             >立即修改</el-button>
-        <el-button @click="modifyFormReset('modifyForm')">重置</el-button>
+        <el-button @click="modifyFormReset()">重置</el-button>
         </el-form-item>
     </el-form>
     </el-dialog>
@@ -172,16 +198,22 @@
 </template>
 
 <script>
-import { getProductList, updateProductStatus } from '@/api/Product/Product'
+import { getProductList, updateProductStatus, getProductById, updateProduct } from '@/api/Product/Product'
+import { getSeriesList } from '@/api/Series/Series'
+
 export default {
   created() {
     this.getList()
+    getSeriesList().then(res => {
+      this.options = res.data.rows
+    })
 
   },
   methods: {
     getList() {
       getProductList().then(res => {
         this.ProductList = res.data.rows
+
         console.log('this', this.ProductList)
       })
     },
@@ -193,8 +225,95 @@ export default {
 
     },
 
-    ////修改
-    
+    ////关闭页面
+    handelCloseDialog(formName) {
+      this.isShow[formName] = false
+      this.$refs[formName].resetFields();
+
+    },
+
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
+    },
+
+    //////修改
+  
+
+    handleEdit(row) {
+      this.modifyForm.id = row.id
+      this.initSeries(this.modifyForm.id)
+    },
+  initSeries(id) {
+    getProductById(id).then(res => {
+ 
+      this.modifyForm = res.data.data
+      this.modifyFormBufferData = JSON.parse(JSON.stringify(this.modifyForm))
+      this.fileList = [{
+        name: this.modifyForm.name,
+        url: this.modifyForm.pictureUrl
+      }]
+      console.log(this.fileList)
+      this.isShow.modifyForm = true
+    })
+  },
+    handleFileChange(file) {
+      // 当文件改变时更新fileList
+      if (file.raw) {
+        this.fileList = [{
+          name: file.name,
+          url: URL.createObjectURL(file.raw),
+          raw: file.raw
+        }]
+      }
+    },
+
+    handleRemove() {
+      // 清空文件列表
+      this.fileList = []
+    },
+
+    modifyFormSubmit() {
+      const data = new FormData()
+      
+      data.append("id", this.modifyForm.id)
+      data.append("name", this.modifyForm.name)
+      data.append("description", this.modifyForm.description)
+      data.append("price", this.modifyForm.price)
+      data.append("productTypeId", this.modifyForm.productTypeId)
+
+      // 检查是否有文件需要上传
+      if (this.fileList.length > 0 && this.fileList[0].raw) {
+        data.append("image", this.fileList[0].raw)
+      }
+
+     updateProduct(data).then((res) => {
+
+      if(res.data.code === 200)
+        this.$message({
+            type: 'success',
+            message: '修改成功'
+        });
+
+      else if(res.data.code === 500)
+      this.$message({
+            type: 'error',
+            message: '修改失败！产品系列名名已存在'
+        });
+
+      this.getList()
+
+    })
+
+    },
+  
+    modifyFormReset() {
+
+      console.log(this.modifyFormBufferData)
+        this.modifyForm = JSON.parse(JSON.stringify(this.modifyFormBufferData))
+
+    },
+
     modifyFormComfirm() {
     {
       this.$confirm('是否保存修改？', '确认信息', {
@@ -220,13 +339,10 @@ export default {
         }
 
       });
-    }
+      }
     },
 
-    handleEdit() {
 
-
-    }
     
 
 
@@ -235,6 +351,11 @@ export default {
   },
   data() {
     return {
+      // 图片上传
+      dialogImageUrl: '',
+      dialogVisible: false,
+      fileList:[],
+
       ProductList: [
       ],
       addForm: {
@@ -262,6 +383,8 @@ export default {
 
       },
 
+
+
     }
   }
 
@@ -280,6 +403,21 @@ export default {
   .el-table td {
     font-size: 13px;
   }
+
+  /* 针对 el-table 单元格内的 .cell 元素 */
+.el-table .el-table__body .cell {
+    height: 100px; /* 设置 .cell 元素高度 */
+    display: flex; /* 使用 Flex 布局 */
+    align-items: center; /* 垂直居中 */
+    justify-content: center; /* 水平居中 */
+    padding: 0; /* 移除默认内边距 */
+}
+
+/* 确保 td 高度适应 .cell */
+.el-table .el-table__body td {
+    height: 100px; /* 与 .cell 高度一致 */
+    padding: 0; /* 移除 td 的默认内边距 */
+}
 </style>
 
 <style scoped lang="less">

@@ -214,7 +214,6 @@ export default {
   handleEdit(row) {
     this.modifyForm.id = row.id
     this.initSeries(this.modifyForm.id)
-    
   },
   initSeries(id) {
     getSeriesById(id).then(res => {
@@ -225,7 +224,6 @@ export default {
       this.modifyFormBufferData = res.data.data
       console.log(this.modifyForm)
       this.isShow.modifyForm = true
-
     })
     },
     modifyFormSubmit() {

@@ -49,8 +49,7 @@ public class Product {
     }
 
     public void setPictureUrl(String pictureUrl) {
-        String relativePath = pictureUrl.replace("./", "");
-        this.pictureUrl = "/" + relativePath;
+        this.pictureUrl = pictureUrl;
     }
 
     public Integer getProductTypeId() {

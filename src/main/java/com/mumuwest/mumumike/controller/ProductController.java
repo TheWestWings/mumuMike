@@ -57,7 +57,9 @@ public class ProductController {
 
         if(image != null) {
             String imagePath = FileStorageUtil.storeFile(image);
-            product.setPictureUrl(imagePath);
+            String baseUrl = "http://localhost:8080";
+            String relativePath = imagePath.replace("./", "");
+            product.setPictureUrl(baseUrl + "/" + relativePath);
         }
         return AjaxResult.success(productService.insertProduct(product));
     }
@@ -73,11 +75,13 @@ public class ProductController {
      */
     @PutMapping
     public AjaxResult updateProduct(@RequestParam("name") String name,
+                                    @RequestParam("id") Integer id,
                                     @RequestParam("description") String description,
                                     @RequestParam("price") Integer price,
                                     @RequestParam("productTypeId") Integer productTypeId,
                                     @RequestParam("image") MultipartFile image) throws IOException {
         Product product = new Product();
+        product.setId(id);
         product.setName(name);
         product.setDescription(description);
         product.setPrice(price);

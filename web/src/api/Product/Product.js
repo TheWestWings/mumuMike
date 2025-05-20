@@ -14,3 +14,18 @@ export function updateProductStatus(data) {
     data
   });
 }
+
+export function getProductById(id) {
+  return request({
+    url: `product/${id}`,
+    method: 'get',
+  });
+}
+
+export function updateProduct(data) {
+  return request({
+    url: 'product',
+    method: 'put',
+    data
+  });
+}
