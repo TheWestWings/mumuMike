@@ -57,6 +57,9 @@
             <if test="updateTime != null">
                 updateTime = #{updateTime},
             </if>
+            <if test="status != null and status != ''">
+                status = #{status},
+            </if>
         </set>
     </update>
 

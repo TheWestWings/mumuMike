@@ -138,5 +138,14 @@ public class OrderController {
         return AjaxResult.success(orderService.updateOrderProduct(orderProduct));
     }
 
+    @PutMapping("/updateOrderStatus")
+    @Role(role = {0, 1})
+    public AjaxResult updateOrderStatus(@RequestBody Order order) {
+        Order orderUpdate = new Order();
+        orderUpdate.setId(order.getId());
+        orderUpdate.setStatus(order.getStatus());
+        return AjaxResult.success(orderService.updateOrder(orderUpdate));
+    }
+
 
 }
