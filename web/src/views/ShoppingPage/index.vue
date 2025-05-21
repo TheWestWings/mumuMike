@@ -397,7 +397,8 @@ export default {
         this.$store.commit('setUsername', this.user.username)
         this.$store.commit('setEmail', this.user.email)
         this.$store.commit('setPhone', this.user.phone)
-        this.$message({
+        this.$notify({
+          title: "成功",
           message: "修改成功！",
           type: 'success'
         })
@@ -410,7 +411,8 @@ export default {
       if (res.code === 200) {
         this.user.avatar = res.data.url
         this.$store.commit('setAvatar', this.user.avatar)
-        this.$message({
+        this.$notify({
+          title: "成功",
           message: `头像"${file.name}"上传成功！`,
           type: 'success'
         })
@@ -421,7 +423,10 @@ export default {
           console.log('头像更新成功')
         })
       } else {
-        this.$message.error('头像上传失败')
+        this.$notify.error({
+          title: "错误",
+          message: '头像上传失败'
+        })
       }
     },
     
@@ -431,10 +436,16 @@ export default {
       const isLt2M = file.size / 1024 / 1024 < 2
 
       if (!isJPG) {
-        this.$message.error('上传头像图片只能是 JPG/PNG/GIF 格式!')
+        this.$notify.error({
+          title: "格式错误",
+          message: '上传头像图片只能是 JPG/PNG/GIF 格式!'
+        })
       }
       if (!isLt2M) {
-        this.$message.error('上传头像图片大小不能超过 2MB!')
+        this.$notify.error({
+          title: "大小错误",
+          message: '上传头像图片大小不能超过 2MB!'
+        })
       }
       return isJPG && isLt2M
     },
@@ -484,7 +495,8 @@ export default {
     submitOrder() {
       // 检查购物车是否为空
       if (this.carProductList.length === 0) {
-        this.$message({
+        this.$notify({
+          title: "提示",
           message: "购物车是空的，请先添加商品",
           type: 'warning'
         });
@@ -510,7 +522,8 @@ export default {
         loading.close();
         
         // 显示成功提示
-        this.$message({
+        this.$notify({
+          title: "成功",
           message: "订单提交成功！",
           type: 'success'
         });
@@ -528,7 +541,8 @@ export default {
         loading.close();
         
         // 显示错误提示
-        this.$message({
+        this.$notify({
+          title: "错误",
           message: "订单提交失败，请稍后重试",
           type: 'error'
         });

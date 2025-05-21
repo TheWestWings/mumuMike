@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.mumuwest.mumumike.mapper.InformationMapper">
+
+
+    <insert id="createInformation" parameterType="com.mumuwest.mumumike.pojo.Information">
+        insert into information (user_id, title, content, reply, create_time, update_time)
+        values (#{userId}, #{title}, #{content}, #{reply}, #{createTime}, #{updateTime})
+
+    </insert>
+    <update id="updateInformation">
+        update information
+        <set>
+            <if test="reply != null">
+                reply = #{reply},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+            <if test="status != null">
+                status = #{status},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+    <delete id="deleteInformation">
+        delete from information
+        where id = #{id}
+    </delete>
+    <select id="getInformationById" resultType="com.mumuwest.mumumike.pojo.Information">
+        select * from information
+        where id = #{id}
+    </select>
+    <select id="getInformationListByUserId" resultType="com.mumuwest.mumumike.pojo.Information">
+        select * from information
+        where user_id = #{userId}
+    </select>
+    <select id="getInformationList" resultType="com.mumuwest.mumumike.pojo.Information">
+        select * from information
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="title != null">
+                and title like concat('%', #{title}, '%')
+            </if>
+            <if test="content != null">
+                and content like concat('%', #{content}, '%')
+            </if>
+            <if test="status != null">
+                and status = #{status}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime}
+            </if>
+            <if test="updateTime != null">
+                and update_time = #{updateTime}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+</mapper>
