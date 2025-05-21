@@ -22,8 +22,12 @@ import { mapState } from 'vuex'
 export default {
     props: ['product'],
     watch: {
-        product: function(val) {
-            if(val.count && val. count > 0) this.isShow = true
+        product: {
+            handler(val) {
+                if(val.count && val. count > 0) this.isShow = true
+            },
+            deep: true,
+            immediate: true
         },
         carList: {
             handler(newVal) {
@@ -37,7 +41,8 @@ export default {
                 }
                 
             },
-            deep: true
+            deep: true,
+            immediate: true
         }
 
     },

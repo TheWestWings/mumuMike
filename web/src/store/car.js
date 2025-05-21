@@ -3,7 +3,7 @@ const carModule = {
     namespaced: true,
 
     state: {
-        carList: localStorage.getItem('carList') ? JSON.parse(localStorage.getItem('cart')) : [],
+        carList: localStorage.getItem('carList') ? JSON.parse(localStorage.getItem('carList')) : [],
     },
 
     getters: {

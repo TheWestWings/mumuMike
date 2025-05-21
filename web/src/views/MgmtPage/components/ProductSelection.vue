@@ -30,7 +30,8 @@ export default {
         handler(newVal) {
             this.now = newVal
         },
-        deep: true
+        deep: true,
+        immediate: true
     }
     
   },

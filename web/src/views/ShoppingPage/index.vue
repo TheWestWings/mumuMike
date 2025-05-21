@@ -264,7 +264,7 @@
         <el-drawer
           title="留言板"
           :visible.sync="drawer.comment"
-          :size="isMobile ? '90%' : '550px'"
+          :size="isMobile ? '100%' : '550px'"
           :direction="isMobile ? 'btt' : 'rtl'"
           class="comment-drawer"
         >
@@ -336,6 +336,9 @@ export default {
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize);
   },
+  created(){
+    this.carProductList = this.$store.state.car.carList ? this.$store.state.car.carList : []
+  },
 
   mounted(){
     this.getList()
@@ -357,6 +360,8 @@ export default {
 
     this.drawerWidth = this.isMobile ? '100%' : '50%';  // 设置抽屉宽度
     this.drawerLift = this.isMobile ? '0%' : '25%';  // 设置抽屉位置
+    this.carProductList = this.$store.state.car.carList ? this.$store.state.car.carList : []
+    console.log('购物车', this.$store.state.car.carList)
     this.getMessage()
     
     // 移除所有动画效果，直接显示页面元素
@@ -852,7 +857,7 @@ export default {
       grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
       gap: 18px;
       padding: 15px 15px 15px 12px;
-      justify-items: start;
+    //   justify-items: start;
       justify-content: start;
       height: auto;
       max-height: 320px;
@@ -867,6 +872,7 @@ export default {
     .nav-menu-btn {
       padding: 10px 5px;
       height: 85px;
+      margin: 0;
       flex-direction: column;
       justify-content: center;
       align-items: center;
