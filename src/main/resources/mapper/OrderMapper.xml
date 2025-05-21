@@ -37,6 +37,11 @@
             </if>
         </where>
     </select>
+    <select id="getOrderProductById" resultType="com.mumuwest.mumumike.pojo.OrderProduct">
+        SELECT *
+        FROM orders_product
+        WHERE id = #{id}
+    </select>
 
     <insert id="insertOrder" parameterType="com.mumuwest.mumumike.pojo.Order" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO orders (user_id, createTime, updateTime)

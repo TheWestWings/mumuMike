@@ -4,6 +4,7 @@ import com.mumuwest.mumumike.annotation.Role;
 import com.mumuwest.mumumike.pojo.*;
 import com.mumuwest.mumumike.pojo.VO.OrderProductVO;
 import com.mumuwest.mumumike.pojo.VO.OrderVO;
+import com.mumuwest.mumumike.service.MessageService;
 import com.mumuwest.mumumike.service.OrderService;
 import com.mumuwest.mumumike.service.ProductService;
 import com.mumuwest.mumumike.service.UserService;
@@ -29,6 +30,9 @@ public class OrderController {
 
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private MessageService messageService;
 
     /**
      * 通过id查询订单
@@ -135,6 +139,17 @@ public class OrderController {
      */
     @PutMapping("/updateOrderProduct")
     public AjaxResult updateOrderProduct(@RequestBody OrderProduct orderProduct) {
+        if(orderProduct.getStatus() == 2){
+            OrderProduct orderProductById = orderService.getOrderProductById(orderProduct.getId());
+            Product product = productService.getProductById(orderProductById.getProductId());
+            Order orderById = orderService.getOrderById(orderProductById.getOrderId());
+            Message message = new Message();
+            message.setUserId(orderById.getUserId());
+            message.setTitle("订单已退单");
+            message.setContent("订单号：" + orderProduct.getOrderId() + "的商品已退单，商品名称：" + product.getName());
+            message.setCreateTime(String.valueOf(System.currentTimeMillis()));
+            messageService.createMessage(message);
+        }
         return AjaxResult.success(orderService.updateOrderProduct(orderProduct));
     }
 
@@ -144,6 +159,15 @@ public class OrderController {
         Order orderUpdate = new Order();
         orderUpdate.setId(order.getId());
         orderUpdate.setStatus(order.getStatus());
+        if(orderUpdate.getStatus() == 2){
+            Order orderById = orderService.getOrderById(orderUpdate.getId());
+            Message message = new Message();
+            message.setUserId(orderById.getUserId());
+            message.setTitle("订单已完成，请取餐");
+            message.setContent("订单号：" + orderUpdate.getId() + "，请及时取餐");
+            message.setCreateTime(String.valueOf(System.currentTimeMillis()));
+            messageService.createMessage(message);
+        }
         return AjaxResult.success(orderService.updateOrder(orderUpdate));
     }
 

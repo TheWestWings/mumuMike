@@ -19,6 +19,27 @@
         >
           <div class="message-content">
             <!-- 消息内容区域 -->
+            <div v-for="(item, index) in messageList" :key="item.id">
+              <!-- 时间分界线 -->
+              <div v-if="index === 0 || formatDate(item.createTime) !== formatDate(messageList[index-1].createTime)" class="message-time-divider">
+                <span>{{ formatDate(item.createTime) }}</span>
+              </div>
+              
+              <!-- 消息卡片 -->
+              <div class="message-item">
+                <el-card :class="{'unread': item.status === 0}" @click.native="toggleMessage(item)">
+                  <div class="message-header">
+                    <div class="message-title-row">
+                      <span class="message-title">{{ item.title }}</span>
+                      <span v-if="item.status === 0" class="unread-dot"></span>
+                    </div>
+                  </div>
+                  <div v-if="item.expanded || item.showContent" class="message-body">
+                    {{ item.content }}
+                  </div>
+                </el-card>
+              </div>
+            </div>
           </div>
         </el-drawer>
 
@@ -103,15 +124,17 @@
           </el-button>
         </div>
 
-        <el-header style="height: 450px;">
+        <el-header style="height: auto; padding: 0;">
           <header class="header">
+            <div class="header-backdrop"></div>
             <div class="header-content">
                 <h1>木木牛奶公司</h1>
                 <p>用心制作的奶香甜品</p>
+                <div class="header-decoration">
+                  <span></span><span></span><span></span>
+                </div>
             </div>
           </header>
-
-
         </el-header>
 
 
@@ -125,10 +148,11 @@
           >
             <template v-slot:products>
               <product-card
-              v-for="(product, index) in series.productList"
-                :key="index"
+              v-for="(product, productIndex) in series.productList"
+                :key="productIndex"
                 :product="product"
                 @click="handleAdd"
+                ref="productCards"
               ></product-card>
               
             </template>
@@ -155,9 +179,13 @@
           :visible.sync="drawer.car"
           :size="isMobile ? '70%' : '50%'"
           :style="{ width: drawerWidth, left: drawerLift }"
-          :class="{'mobile-drawer': isMobile}"
+          :class="{'mobile-drawer': isMobile, 'cart-drawer': true}"
         >
           <div class="cart-content">
+            <div v-if="carProductList.length === 0" class="empty-cart">
+              <i class="el-icon-shopping-cart-2"></i>
+              <p>购物车是空的，快去选购吧~</p>
+            </div>
             <product-selection
               @countChange="handleCountChange"
               v-for="(item, index) in carProductList"
@@ -165,6 +193,23 @@
               :product="item"
               class="cart-item"
             ></product-selection>
+          </div>
+          <div class="cart-footer">
+            <div class="cart-footer-item">
+              <span class="cart-summary">共 {{ totalCount }} 件商品</span>
+            </div>
+            <div class="cart-footer-item">
+              <span class="cart-total-label">合计:</span>
+              <span class="cart-total-price">¥{{ calculateTotal() }}</span>
+            </div>
+            <el-button
+              type="primary"
+              @click="submitOrder"
+              class="cart-checkout-btn"
+              :disabled="carProductList.length === 0"
+            >
+              去结算
+            </el-button>
           </div>
         </el-drawer>
 
@@ -208,7 +253,12 @@ export default {
     this.user.phone = this.$store.state.phone
     this.user.email = this.$store.state.email
     this.user.id = this.$store.state.id
+
+    this.drawerWidth = this.isMobile ? '100%' : '50%';  // 设置抽屉宽度
+    this.drawerLift = this.isMobile ? '0%' : '25%';  // 设置抽屉位置
     this.getMessage()
+    
+    // 移除所有动画效果，直接显示页面元素
   },
 
   methods: {
@@ -272,8 +322,33 @@ export default {
     getMessage() {
       console.log( 'id',this.user.id)
       getMessageList(this.user.id).then(res => {
-        console.log( 'message',res)
+        this.messageList = res.data.rows.map(item => {
+          return {
+            ...item,
+            expanded: false,
+            showContent: false
+          }
+        })
       })
+    },
+
+    // 格式化日期为 YYYY-MM-DD 格式
+    formatDate(dateString) {
+      if (!dateString) return ''
+      const date = new Date(dateString)
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+    },
+
+    toggleMessage(item) {
+      // 切换消息展开/收起状态
+      item.expanded = !item.expanded
+      
+      // 如果是未读消息，标记为已读
+      if (item.status === 0) {
+        item.status = 1
+        // 这里可以添加调用后端API更新消息状态的代码
+        // 例如: updateMessageStatus(item.id, 1)
+      }
     },
 
     handleOnEdit() {
@@ -333,13 +408,59 @@ export default {
       })
     },
     submitOrder() {
+      // 检查购物车是否为空
+      if (this.carProductList.length === 0) {
+        this.$message({
+          message: "购物车是空的，请先添加商品",
+          type: 'warning'
+        });
+        return;
+      }
+      
       this.order.createTime = new Date()
       this.order.product = this.carProductList
       console.log(this.order)
+      
+      // 显示加载中
+      const loading = this.$loading({
+        lock: true,
+        text: '订单提交中...',
+        spinner: 'el-icon-loading',
+        background: 'rgba(255, 255, 255, 0.7)'
+      });
+      
       submitOrder(this.order).then((res) => {
-        
         console.log(res)
-      })
+        
+        // 关闭加载中
+        loading.close();
+        
+        // 显示成功提示
+        this.$message({
+          message: "订单提交成功！",
+          type: 'success'
+        });
+        
+        // 关闭购物车抽屉
+        this.drawer.car = false;
+        
+        // 清空购物车
+        this.carProductList = [];
+        
+        // 更新总数量
+        this.totalCount = 0;
+      }).catch(error => {
+        // 关闭加载中
+        loading.close();
+        
+        // 显示错误提示
+        this.$message({
+          message: "订单提交失败，请稍后重试",
+          type: 'error'
+        });
+        
+        console.error("提交订单失败:", error);
+      });
     }
 
 
@@ -368,8 +489,8 @@ export default {
   data(){
     return{
       isMobile: window.innerWidth <= 768,  // 添加移动端判断
-      drawerWidth: '50%',
-      drawerLift: '25%',
+      drawerWidth: this.isMobile ? '100%' : '50%',  // 设置抽屉宽度
+      drawerLift: this.isMobile ? '0%' : '25%',  // 设置抽屉位置
       isCollapsed: false,
       seriesIcons: [],  // 存储每个系列对应的图标
 
@@ -414,6 +535,7 @@ export default {
       },
 
       carProductList:[],
+      messageList:[]
     }
   }
 
@@ -423,27 +545,37 @@ export default {
 </script>
 
 <style lang="less">
+/* 已移除所有动画效果 */
+
+/* 移动端抽屉样式 */
 .mobile-drawer {
   .el-drawer__container {
     .el-drawer {
       width: 100% !important;
-      left: 50% !important;
-      transform: translateX(-50%) !important;
+      left: 0 !important;
+      transform: none !important;
       max-width: 100%;
+      border-radius: 20px 20px 0 0 !important;
 
       .el-drawer__body {
-        padding: 20px;
+        padding: 0;
         
         .cart-content {
-          width: 92%;
-          margin: 0 auto;
+          width: 100%;
+          padding: 15px;
+          max-height: 60vh;
         }
       }
 
       .el-drawer__header {
-        padding: 15px;
+        padding: 12px 15px;
         margin-bottom: 0;
         text-align: center;
+        font-size: 16px;
+        font-weight: 600;
+        border-radius: 20px 20px 0 0;
+        background-color: #f8f6f2;
+        border-bottom: 1px solid #eee;
       }
     }
   }
@@ -546,14 +678,21 @@ export default {
   }
 
   .bottom-bar {
-    width: 92% !important;
-    border-radius: 30px !important;
-    bottom: 20px !important;
+    width: 100% !important;
+    border-radius: 0 !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    display: flex !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    z-index: 2000 !important;
+    position: fixed !important;
     
-
     .cart-btn, .submit-btn {
       padding: 8px 12px;
       font-size: 14px;
+      width: auto !important;
     }
 
     .total-price {
@@ -565,13 +704,35 @@ export default {
   .header {
     height: 300px !important;
     margin-top: 50px;
+    border-radius: 0 0 20px 20px;
 
     h1 {
-      font-size: 24px !important;
+      font-size: 28px !important;
     }
 
     p {
       font-size: 14px !important;
+      margin-bottom: 20px;
+    }
+    
+    .header-decoration {
+      margin-top: 20px;
+      
+      span {
+        height: 3px;
+      }
+      
+      span:nth-child(1) {
+        width: 20px;
+      }
+      
+      span:nth-child(2) {
+        width: 40px;
+      }
+      
+      span:nth-child(3) {
+        width: 20px;
+      }
     }
   }
 
@@ -586,41 +747,37 @@ export default {
     width: 90%;
   }
 
+  .header {
+    height: 350px !important;
+    border-radius: 0 0 25px 25px;
+    
+    h1 {
+      font-size: 3em !important;
+    }
+    
+    .header-decoration {
+      margin-top: 25px;
+    }
+  }
+
   .side-nav {
-    width: 50px;
+    width: 180px;
     
     .nav-content {
       padding: 10px 0;
     }
 
     .nav-menu-btn {
-      padding: 15px 0;
-      justify-content: center;
+      padding: 12px 15px;
+      justify-content: flex-start;
 
       i {
-        margin: 0;
+        margin-right: 10px;
         font-size: 20px;
       }
 
       .nav-text {
-        display: none;
-      }
-    }
-
-    &:hover {
-      width: 180px;
-
-      .nav-menu-btn {
-        padding: 12px 25px;
-        justify-content: flex-start;
-
-        i {
-          margin-right: 10px;
-        }
-
-        .nav-text {
-          display: block;
-        }
+        font-size: 14px;
       }
     }
   }
@@ -682,6 +839,8 @@ export default {
   transition: all 0.3s ease;
   width: 220px;
   max-height: 80vh;
+  opacity: 1; /* 始终保持可见 */
+
 
   &.mobile.collapsed {
     transform: translate(-100%, -50%);
@@ -788,20 +947,22 @@ export default {
 
 
 .bottom-bar {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 50%;
-  height: 60px;
-  background-color: #fff;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 20px;
-  z-index: 1000;
-  border-radius: 30px;
+  position: fixed !important;
+  bottom: 20px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  width: 50% ;
+  height: 60px !important;
+  background-color: #fff !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 0 20px !important;
+  z-index: 2000 !important;
+  border-radius: 30px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
 
   .cart-badge {
     margin: 0;
@@ -835,29 +996,222 @@ export default {
 
 
 
-.shopping-cart-drawer {
+/* 购物车抽屉样式 */
+.cart-drawer {
   &.el-drawer--bottom {
-    height: 500px !important;
+    height: auto !important;
+    min-height: 50vh;
+    max-height: 70vh;
     width: 50% !important;
     left: 25% !important;
+    border-radius: 20px 20px 0 0 !important;
+    overflow: hidden;
+  }
+  
+  .el-drawer__wrapper {
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+  }
+  
+  .el-drawer__container {
+    border-radius: 20px 20px 0 0;
+    overflow: hidden;
+  }
+  
+  .el-drawer {
+    border-radius: 20px 20px 0 0 !important;
+    overflow: hidden;
+  }
+  
+  .el-drawer__header {
+    margin-bottom: 0;
+    padding: 16px 20px;
+    background-color: #f8f6f2;
+    border-bottom: 1px solid #eee;
+    font-size: 18px;
+    font-weight: 600;
+    color: #8d6e63;
+    border-radius: 20px 20px 0 0;
+    
+    .el-drawer__close-btn {
+      color: #8d6e63;
+      
+      &:hover {
+        color: #5d4037;
+      }
+    }
+  }
+  
+  .el-drawer__body {
+    padding: 0;
+    position: relative;
+    background-color: #fdf6e3;
+    display: flex;
+    flex-direction: column;
   }
 }
 
 .cart-content {
   padding: 20px;
-  max-height: calc(80vh - 60px);
+  flex: 1;
   overflow-y: auto;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0.2));
+  -webkit-overflow-scrolling: touch;
+
+  .empty-cart {
+    text-align: center;
+    padding: 40px 20px;
+    color: #aaa;
+    
+    i {
+      font-size: 50px;
+      color: #ddd;
+      margin-bottom: 15px;
+    }
+    
+    p {
+      font-size: 15px;
+    }
+  }
 
   .cart-item {
     margin-bottom: 15px;
     padding: 15px;
-    background-color: #f8f8f8;
-    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 12px;
     transition: all 0.3s;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    border: 1px solid rgba(141, 110, 99, 0.1);
 
     &:hover {
       transform: translateY(-2px);
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 4px 12px rgba(141, 110, 99, 0.15);
+    }
+  }
+}
+
+/* 购物车底部样式 */
+.cart-footer {
+  background-color: #fff;
+  border-top: 1px solid #eee;
+  padding: 15px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 -4px 10px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  
+  .cart-footer-item {
+    display: flex;
+    align-items: center;
+    
+    .cart-summary {
+      font-size: 14px;
+      color: #909399;
+    }
+    
+    .cart-total-label {
+      font-size: 15px;
+      color: #606266;
+      margin-right: 8px;
+    }
+    
+    .cart-total-price {
+      font-size: 20px;
+      font-weight: 600;
+      color: #8d6e63;
+    }
+  }
+  
+  .cart-checkout-btn {
+    padding: 10px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    background-color: #8d6e63;
+    border-color: #8d6e63;
+    transition: all 0.3s;
+    
+    &:hover {
+      background-color: #5d4037;
+      border-color: #5d4037;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(93, 64, 55, 0.25);
+    }
+  }
+}
+
+/* 适配移动端购物车 */
+@media screen and (max-width: 768px) {
+  .cart-drawer {
+    &.el-drawer--bottom {
+      width: 100% !important;
+      left: 0 !important;
+      border-radius: 20px 20px 0 0 !important;
+      z-index: 2001 !important;
+      height: auto !important;
+      min-height: 55vh !important;
+      max-height: 80vh !important;
+    }
+    
+    .el-drawer__wrapper,
+    .el-drawer__container,
+    .el-drawer,
+    .el-drawer__header {
+      border-radius: 20px 20px 0 0 !important;
+    }
+    
+    .el-drawer__body {
+      .cart-content {
+        max-height: calc(75vh - 120px);
+        padding: 15px;
+      }
+    }
+  }
+  
+  .cart-footer {
+    padding: 12px 15px;
+    border-top: 1px solid rgba(141, 110, 99, 0.1);
+    background-color: #f8f6f2;
+    
+    .cart-footer-item {
+      &:first-child {
+        display: none;
+      }
+      
+      .cart-total-label {
+        font-size: 14px;
+      }
+      
+      .cart-total-price {
+        font-size: 18px;
+      }
+    }
+    
+    .cart-checkout-btn {
+      padding: 8px 15px;
+      font-size: 14px;
+      border-radius: 16px;
+      width: 120px;
+      font-weight: 500;
+      background-color: #8d6e63;
+      border-color: #8d6e63;
+      
+      &:hover, &:active {
+        background-color: #5d4037;
+        border-color: #5d4037;
+      }
+    }
+  }
+  
+  .cart-item {
+    margin-bottom: 10px;
+    
+    &:last-child {
+      margin-bottom: 5px;
     }
   }
 }
@@ -946,7 +1300,22 @@ export default {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(93, 64, 55, 0.8);
+    background-color: #8d6e63;
+    background-image: linear-gradient(135deg, #8d6e63 0%, #5d4037 100%);
+    overflow: hidden;
+    border-radius: 0 0 30px 30px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.header-backdrop {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23ffffff' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+    opacity: 0.8;
+    z-index: 1;
 }
 
 .header-content {
@@ -954,12 +1323,52 @@ export default {
     color: #fff;
     position: relative;
     z-index: 2;
+    padding: 40px 20px;
+    max-width: 800px;
 }
 
 .header h1 {
-    font-size: 3em;
+    font-size: 3.5em;
     margin-bottom: 20px;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-shadow: 2px 4px 8px rgba(0, 0, 0, 0.3);
+    font-weight: 600;
+    letter-spacing: 2px;
+    color: #FFF;
+}
+
+.header p {
+    font-size: 1.25em;
+    margin-bottom: 30px;
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 1px 2px 4px rgba(0, 0, 0, 0.2);
+    letter-spacing: 1px;
+}
+
+.header-decoration {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    margin-top: 30px;
+}
+
+.header-decoration span {
+    display: block;
+    height: 4px;
+    background-color: #FDF6E3;
+    border-radius: 2px;
+}
+
+.header-decoration span:nth-child(1) {
+    width: 30px;
+}
+
+.header-decoration span:nth-child(2) {
+    width: 60px;
+}
+
+.header-decoration span:nth-child(3) {
+    width: 30px;
 }
 
 a {
@@ -977,5 +1386,99 @@ a {
   align-items: center;
 }
 
+/* 消息中心样式 */
+.message-content {
+  padding: 15px;
+  max-height: calc(100vh - 120px);
+  overflow-y: auto;
+}
+
+.message-item {
+  margin-bottom: 15px;
+}
+
+.message-item .el-card {
+  border-radius: 8px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.message-item .el-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.message-item .el-card.unread {
+  border-left: 3px solid #8d6e63;
+  background-color: #f0f9ff;
+}
+
+.message-header {
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+
+.message-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.message-title {
+  font-weight: bold;
+  font-size: 16px;
+  color: #303133;
+}
+
+.unread .message-title {
+  color: #8d6e63;
+}
+
+.message-body {
+  padding-top: 10px;
+  font-size: 14px;
+  color: #606266;
+  line-height: 1.6;
+  border-top: 1px solid #eee;
+  margin-top: 8px;
+}
+
+.unread-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #F56C6C;
+  border-radius: 50%;
+  display: inline-block;
+}
+
+/* 时间分界线样式 */
+.message-time-divider {
+  position: relative;
+  text-align: center;
+  margin: 20px 0;
+  height: 16px;
+  font-size: 14px;
+}
+
+.message-time-divider:before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background-color: #EBEEF5;
+  z-index: 1;
+}
+
+.message-time-divider span {
+  position: relative;
+  display: inline-block;
+  padding: 0 10px;
+  background-color: white;
+  color: #909399;
+  z-index: 2;
+}
 
 </style>

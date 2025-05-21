@@ -36,6 +36,13 @@ public interface OrderService {
     public Order getOrderById(Integer id);
 
     /**
+     * 根据id查询订单产品
+     * @param id
+     * @return
+     */
+    public OrderProduct getOrderProductById(Integer id);
+
+    /**
      * 查询订单列表
      * @param order
      * @return

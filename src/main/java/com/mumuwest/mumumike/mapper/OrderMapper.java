@@ -57,4 +57,12 @@ public interface OrderMapper {
      * @return
      */
     public int updateOrderProduct(OrderProduct orderProduct);
+
+
+    /**
+     * 根据id查询订单产品
+     * @param id
+     * @return
+     */
+    public OrderProduct getOrderProductById(Integer id);
 }

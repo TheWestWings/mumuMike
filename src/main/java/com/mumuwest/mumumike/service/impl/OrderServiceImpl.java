@@ -1,6 +1,7 @@
 package com.mumuwest.mumumike.service.impl;
 
 import com.mumuwest.mumumike.mapper.OrderMapper;
+import com.mumuwest.mumumike.pojo.Message;
 import com.mumuwest.mumumike.pojo.Order;
 import com.mumuwest.mumumike.pojo.OrderProduct;
 import com.mumuwest.mumumike.service.OrderService;
@@ -61,6 +62,11 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public Order getOrderById(Integer id) {
         return orderMapper.getOrderById(id);
+    }
+
+    @Override
+    public OrderProduct getOrderProductById(Integer id) {
+        return orderMapper.getOrderProductById(id);
     }
 
     /**

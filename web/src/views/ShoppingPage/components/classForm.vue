@@ -1,5 +1,5 @@
 <template>
-   <div class="category-section" id="sugar">
+   <div class="category-section" :id="id">
     <div class="category-header">
         <h2>{{ title }}</h2>
         <p>{{ description }}</p>
@@ -13,25 +13,48 @@
 <script>
 
 export default {
-    props: ['title', 'description'],
+    props: ['title', 'description', 'id'],
     data() {
-
         return{
             series: {
                 title: '糖水系列',
                 description: '传统与创新的完美融合，温暖你的味蕾'
             }
-
         }
     },
     mounted(){
-        console.log(this.title)
-        console.log(this.description)
+        // 添加进入动画效果
+        this.$nextTick(() => {
+            setTimeout(() => {
+                this.$el.classList.add('animate-in');
+            }, 400 + Math.random() * 400); // 随机延迟，创造错落感
+            
+            // 为产品卡片添加交错动画
+            const productCards = this.$el.querySelectorAll('.product-card');
+            productCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.classList.add('animate-in');
+                }, 600 + (index * 120)); // 交错显示产品卡片
+            });
+        });
     }
 }
 </script>
 
 <style scoped>
+/* 分类区域的进入动画 */
+.category-section {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: all 0.8s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.category-section.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* 产品卡片的交错动画由父组件添加的样式控制 */
 .category-section {
     margin: 6rem 0;
 }

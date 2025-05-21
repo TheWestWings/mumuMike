@@ -1,6 +1,6 @@
 <template>
 <div class="product-card">
-    <img :src="product.pictureUrl" alt="桃胶莲子鲜奶" class="product-image">
+    <img :src="product.pictureUrl" :alt="product.name" class="product-image">
     <div class="product-info">
         <h3>{{ product.name }}</h3>
         <p>{{ product.description }}</p>
@@ -44,6 +44,17 @@ export default {
 </script>
 
 <style scoped>
+/* 产品卡片进入动画 */
+.product-card {
+    opacity: 0;
+    transform: translateY(20px) scale(0.96);
+    transition: all 0.5s cubic-bezier(0.215, 0.61, 0.355, 1);
+}
+
+.product-card.animate-in {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
 .product-card {
     background: #fff;
     border-radius: 12px;
