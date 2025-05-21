@@ -40,6 +40,7 @@
         <where>
             <if test="id != null">
                 and id = #{id}
+            </if>
             <if test="userId != null">
                 and user_id = #{userId}
             </if>

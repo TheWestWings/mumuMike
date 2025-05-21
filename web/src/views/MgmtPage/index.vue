@@ -60,7 +60,7 @@
           </el-menu-item-group>
         </el-submenu>
 
-        <el-menu-item index="/MgmtPage/MessageMgmt" @click="closeSidebarOnMobile">
+        <el-menu-item index="/MgmtPage/InformationMgmt" @click="closeSidebarOnMobile">
           <i class="el-icon-chat-line-square"></i>
           <span slot="title">留言管理</span>
         </el-menu-item>

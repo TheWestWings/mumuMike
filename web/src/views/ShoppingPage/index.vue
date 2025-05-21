@@ -248,6 +248,72 @@
 
         </el-main> 
         <el-footer>Footer</el-footer>
+        
+        <!-- 右侧留言按钮 -->
+        <div class="comment-btn-container">
+          <el-button
+            @click="drawer.comment = true"
+            type="primary"
+            class="comment-btn"
+            icon="el-icon-s-comment"
+            circle>
+          </el-button>
+        </div>
+        
+        <!-- 留言抽屉 -->
+        <el-drawer
+          title="留言板"
+          :visible.sync="drawer.comment"
+          :size="isMobile ? '90%' : '550px'"
+          :direction="isMobile ? 'btt' : 'rtl'"
+          class="comment-drawer"
+        >
+          <div class="drawer-header">
+            <div class="drawer-title">留言板</div>
+            <el-button class="drawer-close" icon="el-icon-close" circle @click="drawer.comment = false"></el-button>
+          </div>
+          
+          <div class="comment-content">
+            <el-form
+              :model="commentForm"
+              :rules="commentRules"
+              ref="commentForm"
+              label-position="top"
+              class="comment-form"
+            >
+              <el-form-item label="标题" prop="title">
+                <el-input
+                  v-model="commentForm.title"
+                  placeholder="请输入留言标题"
+                  maxlength="30"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+              
+              <el-form-item label="内容" prop="content">
+                <el-input
+                  type="textarea"
+                  v-model="commentForm.content"
+                  placeholder="请输入留言内容"
+                  :rows="5"
+                  maxlength="200"
+                  show-word-limit
+                ></el-input>
+              </el-form-item>
+              
+              <el-form-item>
+                <el-button
+                  type="primary"
+                  @click="submitComment"
+                  class="submit-comment-btn"
+                  :loading="submitting"
+                >
+                  提交留言
+                </el-button>
+              </el-form-item>
+            </el-form>
+          </div>
+        </el-drawer>
     </el-container>
 
 </template>
@@ -261,6 +327,7 @@ import ProductSelection from '../MgmtPage/components/ProductSelection.vue'
 import { getProductById } from '@/api/Product/Product'
 import { submitOrder } from '@/api/Order/Order'
 import {getMessageList, updateMessageStatus} from '@/api/Message/Message'
+import { addInformation } from '@/api/Information/Information'
 
 export default {
   name: "ShoppingPage",
@@ -549,6 +616,50 @@ export default {
         
         console.error("提交订单失败:", error);
       });
+    },
+    
+    // 提交留言
+    submitComment() {
+      this.$refs.commentForm.validate((valid) => {
+        if (valid) {
+          this.submitting = true;
+          
+          // 这里需要调用后端API提交留言
+          // 假设API路径为 /message/add
+          this.$notify({
+            title: "提示",
+            message: "留言提交中...",
+            type: 'info',
+            duration: 2000
+          });
+          
+          addInformation(this.commentForm).then(() => {
+            // 模拟API调用，实际项目中应该替换为真实的API调用
+            // 例如: submitComment(this.commentForm).then(...)
+            this.submitting = false;
+            this.$notify({
+              title: "成功",
+              message: "留言提交成功！",
+              type: 'success'
+            });
+            
+            // 清空表单
+            this.commentForm.title = '';
+            this.commentForm.content = '';
+            this.$refs.commentForm.resetFields();
+            
+            // 关闭抽屉
+            this.drawer.comment = false;
+          });
+        } else {
+          this.$notify({
+            title: "错误",
+            message: "请正确填写留言信息",
+            type: 'error'
+          });
+          return false;
+        }
+      });
     }
 
 
@@ -589,6 +700,7 @@ export default {
       drawerLift: this.isMobile ? '0%' : '25%',  // 设置抽屉位置
       isCollapsed: false,
       seriesIcons: [],  // 存储每个系列对应的图标
+      submitting: false, // 提交留言状态
 
       user: {
         username: '',
@@ -602,7 +714,27 @@ export default {
       drawer: {
         user: false,
         car: false,
-        message: false
+        message: false,
+        comment: false // 新增留言抽屉
+      },
+      
+      // 留言表单数据
+      commentForm: {
+        title: '',
+        content: '',
+        userId: this.$store.state.id
+      },
+      
+      // 留言表单验证规则
+      commentRules: {
+        title: [
+          { required: true, message: '请输入留言标题', trigger: 'blur' },
+          { min: 2, max: 30, message: '标题长度在2到30个字符之间', trigger: 'blur' }
+        ],
+        content: [
+          { required: true, message: '请输入留言内容', trigger: 'blur' },
+          { min: 5, max: 200, message: '内容长度在5到200个字符之间', trigger: 'blur' }
+        ]
       },
 
       order:{
@@ -1802,4 +1934,151 @@ a {
   z-index: 2;
 }
 
+/* 留言按钮样式 */
+.comment-btn-container {
+  position: fixed;
+  right: 20px;
+  bottom: 400px;
+  z-index: 999;
+}
+
+.comment-btn {
+  width: 60px;
+  height: 60px;
+  box-shadow: 0 4px 12px rgba(141, 110, 99, 0.3);
+  background-color: #8d6e63;
+  border-color: #8d6e63;
+  transition: all 0.3s;
+}
+
+.comment-btn:hover, .comment-btn:focus {
+  background-color: #5d4037;
+  border-color: #5d4037;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(93, 64, 55, 0.4);
+}
+
+.comment-btn i {
+  font-size: 22px;
+}
+
+/* 留言抽屉样式 */
+.comment-drawer {
+  .el-drawer {
+    border-radius: 16px 0 0 16px;
+    overflow: hidden;
+  }
+  
+  .drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #eee;
+    
+    .drawer-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #8d6e63;
+    }
+    
+    .drawer-close {
+      padding: 8px;
+      color: #8d6e63;
+      border: none;
+      
+      &:hover {
+        background-color: rgba(141, 110, 99, 0.1);
+        color: #5d4037;
+      }
+    }
+  }
+  
+  .comment-content {
+    padding: 20px;
+    height: calc(100% - 70px);
+    overflow-y: auto;
+  }
+  
+  .comment-form {
+    background-color: #fff;
+    padding: 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    
+    .el-form-item__label {
+      color: #8d6e63;
+      font-weight: 600;
+      font-size: 16px;
+      padding-bottom: 8px;
+    }
+    
+    .el-input__inner, .el-textarea__inner {
+      border-radius: 8px;
+      border-color: #e0e0e0;
+      transition: all 0.3s;
+      
+      &:focus {
+        border-color: #8d6e63;
+        box-shadow: 0 0 0 2px rgba(141, 110, 99, 0.2);
+      }
+    }
+    
+    .el-textarea__inner {
+      min-height: 120px;
+    }
+    
+    .submit-comment-btn {
+      width: 100%;
+      height: 44px;
+      border-radius: 8px;
+      background-color: #8d6e63;
+      border-color: #8d6e63;
+      font-size: 16px;
+      font-weight: 500;
+      letter-spacing: 1px;
+      margin-top: 20px;
+      transition: all 0.3s;
+      
+      &:hover, &:focus {
+        background-color: #5d4037;
+        border-color: #5d4037;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(93, 64, 55, 0.25);
+      }
+    }
+  }
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+  .comment-btn-container {
+    right: 15px;
+    bottom: 100px;
+  }
+  
+  .comment-btn {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .comment-drawer {
+    .el-drawer {
+      border-radius: 16px 16px 0 0 !important;
+    }
+    
+    .drawer-header {
+      padding: 15px;
+    }
+    
+    .comment-content {
+      padding: 15px;
+    }
+    
+    .comment-form {
+      padding: 15px;
+    }
+  }
+}
 </style>

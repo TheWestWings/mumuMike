@@ -106,7 +106,8 @@ const routesAll = [
       meta: {
         roles: 1,
       }
-    }
+    },
+
 
   ]
 }

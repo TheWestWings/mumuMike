@@ -1,10 +1,13 @@
-package com.mumuwest.mumumike.pojo;
+package com.mumuwest.mumumike.pojo.VO;
+
+import com.mumuwest.mumumike.pojo.User;
 
 import java.util.Date;
 
-public class Information {
+public class InformationVO {
     private Integer id;
     private Integer userId;
+    private User user;
     private String title; // 主题
     private String content; // 内容
     private String reply; // 回复
@@ -26,6 +29,14 @@ public class Information {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public String getTitle() {
