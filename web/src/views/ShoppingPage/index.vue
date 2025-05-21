@@ -15,8 +15,14 @@
         <el-drawer
           :visible.sync="drawer.message"
           title="消息中心"
-          :size="400"
+          class="message-drawer"
+          :size="550"
+          :with-header="false"
         >
+          <div class="drawer-header">
+            <div class="drawer-title">消息中心</div>
+            <el-button class="drawer-close" icon="el-icon-close" circle @click="drawer.user = false"></el-button>
+          </div>
           <div class="message-content">
             <!-- 消息内容区域 -->
             <div v-for="(item, index) in messageList" :key="item.id">
@@ -1348,6 +1354,53 @@ export default {
     .drawer-footer {
       padding: 10px 0;
     }
+  }
+}
+
+.message-drawer {
+      .el-drawer {
+    border-radius: 16px 0 0 16px !important;
+    overflow: hidden;
+  }
+  
+  .drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background-color: #ffffff;
+    border-bottom: 1px solid #eee;
+    
+    .drawer-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #8d6e63;
+    }
+    
+    .drawer-close {
+      padding: 8px;
+      color: #8d6e63;
+      border: none;
+      
+      &:hover {
+        background-color: rgba(141, 110, 99, 0.1);
+        color: #5d4037;
+      }
+    }
+  }
+
+  .el-drawer__body {
+    padding: 24px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  
+  .drawer-footer {
+    padding: 20px 0;
+    margin-top: 20px;
+    background-color: transparent;
   }
 }
 
