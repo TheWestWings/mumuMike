@@ -49,6 +49,7 @@
         SELECT id, user_id, title, content, create_time, update_time, status
         FROM message
         WHERE id = #{id}
+        order by create_time desc
     </select>
 
     <select id="getMessageListByUserId" resultType="com.mumuwest.mumumike.pojo.Message">
