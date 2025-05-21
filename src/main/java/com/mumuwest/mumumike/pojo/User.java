@@ -81,9 +81,7 @@ public class User {
     }
 
     public void setAvatar(String avatar) {
-        String baseUrl = "http://localhost:8080";
-        String relativePath = avatar.replace("./", "");
-        this.avatar = baseUrl + "/" + relativePath;
+        this.avatar = avatar;
     }
 }
 

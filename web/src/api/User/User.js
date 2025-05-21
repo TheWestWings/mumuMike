@@ -41,3 +41,11 @@ export function updateRole(data) {
     data,
   })
 }
+
+export function getInfo(data){
+    return request({
+        url: '/getInfo',
+        method: 'get',
+        data
+    })
+}

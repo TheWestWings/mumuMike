@@ -107,6 +107,7 @@ mounted() {
               this.$store.commit('setRole', user.role)
               this.$store.commit('setEmail', user.email)
               this.$store.commit('setPhone', user.phone)
+              this.$store.commit('setAvatar', user.avatar)
               this.welcome()
     
             })

@@ -46,11 +46,35 @@
         <el-drawer
           title="个人中心"
           :visible.sync="drawer.user"
-          :size="400"
+          :size="550"
+          class="user-drawer"
+          :with-header="false"
         >
+          <div class="drawer-header">
+            <div class="drawer-title">个人中心</div>
+            <el-button class="drawer-close" icon="el-icon-close" circle @click="drawer.user = false"></el-button>
+          </div>
           <div class="demo-basic--circle">
             <div class="block">
-              <el-avatar :size="100"></el-avatar>
+              <el-upload
+                class="avatar-uploader"
+                action="http://localhost:8080/updateAvatar"
+                :show-file-list="false"
+                :on-success="handleAvatarSuccess"
+                :before-upload="beforeAvatarUpload"
+                :headers="{
+                    Authorization: 'Bearer ' + $store.state.token
+            }"
+            
+                >
+                <el-avatar
+                  :size="100"
+                  :src="user.avatar ? user.avatar : ''"
+                  @error="() => false">
+                  <i v-if="!user.avatar" class="el-icon-user-solid"></i>
+                </el-avatar>
+                <div class="avatar-hover-text">点击上传</div>
+              </el-upload>
             </div>
           </div>
 
@@ -83,21 +107,21 @@
              :class="{'input-edit': onEdit}"
              ></el-input>
           </el-form-item>
+<el-form-item size="large" v-if="onEdit" class="center-btn-item">
+  <el-button type="primary" @click="handleUpdateUserInfo" class="center-btn">确认修改</el-button>
+</el-form-item>
 
-          <el-form-item size="large" v-if="onEdit">
-            <el-button type="primary" @click="handleUpdateUserInfo">确认修改</el-button>
-          </el-form-item>
 
+<el-form-item size="large" v-else class="center-btn-item">
+  <el-button @click="handleOnEdit" class="center-btn">修改信息</el-button>
+</el-form-item>
 
-          <el-form-item size="large" v-else>
-            <el-button @click="handleOnEdit">修改信息</el-button>
-          </el-form-item>
 
 
         </el-form>
-        <el-button @click="handleLogout">退出登录</el-button>
-        
-
+        <div class="drawer-footer">
+          <el-button @click="handleLogout" type="danger" icon="el-icon-switch-button">退出登录</el-button>
+        </div>
           
         </el-drawer>
 
@@ -220,7 +244,7 @@
 </template>
 
 <script>
-import { updateUserInfo } from '@/api/User/User'
+import { updateUserInfo, getInfo } from '@/api/User/User'
 import classForm from './components/classForm.vue'
 import ProductCard from './components/productCard.vue'
 import { getSeriesList } from '@/api/Shopping/Shopping'
@@ -253,6 +277,7 @@ export default {
     this.user.phone = this.$store.state.phone
     this.user.email = this.$store.state.email
     this.user.id = this.$store.state.id
+    this.user.avatar = this.$store.state.avatar
 
     this.drawerWidth = this.isMobile ? '100%' : '50%';  // 设置抽屉宽度
     this.drawerLift = this.isMobile ? '0%' : '25%';  // 设置抽屉位置
@@ -332,11 +357,11 @@ export default {
       })
     },
 
-    // 格式化日期为 YYYY-MM-DD 格式
+    // 格式化日期为 YYYY-MM-DD HH:MM:SS 格式
     formatDate(dateString) {
       if (!dateString) return ''
       const date = new Date(dateString)
-      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`
+      return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`
     },
 
     toggleMessage(item) {
@@ -369,6 +394,40 @@ export default {
         })
       })
       this.onEdit = false
+    },
+    
+    // 头像上传成功处理
+    handleAvatarSuccess(res, file) {
+      if (res.code === 200) {
+        this.user.avatar = res.data.url
+        this.$store.commit('setAvatar', this.user.avatar)
+        this.$message({
+          message: `头像"${file.name}"上传成功！`,
+          type: 'success'
+        })
+        // 调用更新用户信息的接口，保存头像URL
+        getInfo().then((res) => {
+            this.$store.commit('setAvatar', res.data.data.avatar)
+            this.user.avatar = res.data.data.avatar
+          console.log('头像更新成功')
+        })
+      } else {
+        this.$message.error('头像上传失败')
+      }
+    },
+    
+    // 头像上传前的校验
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg' || file.type === 'image/png' || file.type === 'image/gif'
+      const isLt2M = file.size / 1024 / 1024 < 2
+
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG/PNG/GIF 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
     },
 
     handleLogout() {
@@ -499,6 +558,7 @@ export default {
         username: '',
         phone: '',
         email: '',
+        avatar: '',
       },
 
       onEdit: false,
@@ -1223,16 +1283,71 @@ export default {
     padding: 0 1rem;
 }
 .user-drawer {
-  .el-drawer__header {
-    margin-bottom: 0;
-    padding: 20px;
-    font-size: 18px;
-    font-weight: bold;
+  .el-drawer {
+    border-radius: 16px 0 0 16px !important;
+    overflow: hidden;
+  }
+  
+  .drawer-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    background-color: #ffffff;
     border-bottom: 1px solid #eee;
+    
+    .drawer-title {
+      font-size: 20px;
+      font-weight: bold;
+      color: #8d6e63;
+    }
+    
+    .drawer-close {
+      padding: 8px;
+      color: #8d6e63;
+      border: none;
+      
+      &:hover {
+        background-color: rgba(141, 110, 99, 0.1);
+        color: #5d4037;
+      }
+    }
   }
 
   .el-drawer__body {
-    padding: 20px;
+    padding: 24px;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+  }
+  
+  .drawer-footer {
+    padding: 20px 0;
+    margin-top: 20px;
+    background-color: transparent;
+  }
+}
+
+/* 适配移动端个人中心抽屉 */
+@media screen and (max-width: 768px) {
+  .user-drawer {
+    .el-drawer__header {
+      padding: 15px;
+      font-size: 16px;
+    }
+    
+    .demo-basic--circle {
+      margin: 20px 0;
+    }
+    
+    .el-form {
+      padding: 0 15px;
+    }
+    
+    .drawer-footer {
+      padding: 10px 0;
+    }
   }
 }
 
@@ -1240,58 +1355,180 @@ export default {
   display: flex;
   justify-content: center;
   margin: 30px 0;
+  position: relative;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60px;
+    height: 3px;
+    background-color: #8d6e63;
+    border-radius: 2px;
+    opacity: 0.5;
+  }
   
   .block {
     text-align: center;
 
-    .el-avatar {
-      border: 3px solid #fff;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      transition: all 0.3s ease;
+    .avatar-uploader {
+      position: relative;
+      display: inline-block;
+      cursor: pointer;
+
+      .el-avatar {
+        border: 4px solid #fff;
+        box-shadow: 0 4px 15px rgba(141, 110, 99, 0.2);
+        transition: all 0.3s ease;
+        background-color: #f8f6f2;
+      }
 
       &:hover {
-        transform: scale(1.05);
+        .el-avatar {
+          transform: scale(1.05);
+          box-shadow: 0 6px 20px rgba(141, 110, 99, 0.3);
+          opacity: 0.9;
+        }
+        
+        .avatar-hover-text {
+          opacity: 1;
+          transform: translate(-50%, -50%) scale(1);
+        }
+      }
+      
+      .avatar-hover-text {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%) scale(0.9);
+        color: #fff;
+        font-size: 14px;
+        font-weight: bold;
+        opacity: 0;
+        transition: all 0.3s ease;
+        text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        padding: 5px 10px;
+        background-color: rgba(141, 110, 99, 0.7);
+        border-radius: 12px;
+        white-space: nowrap;
+        pointer-events: none;
       }
     }
   }
 }
 
-.el-form {
-  padding: 0 20px;
+.user-drawer .el-form {
+  padding: 30px;
+  margin: 15px 0 25px 0;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  transform: translateY(0);
+  transition: transform 0.3s, box-shadow 0.3s;
+  
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 30px rgba(141, 110, 99, 0.12);
+  }
+  
+  .el-form-item__label {
+    color: #8d6e63;
+    font-weight: 600;
+    font-size: 16px;
+    padding-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
 
   .el-form-item {
-    margin-bottom: 25px;
+    margin-bottom: 30px;
+    position: relative;
+    
+    &:last-child {
+      margin-bottom: 15px;
+    }
 
     .el-input__inner {
-      border-radius: 4px;
-      background-color: #f5f7fa;
+      border-radius: 12px;
+      height: 48px;
+      padding-left: 16px;
+      background-color: #f9f9f9;
       transition: all 0.3s ease;
+      border-color: #e8e8e8;
+      font-size: 15px;
     }
 
     .input-edit {
       background-color: #ffffff !important;
-      border: none !important;
-      outline: 2px solid #8d6e63 !important;
-      outline-offset: -1px !important;
-      border-radius: 4px !important;
-      box-shadow: 0 2px 8px rgba(141, 110, 99, 0.15);
+      border: 2px solid #8d6e63 !important;
+      border-radius: 12px !important;
+      box-shadow: 0 4px 12px rgba(141, 110, 99, 0.12);
+      
       &:focus {
         background-color: #fff !important;
-        box-shadow: 0 4px 12px rgba(141, 110, 99, 0.2);
+        box-shadow: 0 6px 16px rgba(141, 110, 99, 0.18);
       }
+    }
+  }
+  
+  .center-btn-item {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+  }
+  
+  .center-btn {
+    width: 200px !important;
+    height: 42px;
+    font-size: 15px;
+    letter-spacing: 1px;
+    border-radius: 8px;
+    transition: all 0.3s;
+    margin: 0 auto;
+    
+    &.el-button--primary {
+      background-color: #8d6e63;
+      border-color: #8d6e63;
+      
+      &:hover, &:focus {
+        background-color: #5d4037;
+        border-color: #5d4037;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(93, 64, 55, 0.25);
+      }
+    }
+    
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(141, 110, 99, 0.15);
     }
   }
 }
 
-.el-button {
-  width: calc(100% - 40px);
-  margin: 10px 20px;
-  border-radius: 4px;
+.user-drawer .drawer-footer .el-button {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+  display: block;
+  border-radius: 12px;
   transition: all 0.3s;
-
-  &:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 48px;
+  font-size: 16px;
+  letter-spacing: 1px;
+  
+  &.el-button--danger {
+    background-color: #f56c6c;
+    border-color: #f56c6c;
+    color: white;
+    box-shadow: 0 4px 12px rgba(245, 108, 108, 0.2);
+    
+    &:hover {
+      background-color: #e64242;
+      border-color: #e64242;
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(230, 66, 66, 0.3);
+    }
   }
 }
 

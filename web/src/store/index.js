@@ -12,6 +12,7 @@ export default new Vuex.Store({
     email: localStorage.getItem('email') || null,
     phone: localStorage.getItem('phone') || null,
     pswd: localStorage.getItem('pswd') || null,
+    avatar: localStorage.getItem('avatar') || null,
   },
   getters: {
   },
@@ -71,6 +72,14 @@ export default new Vuex.Store({
     clearpswd(state) {
       state.pswd = null
       localStorage.removeItem('pswd')
+    },
+    setAvatar(state, avatar) {
+      state.avatar = avatar
+      localStorage.setItem('avatar', avatar)
+    },
+    clearAvatar(state) {
+      state.avatar = null
+      localStorage.removeItem('avatar')
     },
 
     clearAll(state) {

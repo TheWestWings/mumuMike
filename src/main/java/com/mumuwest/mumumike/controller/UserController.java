@@ -197,7 +197,7 @@ public class UserController {
      * @return
      */
     @PostMapping("/updateAvatar")
-    public AjaxResult updateAvatar(@RequestParam("avatar") MultipartFile avatar, HttpServletRequest request) throws IOException {
+    public AjaxResult updateAvatar(@RequestParam("file") MultipartFile avatar, HttpServletRequest request) throws IOException {
         // 通过jwt另外解析用户名
         String header = request.getHeader("Authorization");
         String token = header.substring(7);
@@ -207,7 +207,9 @@ public class UserController {
         userUpdate.setId(userByUsername.getId());
         if(avatar != null) {
             String avatarUrl = FileStorageUtil.storeFile(avatar);
-            userUpdate.setAvatar(avatarUrl);
+            String baseUrl = "http://localhost:8080";
+            String relativePath = avatarUrl.replace("./", "");
+            userUpdate.setAvatar(baseUrl + "/" + relativePath);
         }
         return AjaxResult.success(userService.updateUserInfo(userUpdate));
     }
