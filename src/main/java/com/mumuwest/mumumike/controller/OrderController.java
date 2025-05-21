@@ -16,6 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @RestController
@@ -147,7 +148,7 @@ public class OrderController {
             message.setUserId(orderById.getUserId());
             message.setTitle("订单已退单");
             message.setContent("订单号：" + orderProduct.getOrderId() + "的商品已退单，商品名称：" + product.getName());
-            message.setCreateTime(String.valueOf(System.currentTimeMillis()));
+            message.setCreateTime(new Date().toString());
             messageService.createMessage(message);
         }
         return AjaxResult.success(orderService.updateOrderProduct(orderProduct));
@@ -165,7 +166,7 @@ public class OrderController {
             message.setUserId(orderById.getUserId());
             message.setTitle("订单已完成，请取餐");
             message.setContent("订单号：" + orderUpdate.getId() + "，请及时取餐");
-            message.setCreateTime(String.valueOf(System.currentTimeMillis()));
+            message.setCreateTime(new Date().toString());
             messageService.createMessage(message);
         }
         return AjaxResult.success(orderService.updateOrder(orderUpdate));
