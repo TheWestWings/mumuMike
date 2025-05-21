@@ -51,6 +51,9 @@
             <if test="status != null">
                 and status = #{status}
             </if>
+        <if test="role != null">
+            and role = #{role}
+        </if>
         </where>
     </select>
 

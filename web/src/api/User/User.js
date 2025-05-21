@@ -10,10 +10,11 @@ export function getUserInfoById(id) {
   })
 }
 
-export function getUserList() {
+export function getUserList(data) {
   return request({
     url: '/getList',
-    method: 'get',
+    method: 'post',
+    data
   })
 }
 

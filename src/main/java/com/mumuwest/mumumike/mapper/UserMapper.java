@@ -32,7 +32,7 @@ public interface UserMapper {
      * 选择全部用户
      * @return
      */
-    List<User> selectAllUsers();
+    List<User> selectAllUsers(User user);
 
     /**
      * 通过id查询用户

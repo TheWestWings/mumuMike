@@ -173,6 +173,7 @@ public class OrderController {
             String formattedDateTime = sdf.format(new Date());
             message.setCreateTime(formattedDateTime);
             messageService.createMessage(message);
+            orderUpdate.setUpdateTime(new Date());
         }
         return AjaxResult.success(orderService.updateOrder(orderUpdate));
     }

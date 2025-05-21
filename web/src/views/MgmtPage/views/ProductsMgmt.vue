@@ -1,6 +1,6 @@
 <template>
   <div>
-
+    <h2 class="page-title">具体产品管理</h2>
     <el-table
       :data="ProductList"
       style="width: calc(100% - 40px); margin: 20px; border-radius: 8px; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);"
@@ -531,6 +531,14 @@ export default {
 </script>
 
 <style scope>
+.page-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #303133;
+  font-weight: 600;
+  border-left: 4px solid #409EFF;
+  padding-left: 12px;
+}
   .el-table .mgmter {
     background: rgba(195, 175, 171, 0.2);
   }

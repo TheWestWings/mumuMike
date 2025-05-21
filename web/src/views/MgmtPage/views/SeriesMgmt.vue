@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h2 class="page-title">类别管理</h2>
 
     <el-table
       :data="SeriesList"
@@ -379,6 +380,14 @@ export default {
   .el-table td {
     font-size: 13px;
   }
+  .page-title {
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: #303133;
+  font-weight: 600;
+  border-left: 4px solid #409EFF;
+  padding-left: 12px;
+}
 </style>
 
 <style scoped lang="less">

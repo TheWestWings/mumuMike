@@ -76,7 +76,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> getList(User user) {
         // 实现获取用户列表逻辑
-        return userMapper.selectAllUsers();
+        return userMapper.selectAllUsers(user);
     }
 
     /**

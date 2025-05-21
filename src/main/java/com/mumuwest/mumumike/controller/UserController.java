@@ -118,10 +118,10 @@ public class UserController {
      * 获取用户列表
      * @return
      */
-    @GetMapping("/getList")
+    @PostMapping("/getList")
     @Role(role = {0, 1})
-    public TableDataInfo list(User user) {
-        TableDataInfo tableDataInfo = new TableDataInfo(userService.getList(user), userMapper.selectAllUsers().size());
+    public TableDataInfo list(@RequestBody User user) {
+        TableDataInfo tableDataInfo = new TableDataInfo(userService.getList(user), userMapper.selectAllUsers(user).size());
         tableDataInfo.setCode(200);
         tableDataInfo.setMsg("查询成功");
         return tableDataInfo;

@@ -1,5 +1,6 @@
 <template>
   <div>
+    <h2 class="page-title">用户管理</h2>
     <el-table
       :data="userList"
       style="width: calc(100% - 40px); margin: 20px; border-radius: 8px; box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);"
@@ -62,19 +63,16 @@
 
 
     </el-table-column>
-
-
-
     <el-table-column label="操作" width="300px">
       <template slot-scope="scope">
 
-        <span slot="reference" v-if="scope.row.role == 2">
+        <span slot="reference" v-if="scope.row.role == 2 && $store.state.role == 0">
           <el-button
              plain
             size="mini"
             @click="handleSetRole(scope.row)">设为管理员</el-button>&ensp;
         </span>
-        <span slot="reference" v-if="scope.row.role == 1">
+        <span slot="reference" v-if="scope.row.role == 1 && $store.state.role == 0">
             <el-button
             plain
             size="mini"
@@ -110,7 +108,12 @@ export default {
 
   methods: {
     getList() {
-      getUserList().then(res => { 
+        let data = {}
+        if(this.$store.state.role == 0){
+            data = {}
+        }
+        else data = {role : 2}
+      getUserList(data).then(res => { 
       this.userList = res.data.rows 
       console.log(res.data.rows)
       console.log(this.userList)
@@ -163,6 +166,14 @@ export default {
 }
 </script>
 <style scope>
+    .page-title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #303133;
+    font-weight: 600;
+    border-left: 4px solid #409EFF;
+    padding-left: 12px;
+    }
   .el-table .mgmter {
     background: rgba(195, 175, 171, 0.2);
   }

@@ -36,6 +36,7 @@
                 o.status = #{status}
             </if>
         </where>
+        order by o.createTime desc
     </select>
     <select id="getOrderProductById" resultType="com.mumuwest.mumumike.pojo.OrderProduct">
         SELECT *
