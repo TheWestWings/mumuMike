@@ -23,6 +23,12 @@
               </span>
             </el-button>
           </router-link>
+          <el-button class="custom-button logout-btn" v-if="isLoggedIn" @click="handleLogout">
+            <span class="text">退出登录</span>
+            <span class="icon">
+              <i class="el-icon-switch-button"></i>
+            </span>
+          </el-button>
         </div>
       </div>
     </div>
@@ -39,6 +45,18 @@ export default {
   data(){
     return {
       role : this.$store.state.role
+    }
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.state.token && this.$store.state.token !== '';
+    }
+  },
+  methods: {
+    handleLogout() {
+      this.$store.commit('clearAll')
+      this.$store.commit('car/clearCarList')
+      this.$router.push('/')
     }
   }
 }
@@ -164,6 +182,13 @@ export default {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
+.logout-btn {
+  background: linear-gradient(135deg, rgba(230, 76, 76, 0.1) 0%, rgba(230, 76, 76, 0.3) 100%);
+  border: 1px solid rgba(230, 76, 76, 0.4);
+  color: #fff;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
 .custom-button::before {
   content: '';
   position: absolute;
@@ -236,6 +261,10 @@ export default {
 
 .secondary-btn:hover {
   background: linear-gradient(135deg, rgba(105, 70, 37, 0.2) 0%, rgba(105, 70, 37, 0.4) 100%);
+}
+
+.logout-btn:hover {
+  background: linear-gradient(135deg, rgba(230, 76, 76, 0.2) 0%, rgba(230, 76, 76, 0.4) 100%);
 }
 
 @keyframes fadeInUp {
@@ -420,6 +449,11 @@ export default {
   
   .secondary-btn {
     background: linear-gradient(135deg, rgba(105, 70, 37, 0.15) 0%, rgba(105, 70, 37, 0.35) 100%);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
+  }
+  
+  .logout-btn {
+    background: linear-gradient(135deg, rgba(230, 76, 76, 0.15) 0%, rgba(230, 76, 76, 0.35) 100%);
     box-shadow: 0 8px 15px rgba(0, 0, 0, 0.25);
   }
   

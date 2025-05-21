@@ -524,6 +524,7 @@ export default {
 
     handleLogout() {
       this.$store.commit('clearAll')
+        this.$store.commit('car/clearCarList')
       this.$router.push('/')
     },
 

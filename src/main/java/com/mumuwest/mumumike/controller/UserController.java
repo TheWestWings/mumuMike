@@ -157,15 +157,9 @@ public class UserController {
      * @param user
      * @return
      */
-    @PutMapping("/updateUserByid")
+    @PutMapping("/updateUserById")
     @Role(role = {0, 1})
-    public AjaxResult updateUserByid(@RequestBody User user) {
-        User userQuery = new User();
-        userQuery.setUsername(user.getUsername());
-        List<User> users = userService.getList(userQuery);
-        if(!users.isEmpty()) {
-            return AjaxResult.error("用户名已存在");
-        }
+    public AjaxResult updateUserById(@RequestBody User user) {
         return AjaxResult.success(userService.updateUserInfo(user));
     }
 

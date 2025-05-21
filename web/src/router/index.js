@@ -139,6 +139,14 @@ const router = new VueRouter({
     console.log('from', from)
     console.log(to.meta.roles)
     console.log('store.state.role', store.state.role)
+    if (to.path === '/auth/login' || to.path === '/auth/register') {
+      if(store.state.token) {
+        next({
+            path: "/HomePage",
+        })
+      }
+    }
+
     if (to.meta.roles === 3) {
       next()
     }

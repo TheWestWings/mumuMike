@@ -9,13 +9,22 @@
         <h1>木木牛奶公司</h1>
         <p>用心制作的奶香甜品</p>
       </div>
-      <el-button
-        class="back-btn"
-        type="text"
-        icon="el-icon-back"
-        @click="$router.push('/HomePage')">
-        <span class="btn-text">返回首页</span>
-      </el-button>
+      <div class="header-buttons">
+        <el-button
+          class="back-btn"
+          type="text"
+          icon="el-icon-back"
+          @click="$router.push('/HomePage')">
+          <span class="btn-text">返回首页</span>
+        </el-button>
+        <el-button
+          class="logout-btn"
+          type="text"
+          icon="el-icon-switch-button"
+          @click="handleLogout">
+          <span class="btn-text">退出登录</span>
+        </el-button>
+      </div>
     </header>
   </el-header>
   <el-container>
@@ -93,6 +102,11 @@ export default {
     window.removeEventListener('resize', this.checkScreenSize);
   },
   methods: {
+    handleLogout() {
+      this.$store.commit('clearAll')
+      this.$store.commit('car/clearCarList')
+      this.$router.push('/')
+    },
     toggleMenu() {
       this.sidebarOpen = !this.sidebarOpen;
       if (this.isMobile) {
@@ -184,7 +198,12 @@ export default {
   letter-spacing: 1px;
 }
 
-.back-btn {
+.header-buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.back-btn, .logout-btn {
   color: #fff;
   font-size: 15px;
   padding: 10px 15px;
@@ -194,8 +213,17 @@ export default {
   white-space: nowrap;
 }
 
+.logout-btn {
+  background-color: rgba(230, 76, 76, 0.2);
+}
+
 .back-btn:hover {
   background-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-2px);
+}
+
+.logout-btn:hover {
+  background-color: rgba(230, 76, 76, 0.3);
   transform: translateY(-2px);
 }
 
@@ -361,7 +389,12 @@ a {
     display: none;
   }
   
-  .back-btn {
+  .header-buttons {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .back-btn, .logout-btn {
     padding: 8px;
     border-radius: 50%;
     min-width: 36px;

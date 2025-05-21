@@ -2,11 +2,10 @@ import request from '@/utils/request'
 
 
 
-export function getUserInfoById(id) {
+export function getUserById(id) {
   return request({
-    url: '/getUserInfo1ById',
+    url: '/getUserById/' + id,
     method: 'get',
-    params: { id },
   })
 }
 
@@ -20,7 +19,7 @@ export function getUserList(data) {
 
 export function updateUserInfo(data) {
   return request({
-    url: '/updateUser',
+    url: '/updateUserById',
     method: 'put',
     data,
   })

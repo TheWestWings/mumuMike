@@ -40,7 +40,7 @@
                 and role != 0
             </if>
             <if test="username != null">
-                username = #{username}
+                and username = #{username}
             </if>
             <if test="email != null">
                 and email = #{email}
