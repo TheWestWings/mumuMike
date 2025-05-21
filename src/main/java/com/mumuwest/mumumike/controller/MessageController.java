@@ -32,7 +32,7 @@ public class MessageController {
      * @return
      */
     @PutMapping
-    public AjaxResult updateMessage(Message message) {
+    public AjaxResult updateMessage(@RequestBody Message message) {
         return AjaxResult.success(messageService.updateMessage(message));
     }
 
@@ -41,8 +41,8 @@ public class MessageController {
      * @param id
      * @return
      */
-    @DeleteMapping
-    public AjaxResult deleteMessage(Integer id) {
+    @DeleteMapping("/{id}")
+    public AjaxResult deleteMessage(@PathVariable("id") Integer id) {
         return AjaxResult.success(messageService.deleteMessage(id));
     }
 
