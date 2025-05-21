@@ -7,3 +7,11 @@ export function getMessageList(id) {
     
   })
 }
+
+export function updateMessageStatus(data) {
+  return request({
+    url: '/message',
+    method: 'put',
+    data,
+  })
+}

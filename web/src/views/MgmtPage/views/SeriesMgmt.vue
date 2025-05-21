@@ -330,9 +330,7 @@ export default {
   data() {
     return {
       SeriesList: [
-        {
-          
-        }
+
       ],
       isShow: {
         addForm: false,

@@ -227,7 +227,7 @@ import { getSeriesList } from '@/api/Shopping/Shopping'
 import ProductSelection from '../MgmtPage/components/ProductSelection.vue'
 import { getProductById } from '@/api/Product/Product'
 import { submitOrder } from '@/api/Order/Order'
-import {getMessageList} from '@/api/Message/Message'
+import {getMessageList, updateMessageStatus} from '@/api/Message/Message'
 
 export default {
   name: "ShoppingPage",
@@ -346,8 +346,9 @@ export default {
       // 如果是未读消息，标记为已读
       if (item.status === 0) {
         item.status = 1
-        // 这里可以添加调用后端API更新消息状态的代码
-        // 例如: updateMessageStatus(item.id, 1)
+        updateMessageStatus({id: item.id, status: item.status}).then(() => {
+        })
+   
       }
     },
 
