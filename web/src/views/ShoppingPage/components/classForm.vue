@@ -33,7 +33,7 @@ export default {
 
 <style scoped>
 .category-section {
-    margin: 4rem 0;
+    margin: 6rem 0;
 }
 
 .category-header {
@@ -64,7 +64,7 @@ export default {
 
 .products {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 2fr));
     gap: 2rem;
     margin: 2rem 0;
 }
