@@ -6,7 +6,7 @@
         <p>{{ product.description }}</p>
         <div class="product-price">¥{{ product.price }}</div>
     </div>
-    <el-badge :hidden="!product.count" :value="product.count" class="item">
+    <el-badge :hidden="!count" :value="count" class="item">
         <el-button
         class="add-button"
         circle
@@ -17,16 +17,33 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
     props: ['product'],
     watch: {
         product: function(val) {
             if(val.count && val. count > 0) this.isShow = true
+        },
+        carList: {
+            handler(newVal) {
+                let lst = newVal.filter(item => item.id === this.product.id)
+                if(lst.length === 0) {
+                    this.count = 0
+                    return
+                }
+                else {
+                    this.count = newVal.filter(item => item.id === this.product.id)[0].count
+                }
+                
+            },
+            deep: true
         }
 
     },
     methods: {
         handleAdd() {
+            this.count++
             this.$emit('click', this.product.id)
             console.log("click",  this.product.id)
         }
@@ -34,11 +51,13 @@ export default {
     },
     data() {
         return {
-            isShow: false
-
-
+            isShow: false,
+            count: 0
         }
-    }
+    },
+    computed: {
+        ...mapState('car',['carList'])
+    },
 
 }
 </script>

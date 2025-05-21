@@ -133,7 +133,7 @@
                   size="medium"
                     type="danger" plain
                   :disabled="scope.row.status === 2 || scope.row.status === 1"
-                  @click="handleChargeback(scope.row)">
+                  @click="handleChargeback(scope.row, item.id)">
                   退单
                 </el-button>
                   
@@ -141,7 +141,7 @@
                   size="medium"
                     type="success" plain
                   :disabled="scope.row.status === 2 || scope.row.status === 1"
-                  @click="handleFinish(scope.row)">
+                  @click="handleFinish(scope.row, item.id)">
                  完成
                 </el-button>
               </template>
@@ -282,10 +282,34 @@ export default {
         this.loading = false
       })
     },
-    handleChargeback(row) {
-      row.status = 2
-      updateOrderProductStatus({id: row.id, status: row.status}).then(() => {
-        this.getList()
+    handleChargeback(row, orderId) {
+      // 弹出对话框，让用户输入退单原因
+      this.$prompt('请输入退单原因', '退单', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        inputPattern: /\S+/,
+        inputErrorMessage: '退单原因不能为空'
+      }).then(({ value }) => {
+        // 用户点击确定，将状态和退单原因一起发送到后端
+        row.status = 2
+        updateOrderProductStatus({
+          id: row.id,
+          status: row.status,
+          comment: value  // 退单原因
+        }).then(() => {
+          this.getList()
+          this.checkAndUpdateOrderStatus(orderId)
+          this.$message({
+            type: 'success',
+            message: '退单成功'
+          })
+        })
+      }).catch(() => {
+        // 用户点击取消
+        this.$message({
+          type: 'info',
+          message: '已取消退单'
+        })
       })
     },
     // 格式化日期为 YYYY-MM-DD HH:MM:SS 格式
@@ -295,15 +319,41 @@ export default {
       return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')} ${String(date.getHours()).padStart(2, '0')}:${String(date.getMinutes()).padStart(2, '0')}:${String(date.getSeconds()).padStart(2, '0')}`
     },
 
-    handleFinish(row) {
+    handleFinish(row, orderId) {
       row.status = 1
       updateOrderProductStatus({id: row.id, status: row.status}).then(() => {
         this.getList()
         this.$message({
-          message: '订单制作完成',
+          message: '产品制作完成',
           type: 'success'
         })
+        this.checkAndUpdateOrderStatus(orderId)
       })
+    },
+    
+    // 检查订单中所有产品状态并更新订单状态
+    checkAndUpdateOrderStatus(orderId) {
+      // 获取当前订单
+      // 因为getList是异步的，这里需要等待一小段时间确保数据已经刷新
+      setTimeout(() => {
+        const currentOrder = this.receiveList.find(order => order.id === orderId)
+        if (!currentOrder) return
+      
+      // 检查订单中是否所有产品都不是待制作状态(0)
+      const allProductsProcessed = currentOrder.product.every(product => product.status !== 0)
+      
+      // 如果所有产品都不是待制作状态，且当前订单仍处于"制作中"状态(0)
+      if (allProductsProcessed && currentOrder.status === 0) {
+        // 更新订单状态为"待取餐"(1)
+        updateOrderStatus({id: orderId, status: 1}).then(() => {
+          this.getList()
+          this.$message({
+            message: '订单已更新为待取餐状态',
+            type: 'success'
+          })
+        })
+      }
+      }, 300) // 300毫秒的延迟，确保getList已经完成
     },
     
     handleRelease(item) {

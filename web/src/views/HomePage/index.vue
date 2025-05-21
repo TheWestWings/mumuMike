@@ -15,7 +15,7 @@
               </span>
             </el-button>
           </router-link>
-          <router-link to="/MgmtPage" v-if="role === 0 || role === 1">
+          <router-link to="/MgmtPage/UsersMgmt" v-if="role === 0 || role === 1">
             <el-button class="custom-button secondary-btn">
               <span class="text">去管理</span>
               <span class="icon">

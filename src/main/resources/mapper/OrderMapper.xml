@@ -32,8 +32,11 @@
         FROM orders o
         LEFT JOIN orders_product op ON o.id = op.order_id
         <where>
-            <if test="status != null">
-                o.status = #{status}
+            <if test="status == 0">
+                o.status != 2
+            </if>
+            <if test="status == 2">
+                o.status = 2
             </if>
         </where>
         order by o.createTime desc

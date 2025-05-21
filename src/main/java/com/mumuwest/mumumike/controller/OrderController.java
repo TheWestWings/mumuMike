@@ -148,7 +148,7 @@ public class OrderController {
             Message message = new Message();
             message.setUserId(orderById.getUserId());
             message.setTitle("订单已退单");
-            message.setContent("订单号：" + orderProduct.getOrderId() + "的商品已退单，商品名称：" + product.getName());
+            message.setContent("订单号：" + orderById.getId() + "的商品已退单，商品名称：" + product.getName()  + " 退单原因：" + orderProduct.getComment());
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             String formattedDateTime = sdf.format(new Date());
             message.setCreateTime(formattedDateTime);

@@ -6,7 +6,7 @@
     <el-input-number
       v-model="now.count" 
       @change="handleChange" 
-      :min="1" 
+      :min="0" 
       :max="10" 
       label="描述文字"
       step-strictly
@@ -26,10 +26,13 @@ export default {
     this.now.count = this.product.count
   },
   watch: {
-    product: function(val){
-      this.now = val
-      console.log('product更新了数量', this.now)
+    product: {
+        handler(newVal) {
+            this.now = newVal
+        },
+        deep: true
     }
+    
   },
   data() {
     return {

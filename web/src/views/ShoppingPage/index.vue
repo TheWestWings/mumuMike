@@ -1,15 +1,18 @@
 <template>
       <el-container style="background-color: #FDF6E3;" >
         <div class="top-nav">
+            <el-button @click="$router.push('/HomePage')" type="text" class="nav-btn">
+                <i class="el-icon-s-home"></i> 返回首页
+            </el-button>
           <el-button @click="drawer.user = true" type="text" class="nav-btn">
             <i class="el-icon-user"></i> 个人中心
           </el-button>
-          <el-button @click="drawer.message = true" type="text" class="nav-btn">
-            <i class="el-icon-bell"></i> 消息中心
-          </el-button>
-          <el-button @click="$router.push('/HomePage')" type="text" class="nav-btn">
-            <i class="el-icon-s-home"></i> 返回首页
-          </el-button>
+          <el-badge :value="unreadMessageCount" :hidden="unreadMessageCount === 0" class="message-badge">
+            <el-button @click="drawer.message = true" type="text" class="nav-btn">
+              <i class="el-icon-bell"></i> 消息中心
+            </el-button>
+          </el-badge>
+
         </div>
 
         <el-drawer
@@ -113,9 +116,9 @@
              :class="{'input-edit': onEdit}"
              ></el-input>
           </el-form-item>
-<el-form-item size="large" v-if="onEdit" class="center-btn-item">
-  <el-button type="primary" @click="handleUpdateUserInfo" class="center-btn">确认修改</el-button>
-</el-form-item>
+        <el-form-item size="large" v-if="onEdit" class="center-btn-item">
+        <el-button type="primary" @click="handleUpdateUserInfo" class="center-btn">确认修改</el-button>
+        </el-form-item>
 
 
 <el-form-item size="large" v-else class="center-btn-item">
@@ -444,14 +447,19 @@ export default {
     ///////////购物车
     handleCountChange(now) {
       this.carProductList.forEach((item, index) => {
-        console.log('我要加了', item.count)
         console.log(now.productId)
 
         if(item.productId === now.productId){
-          this.carProductList[index].count = now.count
-          console.log('我要加了', item.count)
+          if(now.count === 0) {
+            // 删除当前物品
+            this.carProductList.splice(index, 1)
+          }
+          else {
+            this.carProductList[index].count = now.count
+            console.log('我要加了', item.count)
+          }
         }
-        
+
       })
     },
     handleAdd(id) {/////////产品上的+按钮
@@ -531,24 +539,32 @@ export default {
 
 
   },
-
-
   
   computed: {
     totalCount() {
       return this.getTotalCount()
+    },
+    unreadMessageCount() {
+      return this.messageList.filter(item => item.status === 0).length;
     }
   },
   watch: {
     isMobile(newVal) {
-      if (newVal) {
-        this.drawerWidth = '100%';
-        this.drawerLift = '0%';
-      }
-    else {
-        this.drawerWidth = '50%';
-        this.drawerLift = '25%';
-    }
+        if (newVal) {
+            this.drawerWidth = '100%';
+            this.drawerLift = '0%';
+        }
+        else {
+            this.drawerWidth = '50%';
+            this.drawerLift = '25%';
+        }
+    },
+    carProductList: {
+        handler(newVal) {
+            console.log('购物车更新了数量', newVal)
+            this.$store.commit('car/setCarList', newVal)
+        },
+        deep: true
     }
   },
 
