@@ -75,9 +75,9 @@
   </template>
   
   <script>
-  import axios from 'axios'
   import FaildAlert from "@/components/faildAlert.vue"
   import RoundButton from '@/components/roundButton.vue'
+import { register } from '@/api/User/User'
   
   
   
@@ -100,17 +100,12 @@
   
   
         register() {
-          axios({
-            url:'http://localhost:8080/register',
-            method: 'POST',
-  
-            data: {
-              username: this.regForm.regUsername,
+            register({
+                username: this.regForm.regUsername,
               email: this.regForm.regEmail,
               phone: this.regForm.regPhone,
               password: this.regForm.regPswd,
-            }
-          }).then(result => {
+            }).then(result => {
             let judge = result.data.code
           
             if(judge === 200) {

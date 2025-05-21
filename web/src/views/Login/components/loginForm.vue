@@ -47,10 +47,9 @@
 
 <script>
 
-import axios from 'axios'
 import faildAlert from "@/components/faildAlert.vue"
 import RoundButton from '@/components/roundButton.vue'
-import request from '@/utils/request.js'
+import { getInfo, login } from '@/api/User/User'
 
 
 
@@ -80,14 +79,10 @@ mounted() {
     },
 
     login() {
-      axios({
-          url: 'http://localhost:8080/login',
-          method: 'POST',
-          data: {
-            username: this.form.username,
-            password: this.form.pswd
-          }
-      }).then(result => {
+        login({
+          username: this.form.username,
+          password: this.form.pswd
+        }).then(result => {
         
           let judge = result.data.code
           
@@ -97,10 +92,7 @@ mounted() {
             this.$store.commit('setToken', result.data.data)
             console.log(this.$store.state.token)
 
-            request({
-              url: 'http://localhost:8080/getInfo',
-              method: 'get',
-            }).then(res => {
+            getInfo().then(res => {
               const user = res.data.data
               this.$store.commit('setId', user.id)
               this.$store.commit('setUsername', user.username)
