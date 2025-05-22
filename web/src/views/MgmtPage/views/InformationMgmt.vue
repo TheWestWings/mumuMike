@@ -118,11 +118,23 @@ import { getInformationVOList, updateInformation } from '@/api/Information/Infor
 
 export default {
   mounted() {
-    this.getList()
+    this.getList(true)
+    // 添加定时器，每60秒自动刷新列表数据，不显示加载状态
+    this.timer = setInterval(() => {
+      this.getList(false)
+    }, 1000) // 设置为10秒，避免频繁请求服务器
+  },
+  beforeDestroy() {
+    // 组件销毁前清除定时器
+    if (this.timer) {
+      clearInterval(this.timer)
+    }
   },
   methods: {
-    getList() {
-      this.loading = true
+    getList(showLoading = true) {
+      if (showLoading) {
+        this.loading = true
+      }
       getInformationVOList({ status: this.currentStatus }).then((res) => {
         this.informationList = res.data.rows || []
         // 初始化回复表单
@@ -132,12 +144,14 @@ export default {
           }
         })
       }).finally(() => {
-        this.loading = false
+        if (showLoading) {
+          this.loading = false
+        }
       })
     },
     handleStatusChange() {
       this.activeNames = []
-      this.getList()
+      this.getList(true)
     },
     handleReply(item) {
       if (!this.replyForm[item.id] || this.replyForm[item.id].trim() === '') {
@@ -156,7 +170,7 @@ export default {
       updateInformation(data).then(() => {
         this.$message.success('回复成功')
         this.replyForm[item.id] = ''
-        this.getList() // 刷新列表
+        this.getList(true) // 回复成功后显示加载状态刷新列表
       }).catch(err => {
         this.$message.error('回复失败: ' + (err.message || '未知错误'))
       }).finally(() => {
@@ -185,7 +199,8 @@ export default {
       },
       activeNames: [],
       replyForm: {}, // 存储每个信息项的回复内容
-      submitting: null // 正在提交回复的信息ID
+      submitting: null, // 正在提交回复的信息ID
+      timer: null // 存储定时器ID
     }
   }
 }

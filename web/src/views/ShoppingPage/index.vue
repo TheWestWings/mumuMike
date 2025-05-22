@@ -335,6 +335,11 @@ export default {
 
   beforeDestroy() {
     window.removeEventListener('resize', this.handleResize);
+    // 清除消息定时器
+    if (this.messageTimer) {
+      clearInterval(this.messageTimer);
+      this.messageTimer = null;
+    }
   },
   created(){
     this.carProductList = this.$store.state.car.carList ? this.$store.state.car.carList : []
@@ -362,7 +367,12 @@ export default {
     this.drawerLift = this.isMobile ? '0%' : '25%';  // 设置抽屉位置
     this.carProductList = this.$store.state.car.carList ? this.$store.state.car.carList : []
     console.log('购物车', this.$store.state.car.carList)
-    this.getMessage()
+    this.getMessage(true) // 初始加载时显示加载状态
+    
+    // 设置定时器，每10秒自动获取消息
+    this.messageTimer = setInterval(() => {
+      this.getMessage(false) // 定时刷新时不显示加载状态，避免闪动
+    }, 5000)
     
     // 移除所有动画效果，直接显示页面元素
   },
@@ -425,8 +435,13 @@ export default {
         this.seriesList = res.data.rows
       })
     },
-    getMessage() {
-      console.log( 'id',this.user.id)
+    getMessage(showLoading = true) {
+      console.log('id', this.user.id)
+      // 使用加载状态变量，但这里没有v-loading指令，所以不会显示加载动画
+      // 为未来可能添加的加载状态做准备
+      if (showLoading) {
+        this.messageLoading = true
+      }
       getMessageList(this.user.id).then(res => {
         this.messageList = res.data.rows.map(item => {
           return {
@@ -435,6 +450,12 @@ export default {
             showContent: false
           }
         })
+        // 计算未读消息数量
+        this.unreadMessageCount = this.messageList.filter(item => item.status === 0).length
+      }).finally(() => {
+        if (showLoading) {
+          this.messageLoading = false
+        }
       })
     },
 
@@ -707,6 +728,8 @@ export default {
       isCollapsed: false,
       seriesIcons: [],  // 存储每个系列对应的图标
       submitting: false, // 提交留言状态
+      messageTimer: null, // 消息定时器ID
+      messageLoading: false, // 消息加载状态
 
       user: {
         username: '',

@@ -163,11 +163,11 @@
 import { getOrderList, updateOrderProductStatus, updateOrderStatus } from '@/api/Order/Order'
 export default {
   created() {
-    this.getList()
-    // 设置定时器，每30秒自动刷新订单列表
+    this.getList(true)
+    // 设置定时器，每5秒自动刷新订单列表
     this.timer = setInterval(() => {
-      this.getList()
-    }, 5000)
+      this.getList(false) // 不显示加载状态，避免页面闪动
+    }, 1000)
   },
   
   beforeDestroy() {
@@ -282,8 +282,10 @@ export default {
     }
   },
   methods: {
-    getList() {
-      this.loading = true
+    getList(showLoading = true) {
+      if (showLoading) {
+        this.loading = true
+      }
       getOrderList().then(res => {
         this.receiveList = res.data.rows
         // this.receiveList.forEach((item, index) => {
@@ -291,7 +293,9 @@ export default {
         // })
         console.log(this.receiveList)
       }).finally(() => {
-        this.loading = false
+        if (showLoading) {
+          this.loading = false
+        }
       })
     },
     handleChargeback(row, orderId) {
@@ -310,7 +314,7 @@ export default {
           status: row.status,
           comment: value  // 退单原因
         }).then(() => {
-          this.getList()
+          this.getList(true)
           this.checkAndUpdateOrderStatus(orderId)
           this.$message({
             type: 'success',
@@ -335,7 +339,7 @@ export default {
     handleFinish(row, orderId) {
       row.status = 1
       updateOrderProductStatus({id: row.id, status: row.status}).then(() => {
-        this.getList()
+        this.getList(true)
         this.$message({
           message: '产品制作完成',
           type: 'success'
@@ -359,7 +363,7 @@ export default {
       if (allProductsProcessed && currentOrder.status === 0) {
         // 更新订单状态为"待取餐"(1)
         updateOrderStatus({id: orderId, status: 1}).then(() => {
-          this.getList()
+          this.getList(true)
           this.$message({
             message: '订单已更新为待取餐状态',
             type: 'success'
@@ -386,7 +390,7 @@ export default {
       
       // 只有当所有产品都不是待制作状态时，才允许更新订单状态
       updateOrderStatus({id: item.id, status: 2}).then(() => {
-        this.getList()
+        this.getList(true)
         this.$message({
           message: '订单已完成',
           type: 'success'

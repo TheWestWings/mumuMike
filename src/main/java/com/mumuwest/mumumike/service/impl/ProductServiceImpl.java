@@ -103,6 +103,7 @@ public class ProductServiceImpl implements ProductService {
             productVO.setStatus(productType.getStatus());
             Product product = new Product();
             product.setProductTypeId(productType.getId());
+            product.setStatus(1);
             List<Product> productList = productMapper.getProductList(product);
             productVO.setProductList(productList);
             productVOList.add(productVO);
