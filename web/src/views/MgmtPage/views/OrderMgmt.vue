@@ -164,12 +164,24 @@ import { getOrderList, updateOrderProductStatus, updateOrderStatus } from '@/api
 export default {
   created() {
     this.getList()
-
+    // 设置定时器，每30秒自动刷新订单列表
+    this.timer = setInterval(() => {
+      this.getList()
+    }, 5000)
+  },
+  
+  beforeDestroy() {
+    // 组件销毁前清除定时器，防止内存泄漏
+    if (this.timer) {
+      clearInterval(this.timer)
+      this.timer = null
+    }
   },
 
   data(){
     return {
       loading: false,
+      timer: null, // 用于存储定时器ID
       orderList:[
         {
           username:'weec',
