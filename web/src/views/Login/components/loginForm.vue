@@ -59,8 +59,8 @@ components: { faildAlert, RoundButton,  },
 mounted() {
   // this.form.username = this.$store.state.username
   // this.form.pswd = this.$store.state.psw
-  this.form.username = 'zzl'
-  this.form.pswd = '123'
+  // this.form.username = 'zzl'
+  // this.form.pswd = '123'
 },
 
   methods: {

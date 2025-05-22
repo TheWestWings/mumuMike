@@ -16,14 +16,14 @@
             </el-button>
           </router-link>
           <router-link to="/MgmtPage/UsersMgmt" v-if="role === 0 || role === 1">
-            <el-button class="custom-button secondary-btn">
+            <el-button class="custom-button primary-btn">
               <span class="text">去管理</span>
               <span class="icon">
                 <i class="el-icon-setting"></i>
               </span>
             </el-button>
           </router-link>
-          <el-button class="custom-button logout-btn" v-if="isLoggedIn" @click="handleLogout">
+          <el-button class="custom-button secondary-btn" v-if="isLoggedIn" @click="handleLogout">
             <span class="text">退出登录</span>
             <span class="icon">
               <i class="el-icon-switch-button"></i>

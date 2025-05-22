@@ -288,6 +288,7 @@ export default {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         inputPattern: /\S+/,
+        inputValue: '产品材料不足',
         inputErrorMessage: '退单原因不能为空'
       }).then(({ value }) => {
         // 用户点击确定，将状态和退单原因一起发送到后端
