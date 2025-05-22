@@ -13,20 +13,34 @@
         <el-form-item label = '用户名' prop="username">
           <el-input
             v-model="form.username"
-            ref="username" 
+            ref="username"
             placeholder="请输入用户名"
             clearable
             ></el-input>
-        </el-form-item> 
+        </el-form-item>
 
         <el-form-item label = '密码' prop="pswd">
-            <el-input 
-              ref="pswd" 
+            <el-input
+              ref="pswd"
               v-model="form.pswd"
               placeholder="请输入密码"
               show-password
               autocomplete="new-password"
               ></el-input>
+        </el-form-item>
+
+        <el-form-item label = '验证码' prop="captcha">
+          <div class="captcha-container">
+            <el-input
+              ref="captcha"
+              v-model="form.captcha"
+              placeholder="请输入验证码"
+              class="captcha-input"
+              ></el-input>
+            <div class="captcha-image" @click="refreshCaptcha">
+              {{ captchaText }}
+            </div>
+          </div>
         </el-form-item>
       </div>
       <round-button     
@@ -61,9 +75,25 @@ mounted() {
   // this.form.pswd = this.$store.state.psw
   // this.form.username = 'zzl'
   // this.form.pswd = '123'
+  this.generateCaptcha();
 },
 
   methods: {
+    generateCaptcha() {
+      // 生成随机验证码
+      const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+      let result = '';
+      for (let i = 0; i < 4; i++) {
+        result += characters.charAt(Math.floor(Math.random() * characters.length));
+      }
+      this.captchaText = result;
+      this.correctCaptcha = result;
+    },
+
+    refreshCaptcha() {
+      this.generateCaptcha();
+      this.form.captcha = '';
+    },
 
     submit() {
       this.$refs.form.validate((valid) => {
@@ -72,7 +102,7 @@ mounted() {
           this.login();
 
         } else {
-          this.handleAlert("登录失败，完整填写用户名与密码!");
+          this.handleAlert("登录失败，请完整填写用户名、密码与验证码!");
           return false;
         }
       })
@@ -139,7 +169,11 @@ mounted() {
         form: {
           username: '',
           pswd: '',
+          captcha: '',
         },
+        
+        captchaText: '',
+        correctCaptcha: '',
 
         rule: {
           username: [
@@ -161,8 +195,18 @@ mounted() {
                   }
                 }, trigger: 'blur'}
             
+          ],
+          captcha: [
+            { validator: (rule, value, callback) => {
+                  if(value === ''){
+                    callback(new Error('请输入验证码!'));
+                  } else if(value.toLowerCase() !== this.correctCaptcha.toLowerCase()){
+                    callback(new Error('验证码错误!'));
+                  } else {
+                    callback();
+                  }
+                }, trigger: 'blur'}
           ]
-
         },
         buttonType: '登录',
         correct: '登录成功',
@@ -290,6 +334,56 @@ to { opacity: 1; transform: translateY(0); }
 }
 
 
+}
+
+/* 验证码样式 */
+.captcha-container {
+  display: flex;
+  align-items: center;
+}
+
+.captcha-input {
+  width: 65%;
+  margin-right: 10px;
+}
+
+.captcha-image {
+  width: 35%;
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  background: #f2f6fc;
+  border-radius: 4px;
+  font-family: 'Courier New', Courier, monospace;
+  font-weight: bold;
+  font-size: 20px;
+  letter-spacing: 3px;
+  color: #606266;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.captcha-image::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.8) 50%, transparent 55%);
+  background-size: 200% 200%;
+  animation: shine 3s infinite;
+}
+
+@keyframes shine {
+  0% { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+.captcha-image:hover {
+  background-color: #e6e6e6;
 }
 
 </style>

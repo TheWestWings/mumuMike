@@ -1,5 +1,10 @@
 <template>
       <el-container style="background-color: #FDF6E3;" >
+        <!-- 固定在右上角的时间显示 -->
+        <div class="current-time">
+          <i class="el-icon-time"></i> {{formattedTime}}
+        </div>
+        
         <div class="top-nav">
             <el-button @click="$router.push('/HomePage')" type="text" class="nav-btn">
                 <i class="el-icon-s-home"></i> 返回首页
@@ -14,6 +19,7 @@
           </el-badge>
 
         </div>
+
 
         <el-drawer
           :visible.sync="drawer.message"
@@ -95,7 +101,7 @@
          >
           <el-form-item label="用户名" prop="username">
             <el-input
-             :readonly="!onEdit"
+             readonly
              v-model="user.username"
              :class="{'input-edit': onEdit}"
              ></el-input>
@@ -133,6 +139,7 @@
         </div>
           
         </el-drawer>
+        
 
 
         <div class="side-nav" :class="{ 'mobile': isMobile, 'collapsed': isCollapsed }">
@@ -340,6 +347,11 @@ export default {
       clearInterval(this.messageTimer);
       this.messageTimer = null;
     }
+    // 清除时间定时器
+    if (this.timeTimer) {
+      clearInterval(this.timeTimer);
+      this.timeTimer = null;
+    }
   },
   created(){
     this.carProductList = this.$store.state.car.carList ? this.$store.state.car.carList : []
@@ -373,6 +385,13 @@ export default {
     this.messageTimer = setInterval(() => {
       this.getMessage(false) // 定时刷新时不显示加载状态，避免闪动
     }, 5000)
+    
+    // 初始化时间
+    this.currentTime = new Date()
+    // 设置定时器，每秒更新当前时间
+    this.timeTimer = setInterval(() => {
+      this.currentTime = new Date()
+    }, 1000)
     
     // 移除所有动画效果，直接显示页面元素
   },
@@ -698,6 +717,18 @@ export default {
     },
     unreadMessageCount() {
       return this.messageList.filter(item => item.status === 0).length;
+    },
+    formattedTime() {
+      if (!this.currentTime) return '';
+      
+      const year = this.currentTime.getFullYear();
+      const month = String(this.currentTime.getMonth() + 1).padStart(2, '0');
+      const date = String(this.currentTime.getDate()).padStart(2, '0');
+      const hours = String(this.currentTime.getHours()).padStart(2, '0');
+      const minutes = String(this.currentTime.getMinutes()).padStart(2, '0');
+      const seconds = String(this.currentTime.getSeconds()).padStart(2, '0');
+      
+      return `${year}/${month}/${date} ${hours}:${minutes}:${seconds}`;
     }
   },
   watch: {
@@ -730,6 +761,8 @@ export default {
       submitting: false, // 提交留言状态
       messageTimer: null, // 消息定时器ID
       messageLoading: false, // 消息加载状态
+      currentTime: new Date(), // 当前时间
+      timeTimer: null, // 时间更新定时器ID
 
       user: {
         username: '',
@@ -839,6 +872,32 @@ export default {
   }
 }
 
+/* 时间显示样式 */
+.current-time {
+  color: white;
+  font-size: 14px;
+  padding: 7px 15px;
+  border-radius: 4px;
+  background-color: rgba(141, 110, 99, 0.9);
+  display: flex;
+  align-items: center;
+  position: fixed;
+  top: 15px;
+  right: 15px;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  
+  i {
+    margin-right: 5px;
+    font-size: 16px;
+  }
+  
+  /* 在移动端隐藏时间显示 */
+  @media screen and (max-width: 768px) {
+    display: none;
+  }
+}
+
 /* 基础样式保持不变 */
 
 /* 移动端样式 */
@@ -851,6 +910,7 @@ export default {
     border-radius: 0;
     background: rgba(141, 110, 99, 0.98);
 
+
     .nav-btn {
       padding: 8px 12px;
       margin-left: 5px;
@@ -858,6 +918,16 @@ export default {
 
       i {
         margin-right: 4px;
+        font-size: 14px;
+      }
+    }
+    
+    .current-time {
+      font-size: 12px;
+      padding: 5px 10px;
+      margin: 5px 5px 5px auto;
+      
+      i {
         font-size: 14px;
       }
     }

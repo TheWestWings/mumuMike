@@ -56,11 +56,24 @@
               show-password
             ></el-input>
           </el-form-item>
-  
+
+          <el-form-item label="验证码" prop="captcha">
+            <div class="captcha-container">
+              <el-input
+                v-model="regForm.captcha"
+                placeholder="请输入验证码"
+                class="captcha-input"
+              ></el-input>
+              <div class="captcha-image" @click="refreshCaptcha">
+                {{ captchaText }}
+              </div>
+            </div>
+          </el-form-item>
+
       </div>
-  
-  
-      <round-button     
+
+
+      <round-button
       :buttonType="'注册'"
       @click="submit"
       class="auth-button"
@@ -83,20 +96,40 @@ import { register } from '@/api/User/User'
   
   export default {
     components: {RoundButton, FaildAlert},
-      methods: {
-
-        submit() {
-          this.$refs.regForm.validate((valid) => {
-            if(valid){
-              console.log("can");
-              this.register();
+    
+    mounted() {
+      this.generateCaptcha();
+    },
+    
+    methods: {
+      generateCaptcha() {
+        // 生成随机验证码
+        const characters = 'ABCDEFGHJKLMNPQRSTUVWXYZabcdefghjkmnpqrstuvwxyz23456789';
+        let result = '';
+        for (let i = 0; i < 4; i++) {
+          result += characters.charAt(Math.floor(Math.random() * characters.length));
+        }
+        this.captchaText = result;
+        this.correctCaptcha = result;
+      },
   
-            } else {
-              this.handleAlert("注册失败，请修改完善注册信息！!");
-              return false;
-            }
-          })
-        },
+      refreshCaptcha() {
+        this.generateCaptcha();
+        this.regForm.captcha = '';
+      },
+  
+      submit() {
+        this.$refs.regForm.validate((valid) => {
+          if(valid){
+            console.log("can");
+            this.register();
+  
+          } else {
+            this.handleAlert("注册失败，请修改完善注册信息！");
+            return false;
+          }
+        })
+      },
   
   
         register() {
@@ -175,14 +208,31 @@ import { register } from '@/api/User/User'
                 }, trigger: 'blur'}
   
               ],
+              
+              captcha: [
+                { required: true, message: '请输入验证码', trigger: 'blur'},
+                { validator: (rule, value, callback) => {
+                  if(value === ''){
+                    callback(new Error('请输入验证码!'));
+                  } else if(value.toLowerCase() !== this.correctCaptcha.toLowerCase()){
+                    callback(new Error('验证码错误!'));
+                  } else {
+                    callback();
+                  }
+                }, trigger: 'blur'}
+              ],
    
              },
+            captchaText: '',
+            correctCaptcha: '',
+            
             regForm :{
               regUsername: '',
               regEmail: '',
               regPhone: '',
               regConfirmPswd: '',
               regPswd: '',
+              captcha: '',
             },
   
             errors: {
@@ -321,5 +371,55 @@ transform: scaleX(1);
     }
     
   
+  }
+
+  /* 验证码样式 */
+  .captcha-container {
+    display: flex;
+    align-items: center;
+  }
+
+  .captcha-input {
+    width: 65%;
+    margin-right: 10px;
+  }
+
+  .captcha-image {
+    width: 35%;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    background: #f2f6fc;
+    border-radius: 4px;
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: bold;
+    font-size: 20px;
+    letter-spacing: 3px;
+    color: #606266;
+    cursor: pointer;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .captcha-image::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 45%, rgba(255,255,255,0.8) 50%, transparent 55%);
+    background-size: 200% 200%;
+    animation: shine 3s infinite;
+  }
+
+  @keyframes shine {
+    0% { background-position: 100% 100%; }
+    100% { background-position: 0% 0%; }
+  }
+
+  .captcha-image:hover {
+    background-color: #e6e6e6;
   }
   </style>
