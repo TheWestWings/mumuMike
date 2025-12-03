@@ -1,0 +1,21 @@
+{
+    "name": "mumu-order",
+    "appid": "",
+    "description": "",
+    "versionName": "1.0.0",
+    "versionCode": "100",
+    "transformPx": false,
+    "mp-weixin": {
+        "appid": "wx0554c8de653be623",
+        "setting": {
+            "urlCheck": false
+        },
+        "usingComponents": true,
+        "permission": {
+            "scope.userLocation": {
+                "desc": "你的位置信息将用于小程序位置接口的效果展示"
+            }
+        }
+    },
+    "vueVersion": "2"
+}
