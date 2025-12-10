@@ -1,0 +1,6 @@
+{
+  "usingComponents": {},
+  "navigationBarTitleText": "点餐",
+  "enablePullDownRefresh": true,
+  "backgroundColor": "#FDF6E3"
+}

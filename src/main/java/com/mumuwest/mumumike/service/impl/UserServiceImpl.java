@@ -89,4 +89,16 @@ public class UserServiceImpl implements UserService {
         return userMapper.selectUserById(id);
     }
 
+    /**
+     * 根据openid查询用户（微信小程序登录）
+     * @param openid 微信openid
+     * @return 用户信息
+     */
+    @Override
+    public User getUserByOpenid(String openid) {
+        // 暂时使用用户名前缀匹配的方式查找微信用户
+        // 实际项目中应该在User表中添加openid字段
+        return userMapper.selectUserByUsername("wx_" + openid.substring(0, 8));
+    }
+
 }

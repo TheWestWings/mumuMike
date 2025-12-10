@@ -1,0 +1,410 @@
+/* pages/menu/menu.wxss - 菜单点餐页样式 */
+
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #FDF6E3;
+}
+
+/* 头部样式 */
+.header {
+  background: linear-gradient(135deg, #8d6e63 0%, #5d4037 100%);
+  padding: 30rpx 30rpx 40rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: column;
+}
+
+.title {
+  color: #fff;
+  font-size: 40rpx;
+  font-weight: bold;
+  margin-bottom: 8rpx;
+}
+
+.subtitle {
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 24rpx;
+}
+
+.table-badge {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 12rpx 24rpx;
+  border-radius: 30rpx;
+}
+
+.table-badge text {
+  color: #fff;
+  font-size: 26rpx;
+}
+
+/* 主体内容 */
+.main-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+/* 左侧分类导航 */
+.category-nav {
+  width: 180rpx;
+  background-color: #f5f5f5;
+  flex-shrink: 0;
+}
+
+.category-item {
+  position: relative;
+  padding: 32rpx 20rpx;
+  text-align: center;
+  background-color: #f5f5f5;
+  transition: all 0.3s;
+}
+
+.category-item.active {
+  background-color: #FDF6E3;
+}
+
+.category-name {
+  font-size: 26rpx;
+  color: #606266;
+}
+
+.category-item.active .category-name {
+  color: #8d6e63;
+  font-weight: bold;
+}
+
+.category-indicator {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 6rpx;
+  height: 40rpx;
+  background-color: #8d6e63;
+  border-radius: 0 3rpx 3rpx 0;
+}
+
+/* 右侧商品列表 */
+.product-list {
+  flex: 1;
+  padding: 0 20rpx;
+}
+
+.category-header {
+  padding: 30rpx 0 20rpx;
+}
+
+.category-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #303133;
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.category-desc {
+  font-size: 24rpx;
+  color: #909399;
+}
+
+/* 商品卡片 */
+.product-card {
+  display: flex;
+  background-color: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+}
+
+.product-image {
+  width: 160rpx;
+  height: 160rpx;
+  border-radius: 12rpx;
+  flex-shrink: 0;
+}
+
+.product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding-left: 20rpx;
+}
+
+.product-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #303133;
+  margin-bottom: 8rpx;
+}
+
+.product-desc {
+  font-size: 24rpx;
+  color: #909399;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  flex: 1;
+}
+
+.product-bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 12rpx;
+}
+
+.product-price {
+  font-size: 34rpx;
+  color: #f56c6c;
+  font-weight: bold;
+}
+
+.product-actions {
+  display: flex;
+  align-items: center;
+}
+
+.count-btn {
+  width: 52rpx;
+  height: 52rpx;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: all 0.2s;
+}
+
+.count-btn text {
+  font-size: 32rpx;
+  line-height: 1;
+}
+
+.count-btn.minus {
+  background-color: #f5f5f5;
+  color: #606266;
+}
+
+.count-btn.plus {
+  background-color: #8d6e63;
+  color: #fff;
+}
+
+.count-btn:active {
+  transform: scale(0.9);
+}
+
+.count-num {
+  min-width: 60rpx;
+  text-align: center;
+  font-size: 30rpx;
+  font-weight: 500;
+  color: #303133;
+}
+
+.bottom-space {
+  height: 320rpx;
+}
+
+/* 底部购物车栏 */
+.cart-bar {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 120rpx;
+  background-color: #fff;
+  display: flex;
+  align-items: center;
+  padding: 20rpx 30rpx;
+  box-shadow: 0 -4rpx 20rpx rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  box-sizing: border-box;
+}
+
+.cart-bar.empty {
+  background-color: #f5f5f5;
+}
+
+.cart-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+.cart-icon-wrapper {
+  position: relative;
+  width: 80rpx;
+  height: 80rpx;
+  background-color: #8d6e63;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20rpx;
+}
+
+.cart-bar.empty .cart-icon-wrapper {
+  background-color: #c0c4cc;
+}
+
+.cart-icon {
+  font-size: 40rpx;
+}
+
+.cart-badge {
+  position: absolute;
+  top: -8rpx;
+  right: -8rpx;
+  min-width: 36rpx;
+  height: 36rpx;
+  background-color: #f56c6c;
+  color: #fff;
+  font-size: 22rpx;
+  border-radius: 18rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 8rpx;
+}
+
+.cart-price-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.cart-total {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #303133;
+}
+
+.cart-hint {
+  font-size: 24rpx;
+  color: #909399;
+}
+
+.empty-hint {
+  font-size: 28rpx;
+  color: #909399;
+}
+
+.checkout-btn {
+  width: 200rpx;
+  height: 80rpx;
+  background: linear-gradient(135deg, #8d6e63 0%, #a88e85 100%);
+  color: #fff;
+  font-size: 30rpx;
+  font-weight: 500;
+  border-radius: 40rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 4rpx 12rpx rgba(141, 110, 99, 0.3);
+}
+
+.checkout-btn:active {
+  transform: scale(0.98);
+}
+
+/* 规格弹窗样式 */
+.spec-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  border-radius: 30rpx 30rpx 0 0;
+  padding-bottom: constant(safe-area-inset-bottom);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30rpx;
+  border-bottom: 1rpx solid #eee;
+}
+
+.modal-title {
+  font-size: 32rpx;
+  font-weight: bold;
+  color: #303133;
+}
+
+.modal-close {
+  width: 60rpx;
+  height: 60rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 40rpx;
+  color: #909399;
+}
+
+.modal-body {
+  padding: 30rpx;
+}
+
+.remark-section {
+  display: flex;
+  flex-direction: column;
+}
+
+.remark-label {
+  font-size: 28rpx;
+  color: #606266;
+  margin-bottom: 16rpx;
+}
+
+.remark-input {
+  height: 80rpx;
+  background-color: #f5f5f5;
+  border-radius: 12rpx;
+  padding: 0 20rpx;
+  font-size: 28rpx;
+}
+
+.modal-footer {
+  padding: 30rpx;
+}
+
+.modal-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #8d6e63 0%, #a88e85 100%);
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: 500;
+  border-radius: 44rpx;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

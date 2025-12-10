@@ -107,6 +107,14 @@ const routesAll = [
         roles: 1,
       }
     },
+    {
+      path: 'TableQRCode',
+      name: 'TableQRCode',
+      component: () => import('@/views/MgmtPage/views/TableQRCode.vue'),
+      meta: {
+        roles: 1,
+      }
+    },
 
 
   ]

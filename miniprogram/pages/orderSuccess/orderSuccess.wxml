@@ -1,0 +1,58 @@
+<!-- pages/orderSuccess/orderSuccess.wxml - 订单提交成功页 -->
+<view class="container">
+  <!-- 成功图标 -->
+  <view class="success-section">
+    <view class="success-icon">✅</view>
+    <text class="success-title">下单成功！</text>
+    <text class="success-hint">您的订单已提交，正在为您准备...</text>
+  </view>
+
+  <!-- 订单信息 -->
+  <view class="order-info">
+    <view class="info-item">
+      <text class="info-label">订单号</text>
+      <text class="info-value">{{orderId}}</text>
+    </view>
+    <view class="info-item" wx:if="{{tableNo}}">
+      <text class="info-label">桌号</text>
+      <text class="info-value">{{tableNo}} 号桌</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">下单时间</text>
+      <text class="info-value">{{orderTime}}</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">订单金额</text>
+      <text class="info-value price">¥{{totalPrice}}</text>
+    </view>
+  </view>
+
+  <!-- 支付状态 -->
+  <view class="payment-section" wx:if="{{paymentStatus !== 'none'}}">
+    <view class="payment-status {{paymentStatus}}">
+      <text class="status-icon" wx:if="{{paymentStatus === 'success'}}">💰</text>
+      <text class="status-icon" wx:elif="{{paymentStatus === 'pending'}}">⏳</text>
+      <text class="status-text">{{paymentStatusText}}</text>
+    </view>
+  </view>
+
+  <!-- 操作按钮 -->
+  <view class="action-section">
+    <button class="action-btn primary" bindtap="viewOrder">
+      查看订单
+    </button>
+    <button class="action-btn secondary" bindtap="continueShopping">
+      继续点餐
+    </button>
+  </view>
+
+  <!-- 温馨提示 -->
+  <view class="tips-section">
+    <text class="tips-title">温馨提示</text>
+    <view class="tips-list">
+      <text class="tips-item">• 请在收银台完成支付</text>
+      <text class="tips-item">• 制作完成后会通知您取餐</text>
+      <text class="tips-item">• 如有问题请联系服务员</text>
+    </view>
+  </view>
+</view>

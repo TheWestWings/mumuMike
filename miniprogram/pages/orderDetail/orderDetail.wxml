@@ -1,0 +1,86 @@
+<!-- pages/orderDetail/orderDetail.wxml - 订单详情页 -->
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <view class="status-icon">
+      <text wx:if="{{order.status === 0}}">⏳</text>
+      <text wx:elif="{{order.status === 1}}">👨‍🍳</text>
+      <text wx:elif="{{order.status === 2}}">✅</text>
+      <text wx:else>❌</text>
+    </view>
+    <text class="status-text">{{statusText}}</text>
+    <text class="status-hint" wx:if="{{order.status === 0}}">订单已提交，等待确认</text>
+    <text class="status-hint" wx:elif="{{order.status === 1}}">正在制作中，请稍候...</text>
+    <text class="status-hint" wx:elif="{{order.status === 2}}">制作完成，请取餐</text>
+  </view>
+
+  <!-- 订单信息 -->
+  <view class="section">
+    <view class="section-title">订单信息</view>
+    <view class="info-item">
+      <text class="info-label">订单号</text>
+      <text class="info-value">{{order.id}}</text>
+    </view>
+    <view class="info-item" wx:if="{{tableNo}}">
+      <text class="info-label">桌号</text>
+      <text class="info-value">{{tableNo}} 号桌</text>
+    </view>
+    <view class="info-item">
+      <text class="info-label">下单时间</text>
+      <text class="info-value">{{createTimeText}}</text>
+    </view>
+    <view class="info-item" wx:if="{{order.updateTime}}">
+      <text class="info-label">完成时间</text>
+      <text class="info-value">{{updateTimeText}}</text>
+    </view>
+  </view>
+
+  <!-- 商品列表 -->
+  <view class="section">
+    <view class="section-title">商品详情</view>
+    <view class="product-list">
+      <view 
+        class="product-item"
+        wx:for="{{productList}}"
+        wx:key="id"
+      >
+        <image class="product-image" src="{{item.product.pictureUrl}}" mode="aspectFill"></image>
+        <view class="product-info">
+          <text class="product-name">{{item.product.name}}</text>
+          <text class="product-remark" wx:if="{{item.product.comment}}">
+            备注: {{item.product.comment}}
+          </text>
+          <view class="product-bottom">
+            <text class="product-price">¥{{item.product.price}}</text>
+            <text class="product-count">x{{item.count}}</text>
+          </view>
+        </view>
+        <!-- 商品状态 -->
+        <view class="product-status status-{{item.orderProduct.status}}">
+          <text wx:if="{{item.orderProduct.status === 0}}">制作中</text>
+          <text wx:elif="{{item.orderProduct.status === 1}}">已完成</text>
+          <text wx:elif="{{item.orderProduct.status === 2}}">已退单</text>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 价格汇总 -->
+  <view class="section summary">
+    <view class="summary-item">
+      <text class="summary-label">商品总计</text>
+      <text class="summary-value">¥{{totalPrice}}</text>
+    </view>
+    <view class="summary-item total">
+      <text class="summary-label">实付金额</text>
+      <text class="summary-value price">¥{{totalPrice}}</text>
+    </view>
+  </view>
+
+  <!-- 底部操作 -->
+  <view class="footer" wx:if="{{order.status === 2}}">
+    <button class="action-btn primary" bindtap="goToReview">
+      去评价
+    </button>
+  </view>
+</view>

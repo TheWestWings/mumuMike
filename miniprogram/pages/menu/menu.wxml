@@ -1,0 +1,148 @@
+<!-- pages/menu/menu.wxml - 菜单点餐页 -->
+<view class="container">
+  <!-- 头部信息 -->
+  <view class="header">
+    <view class="header-content">
+      <text class="title">木木奶茶</text>
+      <text class="subtitle">用心制作的奶香甜品</text>
+    </view>
+    <view class="table-badge" wx:if="{{tableNo}}">
+      <text>桌号 {{tableNo}}</text>
+    </view>
+  </view>
+
+  <!-- 主体内容区 -->
+  <view class="main-content">
+    <!-- 左侧分类导航 -->
+    <scroll-view class="category-nav" scroll-y enhanced show-scrollbar="{{false}}">
+      <view 
+        class="category-item {{currentCategory === index ? 'active' : ''}}"
+        wx:for="{{categoryList}}"
+        wx:key="id"
+        data-index="{{index}}"
+        bindtap="switchCategory"
+      >
+        <text class="category-name">{{item.title}}</text>
+        <view class="category-indicator" wx:if="{{currentCategory === index}}"></view>
+      </view>
+    </scroll-view>
+
+    <!-- 右侧商品列表 -->
+    <scroll-view 
+      class="product-list" 
+      scroll-y 
+      enhanced 
+      show-scrollbar="{{false}}"
+      scroll-into-view="{{scrollToView}}"
+      bindscroll="onProductScroll"
+    >
+      <view wx:for="{{categoryList}}" wx:key="id" id="category-{{index}}">
+        <!-- 分类标题 -->
+        <view class="category-header">
+          <text class="category-title">{{item.title}}</text>
+          <text class="category-desc">{{item.description}}</text>
+        </view>
+        
+        <!-- 商品卡片 -->
+        <view 
+          class="product-card"
+          wx:for="{{item.productList}}"
+          wx:for-item="product"
+          wx:key="id"
+        >
+          <image 
+            class="product-image" 
+            src="{{product.pictureUrl}}" 
+            mode="aspectFill"
+            lazy-load
+          ></image>
+          <view class="product-info">
+            <text class="product-name">{{product.name}}</text>
+            <text class="product-desc">{{product.description}}</text>
+            <view class="product-bottom">
+              <text class="product-price">¥{{product.price}}</text>
+              <view class="product-actions">
+                <view 
+                  class="count-btn minus" 
+                  wx:if="{{cartCountMap[product.id] > 0}}"
+                  data-product="{{product}}"
+                  catchtap="decreaseCount"
+                >
+                  <text>-</text>
+                </view>
+                <text class="count-num" wx:if="{{cartCountMap[product.id] > 0}}">
+                  {{cartCountMap[product.id]}}
+                </text>
+                <view 
+                  class="count-btn plus"
+                  data-product="{{product}}"
+                  catchtap="increaseCount"
+                >
+                  <text>+</text>
+                </view>
+              </view>
+            </view>
+          </view>
+        </view>
+      </view>
+      
+      <!-- 底部留白 -->
+      <view class="bottom-space"></view>
+    </scroll-view>
+  </view>
+
+  <!-- 底部购物车栏 -->
+  <view class="cart-bar" wx:if="{{cartCount > 0}}">
+    <view class="cart-info" bindtap="goToCart">
+      <view class="cart-icon-wrapper">
+        <text class="cart-icon">🛒</text>
+        <view class="cart-badge">{{cartCount}}</view>
+      </view>
+      <view class="cart-price-info">
+        <text class="cart-total">¥{{cartTotal}}</text>
+        <text class="cart-hint">已选 {{cartCount}} 件</text>
+      </view>
+    </view>
+    <button class="checkout-btn" bindtap="goToCart">
+      <text>去结算</text>
+    </button>
+  </view>
+
+  <!-- 空状态底部购物车 -->
+  <view class="cart-bar empty" wx:else>
+    <view class="cart-info">
+      <view class="cart-icon-wrapper">
+        <text class="cart-icon">🛒</text>
+      </view>
+      <text class="empty-hint">购物车是空的</text>
+    </view>
+  </view>
+</view>
+
+<!-- 规格选择弹窗（预留） -->
+<view class="spec-modal" wx:if="{{showSpecModal}}">
+  <view class="modal-mask" bindtap="closeSpecModal"></view>
+  <view class="modal-content">
+    <view class="modal-header">
+      <text class="modal-title">{{currentProduct.name}}</text>
+      <view class="modal-close" bindtap="closeSpecModal">×</view>
+    </view>
+    <view class="modal-body">
+      <!-- 备注输入 -->
+      <view class="remark-section">
+        <text class="remark-label">备注</text>
+        <input 
+          class="remark-input" 
+          placeholder="请输入特殊要求"
+          value="{{productRemark}}"
+          bindinput="onRemarkInput"
+        />
+      </view>
+    </view>
+    <view class="modal-footer">
+      <button class="modal-btn" bindtap="confirmAddToCart">
+        加入购物车
+      </button>
+    </view>
+  </view>
+</view>

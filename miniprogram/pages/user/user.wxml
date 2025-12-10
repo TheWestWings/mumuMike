@@ -1,0 +1,109 @@
+<!-- pages/user/user.wxml - 个人中心页 -->
+<view class="container">
+  <!-- 用户信息头部 -->
+  <view class="user-header">
+    <view class="user-bg"></view>
+    <view class="user-info" wx:if="{{isLoggedIn}}">
+      <view class="avatar-wrapper">
+        <image 
+          class="avatar" 
+          src="{{userInfo.avatar || '/images/default-avatar.png'}}"
+          mode="aspectFill"
+        ></image>
+      </view>
+      <text class="username">{{userInfo.username || '用户'}}</text>
+      <text class="user-phone" wx:if="{{userInfo.phone}}">{{userInfo.phone}}</text>
+    </view>
+    <view class="user-info" wx:else>
+      <view class="avatar-wrapper" bindtap="goToLogin">
+        <view class="avatar default">
+          <text>👤</text>
+        </view>
+      </view>
+      <text class="username" bindtap="goToLogin">点击登录</text>
+      <text class="user-phone">登录后享受更多服务</text>
+    </view>
+  </view>
+
+  <!-- 功能菜单 -->
+  <view class="menu-section">
+    <view class="menu-group">
+      <view class="menu-item" bindtap="goToOrders">
+        <view class="menu-icon">📋</view>
+        <text class="menu-text">我的订单</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="goToMessages">
+        <view class="menu-icon">🔔</view>
+        <text class="menu-text">消息通知</text>
+        <view class="menu-badge" wx:if="{{unreadCount > 0}}">{{unreadCount}}</view>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="menu-group">
+      <view class="menu-item" bindtap="goToFeedback">
+        <view class="menu-icon">✍️</view>
+        <text class="menu-text">意见反馈</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="scanQRCode">
+        <view class="menu-icon">📷</view>
+        <text class="menu-text">扫码点餐</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+
+    <view class="menu-group">
+      <view class="menu-item" bindtap="showAbout">
+        <view class="menu-icon">ℹ️</view>
+        <text class="menu-text">关于我们</text>
+        <text class="menu-arrow">›</text>
+      </view>
+      <view class="menu-item" bindtap="contactService">
+        <view class="menu-icon">📞</view>
+        <text class="menu-text">联系客服</text>
+        <text class="menu-arrow">›</text>
+      </view>
+    </view>
+  </view>
+
+  <!-- 退出登录 -->
+  <view class="logout-section" wx:if="{{isLoggedIn}}">
+    <button class="logout-btn" bindtap="logout">退出登录</button>
+  </view>
+
+  <!-- 版权信息 -->
+  <view class="footer">
+    <text>木木奶茶 v1.0.0</text>
+  </view>
+</view>
+
+<!-- 消息列表弹窗 -->
+<view class="message-modal" wx:if="{{showMessages}}">
+  <view class="modal-mask" bindtap="closeMessages"></view>
+  <view class="modal-content">
+    <view class="modal-header">
+      <text class="modal-title">消息通知</text>
+      <view class="modal-close" bindtap="closeMessages">×</view>
+    </view>
+    <scroll-view class="message-list" scroll-y>
+      <view 
+        class="message-item {{item.status === 0 ? 'unread' : ''}}"
+        wx:for="{{messageList}}"
+        wx:key="id"
+        bindtap="readMessage"
+        data-index="{{index}}"
+      >
+        <view class="message-header">
+          <text class="message-title">{{item.title}}</text>
+          <text class="message-time">{{item.createTime}}</text>
+        </view>
+        <text class="message-content">{{item.content}}</text>
+      </view>
+      <view class="empty-message" wx:if="{{messageList.length === 0}}">
+        <text>暂无消息</text>
+      </view>
+    </scroll-view>
+  </view>
+</view>

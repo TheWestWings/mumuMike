@@ -1,0 +1,60 @@
+<!-- pages/review/review.wxml - 评价/反馈页面 -->
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <text class="title" wx:if="{{type === 'feedback'}}">意见反馈</text>
+    <text class="title" wx:else>订单评价</text>
+    <text class="subtitle" wx:if="{{type === 'feedback'}}">您的建议是我们进步的动力</text>
+    <text class="subtitle" wx:else>分享您的用餐体验</text>
+  </view>
+
+  <!-- 评分区域（仅订单评价） -->
+  <view class="rating-section" wx:if="{{type !== 'feedback'}}">
+    <text class="section-title">整体评分</text>
+    <view class="rating-stars">
+      <view 
+        class="star {{index < rating ? 'active' : ''}}"
+        wx:for="{{5}}"
+        wx:key="index"
+        data-value="{{index + 1}}"
+        bindtap="setRating"
+      >
+        ⭐
+      </view>
+    </view>
+    <text class="rating-text">{{ratingText}}</text>
+  </view>
+
+  <!-- 评价内容 -->
+  <view class="content-section">
+    <text class="section-title">
+      {{type === 'feedback' ? '反馈内容' : '评价内容'}}
+    </text>
+    <view class="input-item">
+      <input 
+        class="title-input"
+        placeholder="请输入标题"
+        value="{{reviewTitle}}"
+        bindinput="onTitleInput"
+        maxlength="30"
+      />
+    </view>
+    <view class="textarea-wrapper">
+      <textarea 
+        class="content-textarea"
+        placeholder="{{type === 'feedback' ? '请详细描述您的问题或建议...' : '请分享您的用餐体验...'}}"
+        value="{{reviewContent}}"
+        bindinput="onContentInput"
+        maxlength="500"
+      ></textarea>
+      <text class="char-count">{{reviewContent.length}}/500</text>
+    </view>
+  </view>
+
+  <!-- 提交按钮 -->
+  <view class="submit-section">
+    <button class="submit-btn" bindtap="submitReview" loading="{{submitting}}">
+      提交
+    </button>
+  </view>
+</view>

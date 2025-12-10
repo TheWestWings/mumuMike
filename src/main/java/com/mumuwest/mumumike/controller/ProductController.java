@@ -57,9 +57,9 @@ public class ProductController {
 
         if(image != null) {
             String imagePath = FileStorageUtil.storeFile(image);
-            String baseUrl = "http://localhost:8080";
-            String relativePath = imagePath.replace("./", "");
-            product.setPictureUrl(baseUrl + "/" + relativePath);
+            // 使用相对路径，前端根据baseUrl拼接
+            String relativePath = imagePath.replace("./", "/");
+            product.setPictureUrl(relativePath);
         }
         return AjaxResult.success(productService.insertProduct(product));
     }
@@ -89,9 +89,9 @@ public class ProductController {
 
         if(image != null) {
             String imagePath = FileStorageUtil.storeFile(image);
-            String baseUrl = "http://localhost:8080";
-            String relativePath = imagePath.replace("./", "");
-            product.setPictureUrl(baseUrl + "/" + relativePath);
+            // 使用相对路径，前端根据baseUrl拼接
+            String relativePath = imagePath.replace("./", "/");
+            product.setPictureUrl(relativePath);
         }
         return AjaxResult.success(productService.updateProduct(product));
     }

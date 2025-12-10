@@ -37,8 +37,11 @@ public class SecurityConfig {
                 .cors().and() // 启用 CORS，配合 CorsConfigurationSource
                 .authorizeHttpRequests(authorize -> authorize
                         .requestMatchers("/login", "/register", "/api/public/**").permitAll() // 公开接口
+                        .requestMatchers("/wx/**").permitAll() // 微信小程序登录和支付接口
                         .requestMatchers("/uploads/**").permitAll() // 允许访问上传的文件
                         .requestMatchers("/productType/**").permitAll() // 临时放行 /dam/**
+                        .requestMatchers("/table/**").permitAll() // 餐桌二维码接口
+                        .requestMatchers("/product/getProductVOList", "/product/getProductList").permitAll() // 小程序商品接口
                         .anyRequest().authenticated() // 其他需要认证
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(userDetailsService), UsernamePasswordAuthenticationFilter.class);
@@ -49,8 +52,8 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Add both localhost and IP-based origins
-        configuration.setAllowedOrigins(Arrays.asList("http://localhost:1024", "http://192.168.1.230:1024"));
+        // 允许所有来源
+        configuration.addAllowedOriginPattern("*");
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Collections.singletonList("*"));
         configuration.setAllowCredentials(true);

@@ -63,4 +63,11 @@ public interface UserService {
      * @return
      */
     User getUserById(Integer id);
+
+    /**
+     * 根据openid查询用户（微信小程序登录）
+     * @param openid 微信openid
+     * @return 用户信息
+     */
+    User getUserByOpenid(String openid);
 }

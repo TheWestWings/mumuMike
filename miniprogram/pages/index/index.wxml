@@ -1,0 +1,44 @@
+<!-- pages/index/index.wxml - 扫码入口页 -->
+<view class="container">
+  <view class="header">
+    <view class="logo-container">
+      <view class="logo">
+        <text class="logo-text">木木奶茶</text>
+      </view>
+      <text class="slogan">用心制作的奶香甜品</text>
+    </view>
+  </view>
+
+  <view class="content">
+    <!-- 扫码区域 -->
+    <view class="scan-section">
+      <view class="scan-icon" bindtap="scanQRCode">
+        <text class="iconfont">📷</text>
+      </view>
+      <text class="scan-text">扫描桌码开始点餐</text>
+      <text class="scan-hint">请扫描餐桌上的二维码</text>
+    </view>
+
+    <!-- 桌号显示 -->
+    <view class="table-info" wx:if="{{tableNo}}">
+      <text class="table-label">当前桌号</text>
+      <text class="table-no">{{tableNo}}</text>
+    </view>
+
+    <!-- 快捷入口 -->
+    <view class="quick-entry">
+      <button class="entry-btn primary" bindtap="goToMenu">
+        <text class="btn-icon">🍹</text>
+        <text class="btn-text">开始点餐</text>
+      </button>
+      <button class="entry-btn secondary" bindtap="goToOrders">
+        <text class="btn-icon">📋</text>
+        <text class="btn-text">我的订单</text>
+      </button>
+    </view>
+  </view>
+
+  <view class="footer">
+    <text class="copyright">© 2024 木木奶茶 · 品味生活</text>
+  </view>
+</view>

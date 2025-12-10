@@ -73,6 +73,11 @@
           <i class="el-icon-chat-line-square"></i>
           <span slot="title">留言管理</span>
         </el-menu-item>
+
+        <el-menu-item index="/MgmtPage/TableQRCode" @click="closeSidebarOnMobile">
+          <i class="el-icon-full-screen"></i>
+          <span slot="title">餐桌二维码</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-main>
