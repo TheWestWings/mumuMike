@@ -209,7 +209,7 @@
   font-weight: 500;
   color: #303133;
   position: relative;
-  top: -4rpx;
+  top: -20rpx;
 }
 
 .bottom-space {
