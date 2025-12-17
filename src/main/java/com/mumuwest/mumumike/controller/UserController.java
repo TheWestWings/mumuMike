@@ -1,6 +1,5 @@
 package com.mumuwest.mumumike.controller;
 
-
 import com.mumuwest.mumumike.annotation.Role;
 import com.mumuwest.mumumike.mapper.UserMapper;
 import com.mumuwest.mumumike.pojo.AjaxResult;
@@ -43,6 +42,7 @@ public class UserController {
 
     /**
      * 登录
+     * 
      * @param user
      * @return
      */
@@ -51,12 +51,11 @@ public class UserController {
         try {
             // 认证用户
             Authentication authentication = authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword())
-            );
+                    new UsernamePasswordAuthenticationToken(user.getUsername(), user.getPassword()));
 
             // 生成 JWT token
             user = userService.getUserByUsername(user.getUsername());
-            if(Objects.equals(user.getStatus(), "0")) {
+            if (Objects.equals(user.getStatus(), "0")) {
                 return AjaxResult.error("用户已被禁用");
             }
             String token = JwtUtil.generateToken(user.getUsername(), user.getRole());
@@ -68,6 +67,7 @@ public class UserController {
 
     /**
      * 注册
+     * 
      * @param registerRequest
      * @return
      */
@@ -81,18 +81,20 @@ public class UserController {
         User user = new User();
         user.setUsername(registerRequest.getUsername());
         user.setPassword(passwordEncoder.encode(registerRequest.getPassword())); // 加密密码
-        userService.register(user.getUsername(), user.getPassword(), registerRequest.getEmail(), registerRequest.getPhone());
+        userService.register(user.getUsername(), user.getPassword(), registerRequest.getEmail(),
+                registerRequest.getPhone(), 2);
 
         return AjaxResult.success("注册成功");
     }
 
     /**
      * 更新角色，只有super可以修改
+     * 
      * @param user
      * @return
      */
     @PutMapping("/updateRole")
-    @Role(role = {0})
+    @Role(role = { 0 })
     public AjaxResult updateRole(@RequestBody User user) {
         User userUpdate = new User();
         userUpdate.setRole(user.getRole());
@@ -102,11 +104,12 @@ public class UserController {
 
     /**
      * 更新user状态， 只有管理员可以更新
+     * 
      * @param user
      * @return
      */
     @PutMapping("/updateStatus")
-    @Role(role = {0, 1})
+    @Role(role = { 0, 1 })
     public AjaxResult updateStatus(@RequestBody User user) {
         User userUpdate = new User();
         userUpdate.setStatus(user.getStatus());
@@ -116,12 +119,14 @@ public class UserController {
 
     /**
      * 获取用户列表
+     * 
      * @return
      */
     @PostMapping("/getList")
-    @Role(role = {0, 1})
+    @Role(role = { 0, 1 })
     public TableDataInfo list(@RequestBody User user) {
-        TableDataInfo tableDataInfo = new TableDataInfo(userService.getList(user), userMapper.selectAllUsers(user).size());
+        TableDataInfo tableDataInfo = new TableDataInfo(userService.getList(user),
+                userMapper.selectAllUsers(user).size());
         tableDataInfo.setCode(200);
         tableDataInfo.setMsg("查询成功");
         return tableDataInfo;
@@ -129,6 +134,7 @@ public class UserController {
 
     /**
      * 获取本人信息
+     * 
      * @param request
      * @return
      */
@@ -143,28 +149,31 @@ public class UserController {
 
     /**
      * 根据id获取用户信息，只有管理员可以
+     * 
      * @param id
      * @return
      */
     @GetMapping("/getUserById/{id}")
-    @Role(role = {0, 1})
+    @Role(role = { 0, 1 })
     public AjaxResult getUserById(@PathVariable("id") Integer id) {
         return AjaxResult.success(userService.getUserById(id));
     }
 
     /**
      * 根据id修改用户信息，只有管理员可以
+     * 
      * @param user
      * @return
      */
     @PutMapping("/updateUserById")
-    @Role(role = {0, 1})
+    @Role(role = { 0, 1 })
     public AjaxResult updateUserById(@RequestBody User user) {
         return AjaxResult.success(userService.updateUserInfo(user));
     }
 
     /**
      * 修改自身信息
+     * 
      * @param user
      * @param request
      * @return
@@ -186,12 +195,14 @@ public class UserController {
 
     /**
      * 修改头像
+     * 
      * @param avatar
      * @param request
      * @return
      */
     @PostMapping("/updateAvatar")
-    public AjaxResult updateAvatar(@RequestParam("file") MultipartFile avatar, HttpServletRequest request) throws IOException {
+    public AjaxResult updateAvatar(@RequestParam("file") MultipartFile avatar, HttpServletRequest request)
+            throws IOException {
         // 通过jwt另外解析用户名
         String header = request.getHeader("Authorization");
         String token = header.substring(7);
@@ -199,7 +210,7 @@ public class UserController {
         User userByUsername = userService.getUserByUsername(username);
         User userUpdate = new User();
         userUpdate.setId(userByUsername.getId());
-        if(avatar != null) {
+        if (avatar != null) {
             String avatarUrl = FileStorageUtil.storeFile(avatar);
             String baseUrl = "http://localhost:8080";
             String relativePath = avatarUrl.replace("./", "");

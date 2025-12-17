@@ -1,17 +1,17 @@
 <!-- pages/orderDetail/orderDetail.wxml - 订单详情页 -->
-<view class="container">
+<view class="container" wx:if="{{order.id}}">
   <!-- 头部 -->
   <view class="header">
     <view class="status-icon">
-      <text wx:if="{{order.status === 0}}">⏳</text>
-      <text wx:elif="{{order.status === 1}}">👨‍🍳</text>
-      <text wx:elif="{{order.status === 2}}">✅</text>
+      <text wx:if="{{order.status == 0}}">⏳</text>
+      <text wx:elif="{{order.status == 1}}">👨‍🍳</text>
+      <text wx:elif="{{order.status == 2}}">✅</text>
       <text wx:else>❌</text>
     </view>
     <text class="status-text">{{statusText}}</text>
-    <text class="status-hint" wx:if="{{order.status === 0}}">订单已提交，等待确认</text>
-    <text class="status-hint" wx:elif="{{order.status === 1}}">正在制作中，请稍候...</text>
-    <text class="status-hint" wx:elif="{{order.status === 2}}">制作完成，请取餐</text>
+    <text class="status-hint" wx:if="{{order.status == 0}}">订单已提交，等待确认</text>
+    <text class="status-hint" wx:elif="{{order.status == 1}}">正在制作中，请稍候...</text>
+    <text class="status-hint" wx:elif="{{order.status == 2}}">制作完成，请取餐</text>
   </view>
 
   <!-- 订单信息 -->
@@ -57,9 +57,9 @@
         </view>
         <!-- 商品状态 -->
         <view class="product-status status-{{item.orderProduct.status}}">
-          <text wx:if="{{item.orderProduct.status === 0}}">制作中</text>
-          <text wx:elif="{{item.orderProduct.status === 1}}">已完成</text>
-          <text wx:elif="{{item.orderProduct.status === 2}}">已退单</text>
+          <text wx:if="{{item.orderProduct.status == 0}}">制作中</text>
+          <text wx:elif="{{item.orderProduct.status == 1}}">已完成</text>
+          <text wx:elif="{{item.orderProduct.status == 2}}">已退单</text>
         </view>
       </view>
     </view>
@@ -78,9 +78,14 @@
   </view>
 
   <!-- 底部操作 -->
-  <view class="footer" wx:if="{{order.status === 2}}">
+  <view class="footer" wx:if="{{order.status == 2}}">
     <button class="action-btn primary" bindtap="goToReview">
       去评价
     </button>
   </view>
+</view>
+
+<!-- 加载失败或无数据提示 -->
+<view class="empty-state" wx:else>
+    <view class="loading-text">加载中...</view>
 </view>

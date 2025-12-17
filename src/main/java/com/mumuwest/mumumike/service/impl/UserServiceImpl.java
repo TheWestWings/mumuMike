@@ -16,18 +16,22 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 用户注册
+     * 
      * @param username 用户名
      * @param password 密码
      * @param email    邮箱
      * @param phone    手机号
      * @return
      */
-    public Integer register(String username, String password, String email, String phone) {
-        return userMapper.insertUser(new User(username, password, email, phone));
+    public Integer register(String username, String password, String email, String phone, Integer role) {
+        User user = new User(username, password, email, phone);
+        user.setRole(role);
+        return userMapper.insertUser(user);
     }
 
     /**
      * 用户登录
+     * 
      * @param username 用户名
      * @param password 密码
      * @return
@@ -39,6 +43,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 获取用户信息
+     * 
      * @param userId 用户ID
      * @return
      */
@@ -49,6 +54,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 根据用户名获取用户信息
+     * 
      * @param username 用户名
      * @return
      */
@@ -59,6 +65,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 修改用户信息
+     * 
      * @param user
      * @return
      */
@@ -69,7 +76,8 @@ public class UserServiceImpl implements UserService {
     }
 
     /**
-     *  获取所有用户信息
+     * 获取所有用户信息
+     * 
      * @param user 用户信息
      * @return
      */
@@ -81,6 +89,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 根据id查询用户
+     * 
      * @param id
      * @return
      */
@@ -91,6 +100,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * 根据openid查询用户（微信小程序登录）
+     * 
      * @param openid 微信openid
      * @return 用户信息
      */

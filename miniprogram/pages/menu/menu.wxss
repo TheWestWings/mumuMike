@@ -208,6 +208,8 @@
   font-size: 30rpx;
   font-weight: 500;
   color: #303133;
+  position: relative;
+  top: -4rpx;
 }
 
 .bottom-space {

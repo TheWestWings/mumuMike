@@ -36,13 +36,14 @@ public class WxLoginController {
 
     /**
      * 微信小程序登录
+     * 
      * @param params 包含code的参数
      * @return 登录结果
      */
     @PostMapping("/login")
     public AjaxResult wxLogin(@RequestBody Map<String, String> params) {
         String code = params.get("code");
-        
+
         if (code == null || code.isEmpty()) {
             return AjaxResult.error("code不能为空");
         }
@@ -50,23 +51,30 @@ public class WxLoginController {
         try {
             // 调用微信接口获取openid
             String openid = getOpenidFromWx(code);
-            
+
             if (openid == null || openid.isEmpty()) {
                 return AjaxResult.error("微信登录失败");
             }
 
             // 根据openid查找或创建用户
             User user = userService.getUserByOpenid(openid);
-            
+
+            // [Auto-Fix] 如果现有用户是角色2(游客)，自动升级为1(用户)
+            if (user != null && Integer.valueOf(2).equals(user.getRole())) {
+                user.setRole(1);
+                userService.updateUserInfo(user);
+            }
+
             if (user == null) {
                 // 自动注册新用户
                 user = new User();
                 user.setUsername("wx_" + openid.substring(0, 8));
                 user.setPassword(passwordEncoder.encode(UUID.randomUUID().toString()));
-                user.setRole(2); // 普通用户
+                // 设置为角色 1 (用户)
+                user.setRole(1);
                 user.setStatus("1");
-                // 注意：需要在User实体和数据库中添加openid字段
-                userService.register(user.getUsername(), user.getPassword(), null, null);
+                // 传入角色 1
+                userService.register(user.getUsername(), user.getPassword(), null, null, 1);
                 user = userService.getUserByUsername(user.getUsername());
             }
 
@@ -87,6 +95,7 @@ public class WxLoginController {
 
     /**
      * 调用微信接口获取openid
+     * 
      * @param code 微信登录code
      * @return openid
      */
@@ -99,9 +108,8 @@ public class WxLoginController {
 
         try {
             String url = String.format(
-                "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code",
-                appid, secret, code
-            );
+                    "https://api.weixin.qq.com/sns/jscode2session?appid=%s&secret=%s&js_code=%s&grant_type=authorization_code",
+                    appid, secret, code);
 
             RestTemplate restTemplate = new RestTemplate();
             @SuppressWarnings("unchecked")

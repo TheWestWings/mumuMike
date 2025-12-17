@@ -19,6 +19,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 创建订单
+     * 
      * @param order
      * @return
      */
@@ -31,11 +32,12 @@ public class OrderServiceImpl implements OrderService {
             orderProduct.setOrderId(order.getId());
             orderMapper.insertOrderProduct(orderProduct);
         }
-        return 1;
+        return order.getId();
     }
 
     /**
      * 删除订单
+     * 
      * @param id
      * @return
      */
@@ -46,6 +48,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 修改订单
+     * 
      * @param order
      * @return
      */
@@ -56,6 +59,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 根据id查询订单
+     * 
      * @param id
      * @return
      */
@@ -71,6 +75,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 查询订单列表
+     * 
      * @param order
      * @return
      */
@@ -81,6 +86,7 @@ public class OrderServiceImpl implements OrderService {
 
     /**
      * 修改订单产品信息
+     * 
      * @param orderProduct
      * @return
      */

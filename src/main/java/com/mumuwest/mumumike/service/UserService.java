@@ -14,7 +14,7 @@ public interface UserService {
      * @param phone    手机号
      * @return 注册结果
      */
-    Integer register(String username, String password, String email, String phone);
+    Integer register(String username, String password, String email, String phone, Integer role);
 
     /**
      * 用户登录
@@ -33,7 +33,6 @@ public interface UserService {
      */
     User getUserInfo(Integer userId);
 
-
     /**
      * 根据用户名获取用户信息
      *
@@ -44,6 +43,7 @@ public interface UserService {
 
     /**
      * 修改用户信息
+     * 
      * @param user
      * @return
      */
@@ -59,6 +59,7 @@ public interface UserService {
 
     /**
      * 根据id查询用户
+     * 
      * @param id
      * @return
      */
@@ -66,6 +67,7 @@ public interface UserService {
 
     /**
      * 根据openid查询用户（微信小程序登录）
+     * 
      * @param openid 微信openid
      * @return 用户信息
      */

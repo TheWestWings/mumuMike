@@ -59,7 +59,7 @@
 
 
     <insert id="insertUser" parameterType="com.mumuwest.mumumike.pojo.User">
-        INSERT INTO user (username, password, email, phone, status) VALUES (#{username}, #{password}, #{email}, #{phone}, #{status})
+        INSERT INTO user (username, password, email, phone, status, role) VALUES (#{username}, #{password}, #{email}, #{phone}, #{status}, #{role})
     </insert>
 
     <select id="selectUserById" resultType="com.mumuwest.mumumike.pojo.User">

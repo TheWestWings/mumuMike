@@ -29,9 +29,18 @@ Page({
 
     try {
       const res = await orderApi.getOrderById(id);
+      console.log('API Response:', res); // Debug log
       
-      // 兼容两种返回格式
-      const order = res.data || res;
+      // 兼容两种返回格式: 直接返回对象 或 {code, data}
+      let order = null;
+      if (res.data) {
+        order = res.data;
+      } else if (res.id || res.message) { // 假设直接返回了对象 (res.message check as fallback)
+        order = res;
+      }
+
+      console.log('Parsed Order:', order); // Debug log
+
       if (order && (order.id || order.product)) {
         const productList = order.product || [];
         
@@ -39,23 +48,32 @@ Page({
         let totalPrice = 0;
         productList.forEach(item => {
           if (item.product && item.product.status !== 2) { // 非退单商品
-            totalPrice += (item.product?.price || 0) * (item.count || 0);
+             // Ensure price and count are numbers
+            const price = parseFloat(item.product?.price || 0);
+            const count = parseInt(item.count || 0);
+            totalPrice += price * count;
           }
         });
-        console.log(productList)
+        
+        // Ensure status is a number for consistent checks
+        const status = typeof order.status !== 'undefined' ? parseInt(order.status) : -1;
 
         this.setData({
-          order: order,
+          order: {
+            ...order,
+            status: status // Overwrite status with parsed number
+          },
           productList: productList,
-          statusText: getOrderStatusText(order.status),
+          statusText: getOrderStatusText(status),
           createTimeText: formatTime(order.createTime, 'YYYY-MM-DD HH:mm:ss'),
           updateTimeText: order.updateTime ? formatTime(order.updateTime, 'YYYY-MM-DD HH:mm:ss') : '',
           totalPrice: totalPrice.toFixed(2),
           tableNo: app.globalData.tableNo || ''
         });
       } else {
+        console.warn('Order data invalid or empty:', order);
         wx.showToast({
-          title: '订单不存在',
+          title: '订单数据异常',
           icon: 'none'
         });
       }
