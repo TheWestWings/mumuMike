@@ -1,8 +1,17 @@
 <template>
   <div class="order-mgmt-container" v-loading="loading" element-loading-text="正在加载订单数据...">
     <h2 class="page-title">订单管理</h2>
+    <div class="page-header-actions">
+      <el-button
+        type="primary"
+        @click="handleCompleteAllOrders"
+        :disabled="pendingOrdersCount === 0"
+      >
+        <i class="el-icon-finished"></i> 一键完成全部订单 ({{ pendingOrdersCount }})
+      </el-button>
+    </div>
     <div
-      v-for="(item, index) in receiveList"
+      v-for="(item, index) in paginatedList"
       :key="index"
       class="order-card"
     >
@@ -161,10 +170,22 @@
       </el-descriptions>
     </div>
     
-    <div v-if="receiveList.length === 0" class="empty-state">
+    <div v-if="paginatedList.length === 0" class="empty-state">
       <i class="el-icon-tickets empty-icon"></i>
       <p>暂无订单</p>
     </div>
+    
+    <!-- 分页组件 -->
+    <el-pagination
+      v-if="receiveList.length > 0"
+      class="pagination"
+      background
+      layout="prev, pager, next"
+      :total="receiveList.length"
+      :page-size="pageSize"
+      :current-page.sync="currentPage"
+      @current-change="handlePageChange"
+    />
   </div>
 </template>
 
@@ -173,10 +194,10 @@ import { getOrderList, updateOrderProductStatus, updateOrderStatus } from '@/api
 export default {
   created() {
     this.getList(true)
-    // 设置定时器，每5秒自动刷新订单列表
+    // 设置定时器，每20秒自动刷新订单列表
     this.timer = setInterval(() => {
       this.getList(false) // 不显示加载状态，避免页面闪动
-    }, 1000)
+    }, 20000)
   },
   
   beforeDestroy() {
@@ -191,6 +212,8 @@ export default {
     return {
       loading: false,
       timer: null, // 用于存储定时器ID
+      currentPage: 1,
+      pageSize: 5,
       orderList:[
         {
           username:'weec',
@@ -290,6 +313,18 @@ export default {
       }
     }
   },
+  computed: {
+    // 分页后的订单列表
+    paginatedList() {
+      const start = (this.currentPage - 1) * this.pageSize
+      const end = start + this.pageSize
+      return this.receiveList.slice(start, end)
+    },
+    // 未完成订单数量
+    pendingOrdersCount() {
+      return this.receiveList.filter(order => order.status !== 2).length
+    }
+  },
   methods: {
     getList(showLoading = true) {
       if (showLoading) {
@@ -306,6 +341,46 @@ export default {
           this.loading = false
         }
       })
+    },
+    // 分页切换
+    handlePageChange(page) {
+      this.currentPage = page
+    },
+    // 一键完成全部订单
+    async handleCompleteAllOrders() {
+      const pendingOrders = this.receiveList.filter(order => order.status !== 2)
+      if (pendingOrders.length === 0) return
+      
+      this.$confirm(`确认一键完成全部 ${pendingOrders.length} 个订单？`, '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(async () => {
+        this.loading = true
+        try {
+          for (const order of pendingOrders) {
+            // 完成所有待制作产品
+            const pendingProducts = order.product.filter(p => p.status === 0)
+            for (const product of pendingProducts) {
+              await updateOrderProductStatus({id: product.id, status: 1})
+            }
+            // 更新订单状态为已完成
+            await updateOrderStatus({id: order.id, status: 2})
+          }
+          this.getList(false)
+          this.$message({
+            message: `已完成全部 ${pendingOrders.length} 个订单`,
+            type: 'success'
+          })
+        } catch (err) {
+          this.$message({
+            message: '操作失败，请重试',
+            type: 'error'
+          })
+        } finally {
+          this.loading = false
+        }
+      }).catch(() => {})
     },
     handleChargeback(row, orderId) {
       // 弹出对话框，让用户输入退单原因
@@ -581,5 +656,21 @@ export default {
   .product-table /deep/ .el-table__body {
     width: 100% !important;
   }
+}
+
+.page-header-actions {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.pagination {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+.batch-complete-btn {
+  margin-right: 10px;
 }
 </style>
