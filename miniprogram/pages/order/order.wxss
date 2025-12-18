@@ -47,6 +47,8 @@
 .order-list {
   flex: 1;
   padding: 20rpx;
+  box-sizing: border-box;
+  width: 100%;
 }
 
 .order-card {
@@ -125,6 +127,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .product-name {
