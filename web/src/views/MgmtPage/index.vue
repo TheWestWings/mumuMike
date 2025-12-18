@@ -78,6 +78,11 @@
           <i class="el-icon-full-screen"></i>
           <span slot="title">餐桌二维码</span>
         </el-menu-item>
+
+        <el-menu-item index="/MgmtPage/RevenueMgmt" @click="closeSidebarOnMobile">
+          <i class="el-icon-s-data"></i>
+          <span slot="title">营收统计</span>
+        </el-menu-item>
       </el-menu>
     </el-aside>
     <el-main>
