@@ -74,7 +74,7 @@
 
 <script>
 import * as echarts from 'echarts'
-import { getOrderList } from '@/api/Order/Order'
+import { getAllOrderList } from '@/api/Order/Order'
 
 export default {
   name: 'RevenueMgmt',
@@ -102,7 +102,7 @@ export default {
   methods: {
     async loadData() {
       try {
-        const res = await getOrderList()
+        const res = await getAllOrderList()
         this.orderList = res.data?.rows || res.rows || []
         this.calculateStatistics()
         this.$nextTick(() => {
