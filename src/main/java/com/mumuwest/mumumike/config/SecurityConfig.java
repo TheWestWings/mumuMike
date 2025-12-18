@@ -42,9 +42,11 @@ public class SecurityConfig {
                         .requestMatchers("/productType/**").permitAll() // 临时放行 /dam/**
                         .requestMatchers("/table/**").permitAll() // 餐桌二维码接口
                         .requestMatchers("/product/getProductVOList", "/product/getProductList").permitAll() // 小程序商品接口
+                        .requestMatchers("/message/**").permitAll() // 小程序消息接口
                         .anyRequest().authenticated() // 其他需要认证
                 )
-                .addFilterBefore(new JwtAuthenticationFilter(userDetailsService), UsernamePasswordAuthenticationFilter.class);
+                .addFilterBefore(new JwtAuthenticationFilter(userDetailsService),
+                        UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
 

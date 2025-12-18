@@ -15,6 +15,15 @@
       >
         <template slot="extra">
           <el-button
+            @click="handleBatchComplete(item)"
+            size="medium"
+            type="success"
+            :disabled="item.status === 2"
+            class="batch-complete-btn"
+          >
+            <i class="el-icon-finished"></i> 一键完成
+          </el-button>
+          <el-button
             @click="handleRelease(item)"
             size="medium"
             :disabled="item.status === 2"
@@ -396,6 +405,46 @@ export default {
           type: 'success'
         })
       })
+    },
+    
+    // 一键完成：完成所有产品并标记订单为已完成
+    async handleBatchComplete(item) {
+      // 获取所有未完成的产品
+      const pendingProducts = item.product.filter(p => p.status === 0)
+      
+      if (pendingProducts.length === 0) {
+        // 无待制作产品，直接标记订单完成
+        updateOrderStatus({id: item.id, status: 2}).then(() => {
+          this.getList(true)
+          this.$message({
+            message: '订单已完成',
+            type: 'success'
+          })
+        })
+        return
+      }
+      
+      try {
+        // 批量完成所有待制作产品
+        const promises = pendingProducts.map(product => 
+          updateOrderProductStatus({id: product.id, status: 1})
+        )
+        await Promise.all(promises)
+        
+        // 更新订单状态为已完成
+        await updateOrderStatus({id: item.id, status: 2})
+        
+        this.getList(true)
+        this.$message({
+          message: '订单一键完成',
+          type: 'success'
+        })
+      } catch (err) {
+        this.$message({
+          message: '操作失败，请重试',
+          type: 'error'
+        })
+      }
     },
     
     getStatusType(status) {

@@ -26,6 +26,7 @@ public class UserServiceImpl implements UserService {
     public Integer register(String username, String password, String email, String phone, Integer role) {
         User user = new User(username, password, email, phone);
         user.setRole(role);
+        user.setStatus("1"); // 默认启用
         return userMapper.insertUser(user);
     }
 
