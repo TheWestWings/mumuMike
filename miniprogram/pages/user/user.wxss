@@ -212,6 +212,8 @@
 .message-list {
   flex: 1;
   padding: 20rpx;
+  height: 50vh;
+  max-height: 50vh;
 }
 
 .message-item {
