@@ -142,9 +142,9 @@ public class OrderController {
      * @param order
      * @return
      */
-    @PutMapping
+    @PutMapping("/updateOrder")
     @Role(role = { 0, 1 })
-    public AjaxResult updateOrder(Order order) {
+    public AjaxResult updateOrder(@RequestBody Order order) {
         return AjaxResult.success(orderService.updateOrder(order));
     }
 
