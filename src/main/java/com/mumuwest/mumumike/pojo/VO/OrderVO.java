@@ -13,6 +13,7 @@ public class OrderVO {
     private Integer userId;
     private List<OrderProductVO> product;
     private Integer status;
+    private Integer reviewed;
     private Date createTime;
     private Date updateTime;
     private User user;
@@ -49,6 +50,14 @@ public class OrderVO {
         this.status = status;
     }
 
+    public Integer getReviewed() {
+        return reviewed;
+    }
+
+    public void setReviewed(Integer reviewed) {
+        this.reviewed = reviewed;
+    }
+
     public Date getCreateTime() {
         return createTime;
     }
@@ -78,6 +87,7 @@ public class OrderVO {
         this.userId = order.getUserId();
         this.product = orderProductVOs;
         this.status = order.getStatus();
+        this.reviewed = order.getReviewed();
         this.createTime = order.getCreateTime();
         this.updateTime = order.getUpdateTime();
         this.user = user;
