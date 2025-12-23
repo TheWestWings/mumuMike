@@ -241,8 +241,9 @@
   height: 40rpx;
 }
 
-.reviewed-text {
-  font-size: 26rpx;
-  color: #67c23a;
-  padding: 12rpx 32rpx;
+.action-btn.disabled {
+  background-color: #e0e0e0;
+  border-color: #e0e0e0;
+  color: #999;
+  opacity: 0.7;
 }
