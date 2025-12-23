@@ -130,6 +130,7 @@
   </view>
   <scroll-view class="drawer-content" scroll-y>
     <view class="drawer-item" wx:for="{{cartList}}" wx:key="index">
+      <image class="drawer-item-image" src="{{item.pictureUrl}}" mode="aspectFill"></image>
       <view class="drawer-item-info">
         <text class="drawer-item-name">{{item.name}}</text>
         <text class="drawer-item-price">¥{{item.price}}</text>

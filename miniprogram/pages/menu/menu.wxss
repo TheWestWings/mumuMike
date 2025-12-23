@@ -469,16 +469,25 @@
 
 .drawer-item {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   padding: 24rpx 0;
   border-bottom: 1rpx solid #f5f5f5;
+}
+
+.drawer-item-image {
+  width: 100rpx;
+  height: 100rpx;
+  border-radius: 12rpx;
+  margin-right: 20rpx;
+  flex-shrink: 0;
 }
 
 .drawer-item-info {
   flex: 1;
   display: flex;
   flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .drawer-item-name {
@@ -496,6 +505,8 @@
 .drawer-item-actions {
   display: flex;
   align-items: center;
+  flex-shrink: 0;
+  margin-left: 20rpx;
 }
 
 .drawer-btn {
