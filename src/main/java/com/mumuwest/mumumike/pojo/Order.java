@@ -8,6 +8,7 @@ public class Order {
     private Integer userId;
     private List<OrderProduct> product;
     private Integer status;
+    private Integer reviewed; // 0: 未评价, 1: 已评价
     private Date createTime;
     private Date updateTime;
 
@@ -59,5 +60,11 @@ public class Order {
         this.updateTime = updateTime;
     }
 
+    public Integer getReviewed() {
+        return reviewed;
+    }
 
+    public void setReviewed(Integer reviewed) {
+        this.reviewed = reviewed;
+    }
 }
