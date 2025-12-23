@@ -93,8 +93,10 @@ Page({
             }
 
             const res = await informationApi.addInformation(data);
+            console.log('提交评价响应:', res);
 
-            if (res.code === 200) {
+            // 后端返回插入成功的行数(int)，不是{code: 200}格式
+            if (res === 1 || res > 0 || res.code === 200 || res.data > 0) {
                 // 标记订单已评价
                 if (orderId) {
                     wx.request({
@@ -118,6 +120,11 @@ Page({
                         url: '/pages/order/order'
                     });
                 }, 1500);
+            } else {
+                wx.showToast({
+                    title: '提交失败',
+                    icon: 'none'
+                });
             }
         } catch (err) {
             console.error('提交失败', err);
