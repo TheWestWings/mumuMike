@@ -93,7 +93,7 @@
 
   <!-- 底部购物车栏 -->
   <view class="cart-bar" wx:if="{{cartCount > 0}}">
-    <view class="cart-info" bindtap="goToCart">
+    <view class="cart-info" bindtap="toggleCartDrawer">
       <view class="cart-icon-wrapper">
         <text class="cart-icon">🛒</text>
         <view class="cart-badge">{{cartCount}}</view>
@@ -103,7 +103,7 @@
         <text class="cart-hint">已选 {{cartCount}} 件</text>
       </view>
     </view>
-    <button class="checkout-btn" bindtap="goToCart">
+    <button class="checkout-btn" bindtap="goToCheckout">
       <text>去结算</text>
     </button>
   </view>
@@ -116,6 +116,44 @@
       </view>
       <text class="empty-hint">购物车是空的</text>
     </view>
+  </view>
+</view>
+
+<!-- 购物车抽屉 -->
+<view class="cart-drawer-mask" wx:if="{{showCartDrawer}}" bindtap="closeCartDrawer"></view>
+<view class="cart-drawer {{showCartDrawer ? 'show' : ''}}">
+  <view class="drawer-header">
+    <text class="drawer-title">购物车</text>
+    <view class="drawer-clear" bindtap="clearCart">
+      <text>清空</text>
+    </view>
+  </view>
+  <scroll-view class="drawer-content" scroll-y>
+    <view class="drawer-item" wx:for="{{cartList}}" wx:key="index">
+      <view class="drawer-item-info">
+        <text class="drawer-item-name">{{item.name}}</text>
+        <text class="drawer-item-price">¥{{item.price}}</text>
+      </view>
+      <view class="drawer-item-actions">
+        <view class="drawer-btn minus" data-index="{{index}}" catchtap="decreaseCartItem">
+          <text>-</text>
+        </view>
+        <text class="drawer-item-count">{{item.count}}</text>
+        <view class="drawer-btn plus" data-index="{{index}}" catchtap="increaseCartItem">
+          <text>+</text>
+        </view>
+      </view>
+    </view>
+    <view class="drawer-empty" wx:if="{{cartList.length === 0}}">
+      <text>购物车是空的</text>
+    </view>
+  </scroll-view>
+  <view class="drawer-footer">
+    <view class="drawer-total">
+      <text>合计：</text>
+      <text class="drawer-total-price">¥{{cartTotal}}</text>
+    </view>
+    <button class="drawer-checkout-btn" bindtap="goToCheckout">去结算</button>
   </view>
 </view>
 

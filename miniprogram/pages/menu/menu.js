@@ -12,6 +12,8 @@ Page({
         cartCount: 0, // 购物车商品数量
         cartTotal: 0, // 购物车总价
         cartCountMap: {}, // 商品ID对应的购物车数量
+        cartList: [], // 购物车列表
+        showCartDrawer: false, // 购物车抽屉开关
         tableNo: '', // 桌号
         showSpecModal: false, // 规格弹窗
         currentProduct: null, // 当前选中商品
@@ -182,9 +184,85 @@ Page({
         }
     },
 
-    // 跳转到购物车
-    goToCart() {
+    // 打开/关闭购物车抽屉
+    toggleCartDrawer() {
+        const showCartDrawer = !this.data.showCartDrawer;
+        if (showCartDrawer) {
+            const cartList = cartUtil.getCart();
+            this.setData({ showCartDrawer, cartList });
+        } else {
+            this.setData({ showCartDrawer });
+        }
+    },
+
+    // 关闭购物车抽屉
+    closeCartDrawer() {
+        this.setData({ showCartDrawer: false });
+    },
+
+    // 增加抽屉中的商品
+    increaseCartItem(e) {
+        const index = e.currentTarget.dataset.index;
+        const cart = cartUtil.getCart();
+        const newCount = cart[index].count + 1;
+        cartUtil.updateCartItemCount(index, newCount);
+        this.updateCartStatus();
+        this.updateCartCountMap();
+        this.setData({ cartList: cartUtil.getCart() });
+        wx.vibrateShort({ type: 'light' });
+    },
+
+    // 减少抽屉中的商品
+    decreaseCartItem(e) {
+        const index = e.currentTarget.dataset.index;
+        const cart = cartUtil.getCart();
+        const currentCount = cart[index].count;
+
+        if (currentCount === 1) {
+            wx.showModal({
+                title: '提示',
+                content: '确定要删除这个商品吗？',
+                success: (res) => {
+                    if (res.confirm) {
+                        cartUtil.updateCartItemCount(index, 0);
+                        this.updateCartStatus();
+                        this.updateCartCountMap();
+                        this.setData({ cartList: cartUtil.getCart() });
+                        if (cartUtil.getCartCount() === 0) {
+                            this.closeCartDrawer();
+                        }
+                    }
+                }
+            });
+        } else {
+            cartUtil.updateCartItemCount(index, currentCount - 1);
+            this.updateCartStatus();
+            this.updateCartCountMap();
+            this.setData({ cartList: cartUtil.getCart() });
+            wx.vibrateShort({ type: 'light' });
+        }
+    },
+
+    // 清空购物车
+    clearCart() {
+        wx.showModal({
+            title: '提示',
+            content: '确定要清空购物车吗？',
+            success: (res) => {
+                if (res.confirm) {
+                    cartUtil.clearCart();
+                    this.updateCartStatus();
+                    this.updateCartCountMap();
+                    this.setData({ cartList: [], showCartDrawer: false });
+                }
+            }
+        });
+    },
+
+    // 去结算
+    goToCheckout() {
         if (this.data.cartCount > 0) {
+            this.closeCartDrawer();
             wx.navigateTo({
                 url: '/pages/cart/cart'
             });
