@@ -507,6 +507,7 @@
   align-items: center;
   flex-shrink: 0;
   margin-left: 20rpx;
+  margin-right: 40rpx;
 }
 
 .drawer-btn {

@@ -63,7 +63,7 @@
       <el-col :span="24">
         <el-card class="chart-card" shadow="hover">
           <div slot="header" class="chart-header">
-            <span>热门产品销量排行 TOP 10</span>
+            <span>热门产品销量排行 TOP 8</span>
           </div>
           <div ref="productRankChart" class="chart-large"></div>
         </el-card>
