@@ -1,0 +1,201 @@
+/* uni.scss */
+.container {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #FDF6E3;
+  /* Web version background */
+}
+.main {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+.left-aside {
+  flex: 0 0 200rpx;
+  background-color: #fff;
+  /* Changed to white or keep grey? Web uses #FDF6E3 for main, maybe sidebar white? */
+  /* Let's keep sidebar distinct but maybe lighter */
+  background-color: #f2f2f2;
+  height: 100%;
+}
+.f-item {
+  height: 100rpx;
+  line-height: 100rpx;
+  text-align: center;
+  font-size: 28rpx;
+  color: #909399;
+  position: relative;
+}
+.f-item.active {
+  background-color: #fff;
+  color: #8d6e63;
+  font-weight: bold;
+}
+.f-item.active:before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 30rpx;
+  height: 40rpx;
+  width: 8rpx;
+  background-color: #8d6e63;
+  border-radius: 0 4rpx 4rpx 0;
+}
+.right-aside {
+  flex: 1;
+  background-color: #fff;
+  height: 100%;
+  padding-bottom: 100rpx;
+}
+.s-list {
+  width: 100%;
+}
+.s-item {
+  display: block;
+  height: 60rpx;
+  line-height: 60rpx;
+  font-size: 26rpx;
+  font-weight: bold;
+  color: #909399;
+  background-color: #f5f7fa;
+  padding-left: 30rpx;
+}
+.t-list {
+  padding: 20rpx;
+}
+.t-item {
+  display: flex;
+  margin-bottom: 20rpx;
+  background-color: #fff;
+  padding: 15rpx;
+  border-radius: 12rpx;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
+  position: relative;
+  min-height: 140rpx;
+}
+.t-item .t-img {
+  width: 140rpx;
+  height: 140rpx;
+  border-radius: 8rpx;
+  margin-right: 15rpx;
+  flex-shrink: 0;
+}
+.t-item .right-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+  height: 140rpx;
+  padding-right: 10rpx;
+}
+.t-item .right-content .title {
+  font-size: 30rpx;
+  color: #303133;
+  font-weight: bold;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+.t-item .right-content .desc {
+  font-size: 24rpx;
+  color: #909399;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  margin: 10rpx 0;
+  max-width: 100%;
+}
+.t-item .right-content .price-box {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+.t-item .right-content .price-box .price {
+  font-size: 30rpx;
+  color: #f56c6c;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+.t-item .right-content .price-box .action-box {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 10rpx;
+}
+.t-item .right-content .price-box .action-box .add-btn, .t-item .right-content .price-box .action-box .minus-btn {
+  width: 44rpx;
+  height: 44rpx;
+  line-height: 44rpx;
+  text-align: center;
+  border-radius: 50%;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+.t-item .right-content .price-box .action-box .add-btn {
+  background-color: #8d6e63;
+  color: #fff;
+}
+.t-item .right-content .price-box .action-box .minus-btn {
+  background-color: #fff;
+  border: 1px solid #dcdfe6;
+  color: #909399;
+  box-sizing: border-box;
+  line-height: 42rpx;
+}
+.t-item .right-content .price-box .action-box .count {
+  margin: 0 12rpx;
+  font-size: 24rpx;
+  color: #303133;
+  min-width: 20rpx;
+  text-align: center;
+}
+.cart-bar {
+  position: fixed;
+  bottom: 0px;
+  left: 30rpx;
+  right: 30rpx;
+  height: 100rpx;
+  background-color: rgba(0, 0, 0, 0.9);
+  display: flex;
+  align-items: center;
+  padding: 0 30rpx;
+  z-index: 99;
+  border-radius: 50rpx;
+  /* Floating pill style */
+  box-shadow: 0 10rpx 20rpx rgba(0, 0, 0, 0.2);
+  margin-bottom: 20rpx;
+}
+.cart-bar .cart-icon {
+  position: relative;
+  margin-right: 30rpx;
+  color: #fff;
+}
+.cart-bar .cart-icon .badge {
+  position: absolute;
+  top: -10rpx;
+  right: -10rpx;
+  background-color: #f56c6c;
+  color: #fff;
+  font-size: 20rpx;
+  padding: 0 10rpx;
+  border-radius: 20rpx;
+}
+.cart-bar .price-info {
+  flex: 1;
+  color: #fff;
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.cart-bar .pay-btn {
+  background-color: #8d6e63;
+  color: #fff;
+  padding: 0 40rpx;
+  height: 70rpx;
+  line-height: 70rpx;
+  border-radius: 35rpx;
+  font-size: 28rpx;
+}

@@ -1,0 +1,82 @@
+/* uni.scss */
+.container {
+  padding: 20rpx;
+  padding-bottom: 120rpx;
+}
+.section {
+  background-color: #ffffff;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+}
+.section-title {
+  font-size: 32rpx;
+  font-weight: bold;
+}
+.order-item {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 20rpx;
+}
+.order-item .item-left {
+  display: flex;
+  flex-direction: column;
+}
+.order-item .item-left .name {
+  font-size: 30rpx;
+}
+.order-item .item-left .spec {
+  font-size: 24rpx;
+  color: #909399;
+}
+.order-item .item-right {
+  text-align: right;
+}
+.order-item .item-right .count {
+  display: block;
+  font-size: 26rpx;
+  color: #909399;
+}
+.order-item .item-right .price {
+  font-size: 30rpx;
+  font-weight: bold;
+}
+.remark-box {
+  display: flex;
+  align-items: center;
+}
+.remark-box .label {
+  width: 100rpx;
+}
+.remark-box .input {
+  flex: 1;
+}
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 100rpx;
+  background-color: #ffffff;
+  display: flex;
+  align-items: center;
+  padding: 0 30rpx;
+  box-shadow: 0 -2rpx 10rpx rgba(0, 0, 0, 0.05);
+}
+.footer .total {
+  flex: 1;
+  font-size: 30rpx;
+}
+.footer .total .price {
+  color: #f56c6c;
+  font-weight: bold;
+  font-size: 36rpx;
+  margin-left: 10rpx;
+}
+.footer .pay-btn {
+  background-color: #8d6e63;
+  color: #fff;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  padding: 0 60rpx;
+}

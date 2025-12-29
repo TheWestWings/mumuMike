@@ -1,0 +1,76 @@
+/* uni.scss */
+.container {
+  padding: 20rpx;
+}
+.header {
+  background-color: #ffffff;
+  padding: 40rpx;
+  border-radius: 10rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+}
+.header .avatar {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 50%;
+  margin-right: 30rpx;
+  background-color: #eee;
+}
+.header .username {
+  font-size: 36rpx;
+  font-weight: bold;
+}
+.section {
+  background-color: #ffffff;
+  border-radius: 10rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+}
+.section-header {
+  border-bottom: 1px solid #dcdfe6;
+  padding-bottom: 20rpx;
+  margin-bottom: 20rpx;
+}
+.section-header .title {
+  font-size: 30rpx;
+  font-weight: bold;
+}
+.order-item {
+  border-bottom: 1px solid #dcdfe6;
+  padding: 20rpx 0;
+}
+.order-item:last-child {
+  border-bottom: none;
+}
+.order-item .order-top {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10rpx;
+}
+.order-item .order-top .time {
+  font-size: 24rpx;
+  color: #909399;
+}
+.order-item .order-top .status {
+  font-size: 26rpx;
+  color: #8d6e63;
+}
+.order-item .order-content {
+  font-size: 28rpx;
+  color: #303133;
+}
+.empty {
+  text-align: center;
+  padding: 40rpx;
+  color: #909399;
+}
+.feedback-btn, .logout-btn {
+  margin-top: 20rpx;
+  background-color: #ffffff;
+  border: 1px solid #dcdfe6;
+  font-size: 28rpx;
+}
+.logout-btn {
+  color: #f56c6c;
+}

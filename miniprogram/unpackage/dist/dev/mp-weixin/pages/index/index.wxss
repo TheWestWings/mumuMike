@@ -1,0 +1,44 @@
+/* uni.scss */
+.content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #fff;
+}
+.logo {
+  height: 200rpx;
+  width: 200rpx;
+  margin-top: 200rpx;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 50rpx;
+}
+.text-area {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 100rpx;
+}
+.title {
+  font-size: 36rpx;
+  color: #303133;
+  font-weight: bold;
+}
+.btn-area {
+  width: 80%;
+}
+.scan-btn {
+  background-color: #8d6e63;
+  border-radius: 50rpx;
+  height: 100rpx;
+  line-height: 100rpx;
+  font-size: 32rpx;
+  box-shadow: 0 10rpx 20rpx rgba(141, 110, 99, 0.3);
+}
+.manual-entry {
+  margin-top: 40rpx;
+  color: #909399;
+  font-size: 24rpx;
+  text-decoration: underline;
+}

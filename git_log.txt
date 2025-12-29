@@ -1,0 +1,99 @@
+*   678f68d merge: 发布v1.0.0版本
+|\  
+| *   0cb6bbe merge: 合并微信小程序开发到develop
+| |\  
+| | * 7d56257 feat: 开发小程序用户中心页
+| | * cda480e feat: 开发小程序评价页面
+| | * ac92572 feat: 开发小程序订单成功页
+| | * bde7ac8 feat: 开发小程序订单详情页
+| | * adb33fa feat: 开发小程序订单列表页
+| | * 41de8c7 feat: 开发小程序购物车页
+| | * 242b2a5 feat: 开发小程序菜单页
+| | * ef4a9de feat: 开发小程序登录页
+| | * b77c45b feat: 开发小程序首页
+| | * 839b25e feat: 创建购物车工具类
+| | * 276f99d feat: 添加小程序公共资源
+| | * 36bfe22 feat: 创建小程序工具类
+| | * 4c9de29 feat: 初始化微信小程序项目
+| |/  
+| *   9e58bbd merge: 合并Vue管理端开发到develop
+| |\  
+| | * 6d45a14 feat: 添加购物车store
+| | * c776e0e feat: 开发分类表单和商品卡片组件
+| | * 36fd4fd feat: 开发购物页面
+| | * 7db14e8 feat: 开发桌码生成页
+| | * fa08272 feat: 开发资讯管理页
+| | * b1ee915 feat: 开发用户管理页
+| | * 66e61cb feat: 开发历史订单页
+| | * 6805286 feat: 开发订单管理页
+| | * 8344373 feat: 开发系列管理页
+| | * 8997651 feat: 开发商品选择组件
+| | * 326be4f feat: 开发商品管理页
+| | * c93ba42 feat: 开发管理页框架
+| | * 2dfe637 feat: 开发首页布局
+| | * 440b4d6 feat: 创建公共组件
+| | * 06c75db feat: 开发登录和注册表单组件
+| | * 812d2fa feat: 开发登录页面
+| | * 628dbbb feat: 创建Message和Information API模块
+| | * 9ef34a4 feat: 创建Order和Series API模块
+| | * 86da6cc feat: 创建User和Product API模块
+| | * d7238ca feat: 创建API请求工具类
+| | * 87d14d8 feat: 添加Vue基础样式
+| | * 92c07a1 feat: 配置Vue路由和状态管理
+| | * b67f864 feat: 初始化Vue管理端项目
+| |/  
+| *   81b6196 merge: 合并Controller层开发到develop
+| |\  
+| | * 84ea36d feat: 添加TableQRCodeController桌码生成
+| | * eafdb3d feat: 实现WxPayController微信支付
+| | * 506cc55 feat: 实现WxLoginController微信登录
+| | * 7a5ffcf feat: 创建InformationController
+| | * 58d775b feat: 创建MessageController
+| | * a3a56bd feat: 创建ProductTypeController
+| | * 9903dec feat: 创建OrderController
+| | * 6a0bbe9 feat: 创建ProductController
+| | * 70f4abe feat: 创建UserController
+| |/  
+| *   ec4d26e merge: 合并安全认证模块到develop
+| |\  
+| | * b2e1cd0 feat: 添加WebConfig配置
+| | * ea2732f feat: 实现CustomUserService
+| | * e8f959c feat: 实现JWT认证过滤器
+| | * 45adf1c feat: 配置SecurityConfig
+| | * ea803da feat: 实现RoleAccess切面
+| | * ef944e2 feat: 创建Role注解
+| | * 32bbcba feat: 添加ExcelUtil和FileStorageUtil工具类
+| | * 998ed70 feat: 添加JwtUtil工具类
+| |/  
+| *   0026a55 merge: 合并Service层开发到develop
+| |\  
+| | * 6bae3aa feat: 实现InformationServiceImpl
+| | * ec85a8e feat: 实现ProductTypeServiceImpl和MessageServiceImpl
+| | * 1cc2018 feat: 实现OrderServiceImpl
+| | * 84afcac feat: 实现ProductServiceImpl
+| | * fcf770c feat: 实现UserServiceImpl
+| | * f4958f9 feat: 定义MessageService和InformationService接口
+| | * a73d1b8 feat: 定义OrderService和ProductTypeService接口
+| | * a48ab17 feat: 定义UserService和ProductService接口
+| |/  
+| *   560941b merge: 合并Mapper层开发到develop
+| |\  
+| | * 5f10ece feat: 创建InformationMapper
+| | * 0131c16 feat: 创建ProductTypeMapper和MessageMapper
+| | * 94e3184 feat: 创建OrderMapper接口和XML
+| | * 658c456 feat: 创建ProductMapper接口和XML
+| | * 14dee3a feat: 创建UserMapper接口和XML
+| |/  
+| * 4202df7 merge: 合并实体类开发到develop
+|/| 
+| * 955a018 feat: 创建VO视图对象
+| * c299c6f feat: 添加AjaxResult和TableDataInfo响应类
+| * 3a3449c feat: 创建Information和Content实体
+| * e24c5f2 feat: 创建ProductType和Message实体
+| * de95c37 feat: 创建Order和OrderProduct实体
+| * d2fc4e7 feat: 创建Product实体类
+| * ed1fbdb feat: 创建User实体类
+|/  
+* 513cda4 chore: 添加application配置文件
+* 210688d chore: 创建主应用程序入口
+* 1ba306e chore: 初始化Spring Boot项目
