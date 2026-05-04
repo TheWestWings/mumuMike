@@ -8,17 +8,10 @@ import com.mumuwest.mumumike.service.MessageService;
 import com.mumuwest.mumumike.service.OrderService;
 import com.mumuwest.mumumike.service.ProductService;
 import com.mumuwest.mumumike.service.UserService;
-import org.apache.poi.ss.formula.functions.T;
-import org.aspectj.weaver.loadtime.Aj;
+import com.mumuwest.mumumike.utils.AuthUtil;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,11 +66,15 @@ public class OrderController {
      * @return
      */
     @GetMapping("/getOrderVOById/{id}")
-    @Role(role = { 0, 1 })
-    public AjaxResult getOrderVOById(@PathVariable("id") Integer id) {
+    @Role(role = { 0, 1, 2 })
+    public AjaxResult getOrderVOById(@PathVariable("id") Integer id, HttpServletRequest request) {
         Order orderById = orderService.getOrderById(id);
         if (orderById == null) {
             return AjaxResult.error("订单不存在");
+        }
+        AjaxResult accessDenied = rejectIfNotOwnerForNormalUser(orderById, request);
+        if (accessDenied != null) {
+            return accessDenied;
         }
         User userById = userService.getUserById(orderById.getUserId());
         List<OrderProductVO> orderProductVOList = new ArrayList<>();
@@ -96,8 +93,16 @@ public class OrderController {
      * @return
      */
     @PostMapping("/getListVO")
-    @Role(role = { 0, 1 })
-    public TableDataInfo getListVO(@RequestBody Order order) {
+    @Role(role = { 0, 1, 2 })
+    public TableDataInfo getListVO(@RequestBody Order order, HttpServletRequest request) {
+        if (order == null) {
+            order = new Order();
+        }
+        User currentUser = getCurrentUser(request);
+        Integer currentRole = AuthUtil.getRole(request);
+        if (currentUser != null && Integer.valueOf(2).equals(currentRole)) {
+            order.setUserId(currentUser.getId());
+        }
         List<Order> orderList = orderService.getOrderList(order);
         List<OrderVO> orderVOList = new ArrayList<>();
         for (Order orderItem : orderList) {
@@ -120,7 +125,12 @@ public class OrderController {
      * @return
      */
     @PostMapping
-    public AjaxResult insertOrder(@RequestBody Order order) {
+    public AjaxResult insertOrder(@RequestBody Order order, HttpServletRequest request) {
+        User currentUser = getCurrentUser(request);
+        if (currentUser == null) {
+            return AjaxResult.error(401, "未登录或token无效");
+        }
+        order.setUserId(currentUser.getId());
         return AjaxResult.success(orderService.insertOrder(order));
     }
 
@@ -155,6 +165,7 @@ public class OrderController {
      * @return
      */
     @PutMapping("/updateOrderProduct")
+    @Role(role = { 0, 1 })
     public AjaxResult updateOrderProduct(@RequestBody OrderProduct orderProduct) {
         if (orderProduct.getStatus() == 2) {
             OrderProduct orderProductById = orderService.getOrderProductById(orderProduct.getId());
@@ -192,6 +203,29 @@ public class OrderController {
             orderUpdate.setUpdateTime(new Date());
         }
         return AjaxResult.success(orderService.updateOrder(orderUpdate));
+    }
+
+    private User getCurrentUser(HttpServletRequest request) {
+        String username = AuthUtil.getUsername(request);
+        if (username == null) {
+            return null;
+        }
+        return userService.getUserByUsername(username);
+    }
+
+    private AjaxResult rejectIfNotOwnerForNormalUser(Order order, HttpServletRequest request) {
+        Integer currentRole = AuthUtil.getRole(request);
+        if (!Integer.valueOf(2).equals(currentRole)) {
+            return null;
+        }
+        User currentUser = getCurrentUser(request);
+        if (currentUser == null) {
+            return AjaxResult.error(401, "未登录或token无效");
+        }
+        if (!currentUser.getId().equals(order.getUserId())) {
+            return AjaxResult.error(403, "没有权限访问该订单");
+        }
+        return null;
     }
 
 }

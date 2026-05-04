@@ -6,11 +6,10 @@ import com.mumuwest.mumumike.pojo.AjaxResult;
 import com.mumuwest.mumumike.pojo.TableDataInfo;
 import com.mumuwest.mumumike.pojo.User;
 import com.mumuwest.mumumike.service.UserService;
+import com.mumuwest.mumumike.utils.AuthUtil;
 import com.mumuwest.mumumike.utils.FileStorageUtil;
 import com.mumuwest.mumumike.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
-import org.apache.ibatis.annotations.Update;
-import org.apache.poi.ss.formula.functions.T;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -140,11 +139,15 @@ public class UserController {
      */
     @GetMapping("/getInfo")
     public AjaxResult getInfo(HttpServletRequest request) {
-        // 通过jwt另外解析用户名
-        String header = request.getHeader("Authorization");
-        String token = header.substring(7);
-        String username = JwtUtil.getUsernameFromToken(token);
-        return AjaxResult.success(userService.getUserByUsername(username));
+        String username = AuthUtil.getUsername(request);
+        if (username == null) {
+            return AjaxResult.error(401, "未登录或token无效");
+        }
+        User user = userService.getUserByUsername(username);
+        if (user == null) {
+            return AjaxResult.error(401, "用户不存在");
+        }
+        return AjaxResult.success(user);
     }
 
     /**
@@ -180,11 +183,14 @@ public class UserController {
      */
     @PutMapping("/updateUser")
     public AjaxResult updateUser(@RequestBody User user, HttpServletRequest request) {
-        // 通过jwt另外解析用户名
-        String header = request.getHeader("Authorization");
-        String token = header.substring(7);
-        String username = JwtUtil.getUsernameFromToken(token);
+        String username = AuthUtil.getUsername(request);
+        if (username == null) {
+            return AjaxResult.error(401, "未登录或token无效");
+        }
         User userByUsername = userService.getUserByUsername(username);
+        if (userByUsername == null) {
+            return AjaxResult.error(401, "用户不存在");
+        }
         User userUpdate = new User();
         userUpdate.setId(userByUsername.getId());
         userUpdate.setUsername(user.getUsername());
@@ -203,11 +209,14 @@ public class UserController {
     @PostMapping("/updateAvatar")
     public AjaxResult updateAvatar(@RequestParam("file") MultipartFile avatar, HttpServletRequest request)
             throws IOException {
-        // 通过jwt另外解析用户名
-        String header = request.getHeader("Authorization");
-        String token = header.substring(7);
-        String username = JwtUtil.getUsernameFromToken(token);
+        String username = AuthUtil.getUsername(request);
+        if (username == null) {
+            return AjaxResult.error(401, "未登录或token无效");
+        }
         User userByUsername = userService.getUserByUsername(username);
+        if (userByUsername == null) {
+            return AjaxResult.error(401, "用户不存在");
+        }
         User userUpdate = new User();
         userUpdate.setId(userByUsername.getId());
         if (avatar != null) {

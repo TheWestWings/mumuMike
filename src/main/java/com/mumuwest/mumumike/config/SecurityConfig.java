@@ -39,10 +39,8 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/register", "/api/public/**").permitAll() // 公开接口
                         .requestMatchers("/wx/**").permitAll() // 微信小程序登录和支付接口
                         .requestMatchers("/uploads/**").permitAll() // 允许访问上传的文件
-                        .requestMatchers("/productType/**").permitAll() // 临时放行 /dam/**
                         .requestMatchers("/table/**").permitAll() // 餐桌二维码接口
-                        .requestMatchers("/product/getProductVOList", "/product/getProductList").permitAll() // 小程序商品接口
-                        .requestMatchers("/message/**").permitAll() // 小程序消息接口
+                        .requestMatchers("/product/getProductVOList").permitAll() // 小程序菜单公开接口
                         .anyRequest().authenticated() // 其他需要认证
                 )
                 .addFilterBefore(new JwtAuthenticationFilter(userDetailsService),
