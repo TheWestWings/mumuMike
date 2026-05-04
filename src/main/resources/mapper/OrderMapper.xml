@@ -16,12 +16,13 @@
             <result property="orderId" column="order_id"/>
             <result property="count" column="count"/>
             <result property="status" column="op_status"/>
+            <result property="comment" column="comment"/>
         </collection>
     </resultMap>
 
     <select id="getOrderById" resultMap="OrderResultMap">
         SELECT o.id, o.user_id, o.status, o.reviewed, o.createTime, o.updateTime,
-               op.id as op_id, op.product_id, op.count,  op.order_id ,op.status as op_status
+               op.id as op_id, op.product_id, op.count, op.comment, op.order_id, op.status as op_status
         FROM orders o
                  LEFT JOIN orders_product op ON o.id = op.order_id
         WHERE o.id = #{id}
@@ -29,7 +30,7 @@
 
     <select id="getOrdersList" resultMap="OrderResultMap">
         SELECT o.id, o.user_id, o.status, o.reviewed, o.createTime, o.updateTime,
-        op.id as op_id, op.product_id, op.count,  op.order_id ,op.status as op_status
+        op.id as op_id, op.product_id, op.count, op.comment, op.order_id, op.status as op_status
         FROM orders o
         LEFT JOIN orders_product op ON o.id = op.order_id
         <where>
@@ -37,7 +38,10 @@
                 o.status != 2
             </if>
             <if test="status == 2">
-                o.status = 2
+                and o.status = 2
+            </if>
+            <if test="userId != null">
+                and o.user_id = #{userId}
             </if>
         </where>
         order by o.createTime desc
@@ -54,8 +58,8 @@
 
     </insert>
     <insert id="insertOrderProduct">
-        INSERT INTO orders_product (product_id, order_id, count)
-        VALUES (#{productId}, #{orderId}, #{count})
+        INSERT INTO orders_product (product_id, order_id, count, comment)
+        VALUES (#{productId}, #{orderId}, #{count}, #{comment})
     </insert>
 
     <update id="updateOrder">

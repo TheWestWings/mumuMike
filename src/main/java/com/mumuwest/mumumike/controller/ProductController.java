@@ -1,8 +1,8 @@
 package com.mumuwest.mumumike.controller;
 
+import com.mumuwest.mumumike.annotation.Role;
 import com.mumuwest.mumumike.pojo.AjaxResult;
 import com.mumuwest.mumumike.pojo.Product;
-import com.mumuwest.mumumike.pojo.ProductType;
 import com.mumuwest.mumumike.pojo.TableDataInfo;
 import com.mumuwest.mumumike.pojo.VO.ProductVO;
 import com.mumuwest.mumumike.service.ProductService;
@@ -26,6 +26,7 @@ public class ProductController {
      * @param product
      * @return
      */
+    @Role(role = {0, 1})
     @PostMapping("/getProductList")
     public TableDataInfo getProductList(Product product) {
         List<Product> productList = productService.getProductList(product);
@@ -42,12 +43,13 @@ public class ProductController {
         return AjaxResult.success(productService.getProductById(id));
     }
 
+    @Role(role = {0, 1})
     @PostMapping
     public AjaxResult insertProduct(@RequestParam("name") String name,
                                     @RequestParam("description") String description,
                                     @RequestParam("price") Integer price,
                                     @RequestParam("productTypeId") Integer productTypeId,
-                                    @RequestParam("image") MultipartFile image
+                                    @RequestParam(value = "image", required = false) MultipartFile image
                                     ) throws IOException {
         Product product = new Product();
         product.setName(name);
@@ -73,13 +75,14 @@ public class ProductController {
      * @param image
      * @return
      */
+    @Role(role = {0, 1})
     @PutMapping
     public AjaxResult updateProduct(@RequestParam("name") String name,
                                     @RequestParam("id") Integer id,
                                     @RequestParam("description") String description,
                                     @RequestParam("price") Integer price,
                                     @RequestParam("productTypeId") Integer productTypeId,
-                                    @RequestParam("image") MultipartFile image) throws IOException {
+                                    @RequestParam(value = "image", required = false) MultipartFile image) throws IOException {
         Product product = new Product();
         product.setId(id);
         product.setName(name);
@@ -101,6 +104,7 @@ public class ProductController {
      * @param id
      * @return
      */
+    @Role(role = {0, 1})
     @DeleteMapping("/{id}")
     public AjaxResult deleteProduct(@PathVariable("id") Integer id) {
         return AjaxResult.success(productService.deleteProduct(id));
@@ -117,6 +121,7 @@ public class ProductController {
     }
 
     @PutMapping("/updateProductStatus")
+    @Role(role = {0, 1})
     public AjaxResult updateProductStatus(@RequestBody Product product) {
         Product productUpdate = new Product();
         productUpdate.setId(product.getId());

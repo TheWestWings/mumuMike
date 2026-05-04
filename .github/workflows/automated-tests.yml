@@ -1,0 +1,116 @@
+name: automated-tests
+
+on:
+  push:
+    branches:
+      - main
+      - automation-ci-tests
+  pull_request:
+
+jobs:
+  backend-code-test:
+    name: backend-code-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Run JUnit tests
+        run: mvn -B test
+
+      - name: Upload JUnit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: junit-surefire-reports
+          path: target/surefire-reports/
+
+  api-regression:
+    name: api-regression
+    runs-on: ubuntu-latest
+    needs: backend-code-test
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: test123
+          MYSQL_DATABASE: mumu_mike
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -ptest123"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+          cache: maven
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install MySQL client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y default-mysql-client
+
+      - name: Initialize test database
+        run: |
+          mysql -h127.0.0.1 -uroot -ptest123 mumu_mike < test-data/schema.sql
+          mysql -h127.0.0.1 -uroot -ptest123 mumu_mike < test-data/seed.sql
+
+      - name: Build Spring Boot jar
+        run: mvn -B -DskipTests package
+
+      - name: Start Spring Boot app
+        run: |
+          SPRING_DATASOURCE_URL='jdbc:mysql://127.0.0.1:3306/mumu_mike?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true' \
+          SPRING_DATASOURCE_USERNAME='root' \
+          SPRING_DATASOURCE_PASSWORD='test123' \
+          SERVER_PORT='8080' \
+          java -jar target/mumuMike-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+          echo $! > app.pid
+
+      - name: Wait for app
+        run: |
+          for i in {1..60}; do
+            if curl -fsS http://localhost:8080/product/getProductVOList >/dev/null; then
+              exit 0
+            fi
+            sleep 1
+          done
+          cat app.log
+          exit 1
+
+      - name: Install API test dependencies
+        run: pip install -r api-tests/requirements.txt
+
+      - name: Run API regression tests
+        env:
+          API_BASE_URL: http://localhost:8080
+        run: pytest api-tests --junitxml=api-tests/report.xml
+
+      - name: Upload API and app reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-regression-reports
+          path: |
+            api-tests/report.xml
+            app.log

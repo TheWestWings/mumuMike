@@ -91,6 +91,7 @@ public class ProductTypeController {
      * @param productType
      * @return
      */
+    @Role(role = {0, 1})
     @PutMapping("/updateProductTypeStatus")
     public AjaxResult updateProductTypeStatus(@RequestBody ProductType productType) {
         ProductType productTypeUpdate = new ProductType();

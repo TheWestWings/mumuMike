@@ -2,6 +2,7 @@ package com.mumuwest.mumumike.aspect;
 
 import com.mumuwest.mumumike.annotation.Role;
 import com.mumuwest.mumumike.pojo.AjaxResult;
+import com.mumuwest.mumumike.utils.AuthUtil;
 import com.mumuwest.mumumike.utils.JwtUtil;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -46,10 +47,15 @@ public class RoleAccess {
             int[] roleValue = roleAnnotation.role();
             // 取出HttpServletRequest对象
             ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+            if (attributes == null) {
+                return AjaxResult.error(401, "未登录或token无效");
+            }
             HttpServletRequest request = attributes.getRequest();
             // 从请求头中获取 JWT token
-            String token = request.getHeader("Authorization");
-            token = token.substring(7);
+            String token = AuthUtil.getBearerToken(request);
+            if (token == null) {
+                return AjaxResult.error(401, "未登录或token无效");
+            }
 
             // 从 JWT token 中获取角色信息
             int role = JwtUtil.getRoleFromToken(token);
