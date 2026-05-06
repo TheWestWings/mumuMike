@@ -19,4 +19,5 @@ class ProductTypeControllerSecurityTest {
         assertThat(role).isNotNull();
         assertThat(role.role()).containsExactly(0, 1);
     }
+    //成功
 }
