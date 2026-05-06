@@ -17,7 +17,7 @@ class ProductTypeControllerSecurityTest {
         Role role = method.getAnnotation(Role.class);
 
         assertThat(role).isNotNull();
-        assertThat(role.role()).containsExactly(0, 1);
+        assertThat(role.role()).containsExactly(3);
     }
-    //成功
+    //失败
 }
