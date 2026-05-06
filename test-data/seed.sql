@@ -1,8 +1,8 @@
 INSERT INTO user (id, username, password, email, phone, status, role, avatar) VALUES
-(1, 'admin_auto', '$2a$10$qxBq09.WFq57LlQuM6KctumGJE6ymW/vWtlZSvXU3cGTjb4g7278G', 'admin@example.com', '13800000001', '1', 0, NULL),
-(2, 'merchant_auto', '$2a$10$qxBq09.WFq57LlQuM6KctumGJE6ymW/vWtlZSvXU3cGTjb4g7278G', 'merchant@example.com', '13800000002', '1', 1, NULL),
-(3, 'customer_auto', '$2a$10$qxBq09.WFq57LlQuM6KctumGJE6ymW/vWtlZSvXU3cGTjb4g7278G', 'customer@example.com', '13800000003', '1', 2, NULL),
-(4, 'disabled_auto', '$2a$10$qxBq09.WFq57LlQuM6KctumGJE6ymW/vWtlZSvXU3cGTjb4g7278G', 'disabled@example.com', '13800000004', '0', 2, NULL);
+(1, 'admin123', '$2a$10$WXB55aePpROWwpgowp140eUhQ4ioNY9MU3wkW8KDy33.3S0CQWLj.', 'admin@example.com', '13800000001', '1', 0, NULL),
+(2, 'merchant_auto', '$2a$10$WXB55aePpROWwpgowp140eUhQ4ioNY9MU3wkW8KDy33.3S0CQWLj.', 'merchant@example.com', '13800000002', '1', 1, NULL),
+(3, 'customer_auto', '$2a$10$WXB55aePpROWwpgowp140eUhQ4ioNY9MU3wkW8KDy33.3S0CQWLj.', 'customer@example.com', '13800000003', '1', 2, NULL),
+(4, 'disabled_auto', '$2a$10$WXB55aePpROWwpgowp140eUhQ4ioNY9MU3wkW8KDy33.3S0CQWLj.', 'disabled@example.com', '13800000004', '0', 2, NULL);
 
 INSERT INTO product_type (id, title, description, status) VALUES
 (1, '自动化测试启用分类', 'API regression enabled type', 1),

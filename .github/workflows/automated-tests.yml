@@ -2,9 +2,6 @@ name: automated-tests
 
 on:
   push:
-    branches:
-      - main
-      - automation-ci-tests
   pull_request:
 
 jobs:
